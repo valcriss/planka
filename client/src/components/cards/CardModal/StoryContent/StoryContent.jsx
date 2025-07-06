@@ -616,6 +616,7 @@ const StoryContent = React.memo(({ onClose }) => {
                 )}
                 {!board.limitCardTypesToDefaultOne && canEditType && (
                   <SelectCardTypePopup
+                    projectId={board.projectId}
                     withButton
                     defaultValue={card.type}
                     title="common.editType"

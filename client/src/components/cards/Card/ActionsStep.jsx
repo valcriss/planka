@@ -217,6 +217,7 @@ const ActionsStep = React.memo(({ cardId, onNameEdit, onClose }) => {
       case StepTypes.EDIT_TYPE:
         return (
           <SelectCardTypeStep
+            projectId={board.projectId}
             withButton
             defaultValue={card.type}
             title="common.editType"

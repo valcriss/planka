@@ -17,6 +17,7 @@ import selectors from '../../../selectors';
 import { useClosable, useForm, useNestedRef } from '../../../hooks';
 import { isModifierKeyPressed } from '../../../utils/event-helpers';
 import { CardTypeIcons } from '../../../constants/Icons';
+import { CardTypes } from '../../../constants/Enums';
 import SelectCardTypeStep from '../SelectCardTypeStep';
 
 import styles from './AddCard.module.scss';
@@ -227,7 +228,12 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) 
               name={(cardType && cardType.icon) || CardTypeIcons[data.type]}
               className={styles.selectTypeButtonIcon}
             />
-            {t(`common.${(cardType && cardType.name) || data.type}`)}
+            {(() => {
+              const typeName = (cardType && cardType.name) || data.type;
+              return typeName === CardTypes.PROJECT || typeName === CardTypes.STORY
+                ? t(`common.${typeName}`)
+                : typeName;
+            })()}
           </Button>
         </SelectCardTypePopup>
       </div>
