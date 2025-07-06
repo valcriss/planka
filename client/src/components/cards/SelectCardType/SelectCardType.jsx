@@ -79,12 +79,13 @@ const SelectCardType = React.memo(({ projectId, value, onSelect }) => {
 
 SelectCardType.propTypes = {
   projectId: PropTypes.string,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
 };
 
 SelectCardType.defaultProps = {
   projectId: undefined,
+  value: undefined,
 };
 
 export default SelectCardType;
