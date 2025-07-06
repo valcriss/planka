@@ -5,6 +5,9 @@
 
 import socket from './socket';
 
+const getBaseCardTypes = (headers) =>
+  socket.get('/base-card-types', undefined, headers);
+
 const createBaseCardType = (data, headers) =>
   socket.post('/base-card-types', data, headers);
 
@@ -15,6 +18,7 @@ const deleteBaseCardType = (id, headers) =>
   socket.delete(`/base-card-types/${id}`, undefined, headers);
 
 export default {
+  getBaseCardTypes,
   createBaseCardType,
   updateBaseCardType,
   deleteBaseCardType,

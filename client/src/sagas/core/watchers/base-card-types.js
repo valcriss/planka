@@ -34,5 +34,6 @@ export default function* baseCardTypesWatchers() {
       ({ payload: { baseCardType } }) =>
         services.handleBaseCardTypeDelete(baseCardType),
     ),
+    takeEvery(EntryActionTypes.BASE_CARD_TYPES_FETCH, services.fetchBaseCardTypes),
   ]);
 }

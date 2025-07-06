@@ -2,6 +2,8 @@ const defaultFind = (criteria) => BaseCardType.find(criteria).sort('id');
 
 const createOne = (values) => BaseCardType.create({ ...values }).fetch();
 
+const getAll = () => defaultFind();
+
 const getByIds = (ids) => defaultFind(ids);
 
 const getOneById = (id) => BaseCardType.findOne(id);
@@ -15,6 +17,7 @@ const deleteOne = (criteria) => BaseCardType.destroyOne(criteria);
 
 module.exports = {
   createOne,
+  getAll,
   getByIds,
   getOneById,
   updateOne,

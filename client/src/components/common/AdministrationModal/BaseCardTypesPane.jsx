@@ -3,12 +3,13 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button, Tab, Table } from 'semantic-ui-react';
 
 import selectors from '../../../selectors';
+import entryActions from '../../../entry-actions';
 import { usePopupInClosableContext } from '../../../hooks';
 import AddBaseCardTypeStep from '../../base-card-types/AddBaseCardTypeStep';
 import Item from './BaseCardTypesPane/Item';
@@ -16,10 +17,15 @@ import Item from './BaseCardTypesPane/Item';
 import styles from './BaseCardTypesPane.module.scss';
 
 const BaseCardTypesPane = React.memo(() => {
+  const dispatch = useDispatch();
   const baseCardTypeIds = useSelector(selectors.selectBaseCardTypeIds);
 
   const AddBaseCardTypePopup = usePopupInClosableContext(AddBaseCardTypeStep);
   const [t] = useTranslation();
+
+  useEffect(() => {
+    dispatch(entryActions.fetchBaseCardTypes());
+  }, [dispatch]);
 
   return (
     <Tab.Pane attached={false} className={styles.wrapper}>

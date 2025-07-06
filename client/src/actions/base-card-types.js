@@ -65,6 +65,20 @@ const handleBaseCardTypeDelete = (baseCardType) => ({
   payload: { baseCardType },
 });
 
+const fetchBaseCardTypes = () => ({
+  type: ActionTypes.BASE_CARD_TYPES_FETCH,
+});
+
+fetchBaseCardTypes.success = (baseCardTypes) => ({
+  type: ActionTypes.BASE_CARD_TYPES_FETCH__SUCCESS,
+  payload: { baseCardTypes },
+});
+
+fetchBaseCardTypes.failure = (error) => ({
+  type: ActionTypes.BASE_CARD_TYPES_FETCH__FAILURE,
+  payload: { error },
+});
+
 export default {
   createBaseCardType,
   handleBaseCardTypeCreate,
@@ -72,4 +86,5 @@ export default {
   handleBaseCardTypeUpdate,
   deleteBaseCardType,
   handleBaseCardTypeDelete,
+  fetchBaseCardTypes,
 };

@@ -35,6 +35,10 @@ const handleBaseCardTypeDelete = (baseCardType) => ({
   payload: { baseCardType },
 });
 
+const fetchBaseCardTypes = () => ({
+  type: EntryActionTypes.BASE_CARD_TYPES_FETCH,
+});
+
 export default {
   createBaseCardType,
   handleBaseCardTypeCreate,
@@ -42,4 +46,5 @@ export default {
   handleBaseCardTypeUpdate,
   deleteBaseCardType,
   handleBaseCardTypeDelete,
+  fetchBaseCardTypes,
 };

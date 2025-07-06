@@ -71,6 +71,18 @@ export function* handleBaseCardTypeDelete(baseCardType) {
   yield put(actions.handleBaseCardTypeDelete(baseCardType));
 }
 
+export function* fetchBaseCardTypes() {
+  let baseCardTypes;
+  try {
+    ({ items: baseCardTypes } = yield call(request, api.getBaseCardTypes));
+  } catch (error) {
+    yield put(actions.fetchBaseCardTypes.failure(error));
+    return;
+  }
+
+  yield put(actions.fetchBaseCardTypes.success(baseCardTypes));
+}
+
 export default {
   createBaseCardType,
   handleBaseCardTypeCreate,
@@ -78,4 +90,5 @@ export default {
   handleBaseCardTypeUpdate,
   deleteBaseCardType,
   handleBaseCardTypeDelete,
+  fetchBaseCardTypes,
 };
