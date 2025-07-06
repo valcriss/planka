@@ -1,0 +1,28 @@
+/*!
+ * Copyright (c) 2024 PLANKA Software GmbH
+ * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
+ */
+
+:global(#app) {
+  .wrapper {
+    padding: 8px;
+  }
+
+  .types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .type {
+    display: inline-block;
+  }
+
+  .addTypeButton {
+    background: #dce0e4;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+}

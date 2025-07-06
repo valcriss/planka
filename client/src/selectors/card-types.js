@@ -65,6 +65,13 @@ export const makeSelectBaseCardTypeById = () =>
 
 export const selectBaseCardTypeById = makeSelectBaseCardTypeById();
 
+export const selectBaseCardTypeIds = createSelector(
+  orm,
+  ({ BaseCardType }) => BaseCardType.all()
+    .toRefArray()
+    .map((item) => item.id),
+);
+
 export default {
   makeSelectCardTypeById,
   selectCardTypeById,
@@ -72,4 +79,5 @@ export default {
   selectCardTypeIdsByProjectId,
   makeSelectBaseCardTypeById,
   selectBaseCardTypeById,
+  selectBaseCardTypeIds,
 };

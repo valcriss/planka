@@ -64,6 +64,7 @@ export default {
       areYouSureYouWantToDeleteThisCustomFieldGroup:
         'Êtes-vous sûr de vouloir supprimer ce groupe de champs personnalisés ?',
       areYouSureYouWantToDeleteThisLabel: 'Êtes-vous sûr de vouloir supprimer cette étiquette ?',
+      areYouSureYouWantToDeleteThisCardType: 'Êtes-vous sûr de vouloir supprimer ce type de carte ?',
       areYouSureYouWantToDeleteThisList: 'Êtes-vous sûr de vouloir supprimer cette liste ?',
       areYouSureYouWantToDeleteThisNotificationService:
         'Êtes-vous sûr de vouloir supprimer ce service de notification ?',
@@ -141,6 +142,11 @@ export default {
       date: 'Date',
       deactivateUser_title: 'Désactiver l’utilisateur',
       defaultCardType_title: 'Type de carte par défaut',
+      cardType_title: 'Type de carte',
+      cardTypes_title: 'Types de carte',
+      createCardType_title: 'Créer un type de carte',
+      editCardType_title: 'Modifier le type de carte',
+      deleteCardType_title: 'Supprimer le type de carte',
       defaultView_title: 'Vue par défaut',
       deleteAllBoardsToBeAbleToDeleteThisProject:
         'Supprimer tous les tableaux pour pouvoir supprimer ce projet.',
@@ -364,6 +370,7 @@ export default {
       createCustomFieldGroup: 'Créer un groupe de champs personnalisés',
       createFile: 'Créer un fichier',
       createLabel: 'Créer une étiquette',
+      createCardType: 'Créer un type de carte',
       createNewLabel: 'Créer une nouvelle étiquette',
       createProject: 'Créer un projet',
       deactivateUser: 'Désactiver l’utilisateur',
@@ -383,6 +390,7 @@ export default {
       deleteForever_title: 'Supprimer définitivement',
       deleteGroup: 'Supprimer le groupe',
       deleteLabel: "Supprimer l'étiquette",
+      deleteCardType: 'Supprimer le type de carte',
       deleteList: 'Supprimer la liste',
       deleteList_title: 'Supprimer la liste',
       deleteNotificationService: 'Supprimer le service de notification',

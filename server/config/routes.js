@@ -99,6 +99,10 @@ module.exports.routes = {
   'PATCH /api/base-custom-field-groups/:id': 'base-custom-field-groups/update',
   'DELETE /api/base-custom-field-groups/:id': 'base-custom-field-groups/delete',
 
+  'POST /api/base-card-types': 'base-card-types/create',
+  'PATCH /api/base-card-types/:id': 'base-card-types/update',
+  'DELETE /api/base-card-types/:id': 'base-card-types/delete',
+
   'POST /api/projects/:projectId/boards': 'boards/create',
   'GET /api/boards/:id': 'boards/show',
   'PATCH /api/boards/:id': 'boards/update',

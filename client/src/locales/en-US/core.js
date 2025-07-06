@@ -57,6 +57,7 @@ export default {
       areYouSureYouWantToDeleteThisCustomFieldGroup:
         'Are you sure you want to delete this custom field group?',
       areYouSureYouWantToDeleteThisLabel: 'Are you sure you want to delete this label?',
+      areYouSureYouWantToDeleteThisCardType: 'Are you sure you want to delete this card type?',
       areYouSureYouWantToDeleteThisList:
         'Are you sure you want to delete this list? All cards will be moved to trash.',
       areYouSureYouWantToDeleteThisNotificationService:
@@ -132,6 +133,11 @@ export default {
       date: 'Date',
       deactivateUser_title: 'Deactivate User',
       defaultCardType_title: 'Default Card Type',
+      cardType_title: 'Card Type',
+      cardTypes_title: 'Card Types',
+      createCardType_title: 'Create Card Type',
+      editCardType_title: 'Edit Card Type',
+      deleteCardType_title: 'Delete Card Type',
       defaultView_title: 'Default View',
       deleteAllBoardsToBeAbleToDeleteThisProject:
         'Delete all boards to be able to delete this project',
@@ -355,6 +361,7 @@ export default {
       createCustomFieldGroup: 'Create custom field group',
       createFile: 'Create file',
       createLabel: 'Create label',
+      createCardType: 'Create card type',
       createNewLabel: 'Create new label',
       createProject: 'Create project',
       deactivateUser: 'Deactivate user',
@@ -374,6 +381,7 @@ export default {
       deleteForever_title: 'Delete Forever',
       deleteGroup: 'Delete group',
       deleteLabel: 'Delete label',
+      deleteCardType: 'Delete card type',
       deleteList: 'Delete list',
       deleteList_title: 'Delete List',
       deleteNotificationService: 'Delete notification service',
