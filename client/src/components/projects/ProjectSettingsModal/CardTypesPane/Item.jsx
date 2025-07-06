@@ -10,6 +10,9 @@ import { Button, Icon, Table } from 'semantic-ui-react';
 
 import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
+import { usePopupInClosableContext } from '../../../../hooks';
+import { CardTypeStep } from '../../../card-types';
+import ConfirmationStep from '../../ConfirmationStep';
 
 import styles from './Item.module.scss';
 
@@ -21,7 +24,10 @@ const Item = React.memo(({ id, isBase }) => {
   const item = useSelector((state) => selectById(state, id));
   const dispatch = useDispatch();
 
-  const handleDelete = useCallback(() => {
+  const EditPopup = usePopupInClosableContext(CardTypeStep);
+  const ConfirmationPopup = usePopupInClosableContext(ConfirmationStep);
+
+  const handleDeleteConfirm = useCallback(() => {
     dispatch(entryActions.deleteCardType(id));
   }, [dispatch, id]);
 
@@ -33,11 +39,28 @@ const Item = React.memo(({ id, isBase }) => {
       <Table.Cell>{item.name}</Table.Cell>
       {!isBase && (
         <Table.Cell textAlign="right">
-          <Button type="button" className={styles.button} onClick={handleDelete}>
-            <Icon fitted name="trash alternate outline" />
-          </Button>
+          <EditPopup id={id}>
+            <Button className={styles.button}>
+              <Icon fitted name="pencil" />
+            </Button>
+          </EditPopup>
         </Table.Cell>
       )}
+      {!isBase && (
+        <Table.Cell textAlign="right">
+          <ConfirmationPopup
+            title="common.deleteCardType"
+            content="common.areYouSureYouWantToDeleteThisCardType"
+            buttonContent="action.deleteCardType"
+            onConfirm={handleDeleteConfirm}
+          >
+            <Button type="button" className={styles.button}>
+              <Icon fitted name="trash alternate outline" />
+            </Button>
+          </ConfirmationPopup>
+        </Table.Cell>
+      )}
+      {isBase && <Table.Cell />}
       {isBase && <Table.Cell />}
     </Table.Row>
   );

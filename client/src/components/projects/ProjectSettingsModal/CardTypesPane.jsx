@@ -52,6 +52,7 @@ const CardTypesPane = React.memo(() => {
                 <Table.HeaderCell width={2}>{t('common.icon')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('common.title')}</Table.HeaderCell>
                 <Table.HeaderCell width={1} />
+                <Table.HeaderCell width={1} />
               </Table.Row>
             </Table.Header>
             <Table.Body>
