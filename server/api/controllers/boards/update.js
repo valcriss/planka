@@ -35,6 +35,10 @@ module.exports = {
       isIn: Object.values(Card.Types),
       allowNull: true,
     },
+    defaultCardTypeId: {
+      type: 'number',
+      allowNull: true,
+    },
     limitCardTypesToDefaultOne: {
       type: 'boolean',
       allowNull: true,
@@ -77,6 +81,7 @@ module.exports = {
         'name',
         'defaultView',
         'defaultCardType',
+        'defaultCardTypeId',
         'limitCardTypesToDefaultOne',
         'alwaysDisplayCardCreator',
       );
@@ -94,6 +99,7 @@ module.exports = {
       'name',
       'defaultView',
       'defaultCardType',
+      'defaultCardTypeId',
       'limitCardTypesToDefaultOne',
       'alwaysDisplayCardCreator',
       'isSubscribed',

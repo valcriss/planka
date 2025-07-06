@@ -33,6 +33,10 @@ module.exports = {
       maxLength: 128,
       required: true,
     },
+    defaultCardTypeId: {
+      type: 'number',
+      allowNull: true,
+    },
     importType: {
       type: 'string',
       isIn: Object.values(Board.ImportTypes),
@@ -101,7 +105,7 @@ module.exports = {
       }
     }
 
-    const values = _.pick(inputs, ['position', 'name']);
+    const values = _.pick(inputs, ['position', 'name', 'defaultCardTypeId']);
 
     const { board, boardMembership } = await sails.helpers.boards.createOne.with({
       values: {
