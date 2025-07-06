@@ -45,6 +45,11 @@ export default class extends BaseModel {
           });
         }
         break;
+      case ActionTypes.CARD_TYPES_FETCH__SUCCESS:
+        payload.cardTypes.forEach((item) => {
+          CardType.upsert(item);
+        });
+        break;
       case ActionTypes.CARD_TYPE_CREATE:
         CardType.upsert(payload.cardType);
         break;

@@ -95,6 +95,21 @@ const handleCardTypeDelete = (cardType) => ({
   },
 });
 
+const fetchCardTypes = (projectId) => ({
+  type: ActionTypes.CARD_TYPES_FETCH,
+  payload: { projectId },
+});
+
+fetchCardTypes.success = (projectId, cardTypes) => ({
+  type: ActionTypes.CARD_TYPES_FETCH__SUCCESS,
+  payload: { projectId, cardTypes },
+});
+
+fetchCardTypes.failure = (projectId, error) => ({
+  type: ActionTypes.CARD_TYPES_FETCH__FAILURE,
+  payload: { projectId, error },
+});
+
 export default {
   createCardType,
   handleCardTypeCreate,
@@ -102,4 +117,5 @@ export default {
   handleCardTypeUpdate,
   deleteCardType,
   handleCardTypeDelete,
+  fetchCardTypes,
 };

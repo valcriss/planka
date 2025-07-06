@@ -32,5 +32,9 @@ export default function* cardTypesWatchers() {
       EntryActionTypes.CARD_TYPE_DELETE_HANDLE,
       ({ payload: { cardType } }) => services.handleCardTypeDelete(cardType),
     ),
+    takeEvery(
+      EntryActionTypes.CARD_TYPES_FETCH,
+      ({ payload: { projectId } }) => services.fetchCardTypes(projectId),
+    ),
   ]);
 }

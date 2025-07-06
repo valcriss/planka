@@ -14,8 +14,12 @@ const updateCardType = (id, data, headers) =>
 const deleteCardType = (id, headers) =>
   socket.delete(`/card-types/${id}`, undefined, headers);
 
+const getCardTypes = (projectId, headers) =>
+  socket.get(`/projects/${projectId}/card-types`, undefined, headers);
+
 export default {
   createCardType,
   updateCardType,
   deleteCardType,
+  getCardTypes,
 };

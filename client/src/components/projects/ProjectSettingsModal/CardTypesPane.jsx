@@ -33,7 +33,10 @@ const CardTypesPane = React.memo(() => {
 
   useEffect(() => {
     dispatch(entryActions.fetchBaseCardTypes());
-  }, [dispatch]);
+    if (projectId) {
+      dispatch(entryActions.fetchCardTypes(projectId));
+    }
+  }, [dispatch, projectId]);
 
   return (
     <Tab.Pane attached={false} className={styles.wrapper}>

@@ -104,6 +104,8 @@ module.exports.routes = {
   'DELETE /api/base-card-types/:id': 'base-card-types/delete',
   'GET /api/base-card-types': 'base-card-types/index',
 
+  'GET /api/projects/:projectId/card-types': 'card-types/index',
+
   'POST /api/projects/:projectId/card-types': 'card-types/create',
   'PATCH /api/card-types/:id': 'card-types/update',
   'DELETE /api/card-types/:id': 'card-types/delete',

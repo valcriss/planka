@@ -52,7 +52,10 @@ const EditDefaultCardTypeStep = React.memo(({ listId, onBack, onClose }) => {
 
   useEffect(() => {
     dispatch(entryActions.fetchBaseCardTypes());
-  }, [dispatch]);
+    if (board) {
+      dispatch(entryActions.fetchCardTypes(board.projectId));
+    }
+  }, [dispatch, board]);
 
   const handleSelect = useCallback(
     (defaultCardTypeId) => {

@@ -35,6 +35,11 @@ const handleCardTypeDelete = (cardType) => ({
   payload: { cardType },
 });
 
+const fetchCardTypes = (projectId) => ({
+  type: EntryActionTypes.CARD_TYPES_FETCH,
+  payload: { projectId },
+});
+
 export default {
   createCardTypeInCurrentProject,
   handleCardTypeCreate,
@@ -42,4 +47,5 @@ export default {
   handleCardTypeUpdate,
   deleteCardType,
   handleCardTypeDelete,
+  fetchCardTypes,
 };

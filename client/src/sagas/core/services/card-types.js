@@ -74,6 +74,18 @@ export function* handleCardTypeDelete(cardType) {
   yield put(actions.handleCardTypeDelete(cardType));
 }
 
+export function* fetchCardTypes(projectId) {
+  let cardTypes;
+  try {
+    ({ items: cardTypes } = yield call(request, api.getCardTypes, projectId));
+  } catch (error) {
+    yield put(actions.fetchCardTypes.failure(projectId, error));
+    return;
+  }
+
+  yield put(actions.fetchCardTypes.success(projectId, cardTypes));
+}
+
 export default {
   createCardType,
   createCardTypeInCurrentProject,
@@ -82,4 +94,5 @@ export default {
   handleCardTypeUpdate,
   deleteCardType,
   handleCardTypeDelete,
+  fetchCardTypes,
 };

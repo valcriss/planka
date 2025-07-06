@@ -49,7 +49,10 @@ const DefaultCardType = React.memo(() => {
 
   useEffect(() => {
     dispatch(entryActions.fetchBaseCardTypes());
-  }, [dispatch]);
+    if (board.projectId) {
+      dispatch(entryActions.fetchCardTypes(board.projectId));
+    }
+  }, [dispatch, board.projectId]);
 
   useEffect(() => {
     if (!board.defaultCardTypeId && allTypes.length > 0) {
