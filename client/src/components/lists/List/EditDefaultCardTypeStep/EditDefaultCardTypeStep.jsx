@@ -9,9 +9,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Popup } from '../../../../lib/custom-ui';
 
-import selectors from '../../../selectors';
-import cardTypeSelectors from '../../../selectors/card-types';
-import entryActions from '../../../entry-actions';
+import selectors from '../../../../selectors';
+import cardTypeSelectors from '../../../../selectors/card-types';
+import entryActions from '../../../../entry-actions';
 import SelectCardType from '../../cards/SelectCardType';
 
 const EditDefaultCardTypeStep = React.memo(({ listId, onBack, onClose }) => {
