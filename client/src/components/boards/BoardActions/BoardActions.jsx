@@ -15,6 +15,8 @@ import BoardMemberships from '../../board-memberships/BoardMemberships';
 import styles from './BoardActions.module.scss';
 
 const BoardActions = React.memo(() => {
+  const { ownerProjectManagerId } = useSelector(selectors.selectCurrentProject);
+
   const withMemberships = useSelector((state) => {
     const boardMemberships = selectors.selectMembershipsForCurrentBoard(state);
 
@@ -25,10 +27,12 @@ const BoardActions = React.memo(() => {
     return selectors.selectIsCurrentUserManagerForCurrentProject(state);
   });
 
+  const showMemberships = withMemberships && !ownerProjectManagerId;
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.actions}>
-        {withMemberships && (
+        {showMemberships && (
           <div className={styles.action}>
             <BoardMemberships />
           </div>
