@@ -44,6 +44,8 @@ const COLORS = [
   'turquoise-sea',
 ];
 
+const HEX_COLOR_REGEX = /^#[0-9a-fA-F]{6}$/;
+
 module.exports = {
   Types,
   SortFieldNames,
@@ -72,7 +74,7 @@ module.exports = {
     },
     color: {
       type: 'string',
-      isIn: COLORS,
+      custom: (value) => HEX_COLOR_REGEX.test(value) || COLORS.includes(value),
       allowNull: true,
     },
 

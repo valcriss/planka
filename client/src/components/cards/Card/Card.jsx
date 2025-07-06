@@ -90,14 +90,17 @@ const Card = React.memo(({ id, isInline }) => {
     }
   }
 
-  const colorLineNode = list.color && (
-    <div
-      className={classNames(
-        styles.colorLine,
-        globalStyles[`background${upperFirst(camelCase(list.color))}`],
-      )}
-    />
-  );
+  const colorLineNode =
+    list.color && (
+      <div
+        className={classNames(
+          styles.colorLine,
+          !list.color.startsWith('#') &&
+            globalStyles[`background${upperFirst(camelCase(list.color))}`],
+        )}
+        style={list.color.startsWith('#') ? { backgroundColor: list.color } : null}
+      />
+    );
 
   return (
     <div

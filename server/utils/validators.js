@@ -12,6 +12,7 @@ const MAX_STRING_ID = '9223372036854775807';
 const ID_REGEX = /^[1-9][0-9]*$/;
 const IDS_WITH_COMMA_REGEX = /^[1-9][0-9]*(,[1-9][0-9]*)*$/;
 const USERNAME_REGEX = /^[a-zA-Z0-9]+((_|\.)?[a-zA-Z0-9])*$/;
+const HEX_COLOR_REGEX = /^#[0-9a-fA-F]{6}$/;
 
 const isUrl = (value) =>
   validator.isURL(value, {
@@ -36,6 +37,8 @@ const isEmailOrUsername = (value) =>
     : value.length >= 3 && value.length <= 16 && USERNAME_REGEX.test(value);
 
 const isDueDate = (value) => moment(value, moment.ISO_8601, true).isValid();
+
+const isHexColor = (value) => HEX_COLOR_REGEX.test(value);
 
 const isStopwatch = (value) => {
   if (!_.isPlainObject(value) || _.size(value) !== 2) {
@@ -68,5 +71,6 @@ module.exports = {
   isPassword,
   isEmailOrUsername,
   isDueDate,
+  isHexColor,
   isStopwatch,
 };

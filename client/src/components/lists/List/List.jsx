@@ -177,8 +177,10 @@ const List = React.memo(({ id, index }) => {
                       name="circle"
                       className={classNames(
                         styles.headerNameColor,
-                        globalStyles[`color${upperFirst(camelCase(list.color))}`],
+                        !list.color.startsWith('#') &&
+                          globalStyles[`color${upperFirst(camelCase(list.color))}`],
                       )}
+                      style={list.color.startsWith('#') ? { color: list.color } : null}
                     />
                   )}
                   {list.name}

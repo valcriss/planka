@@ -72,6 +72,18 @@ const EditColorStep = React.memo(({ listId, onBack, onClose }) => {
             />
           ))}
         </div>
+        <input
+          type="color"
+          className={styles.colorInput}
+          defaultValue={defaultValue && defaultValue.startsWith('#') ? defaultValue : '#000000'}
+          onChange={(e) =>
+            dispatch(
+              entryActions.updateList(listId, {
+                color: e.target.value,
+              }),
+            )
+          }
+        />
         {defaultValue && (
           <Button
             fluid
