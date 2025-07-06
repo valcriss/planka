@@ -8,6 +8,7 @@ module.exports = {
     baseCardTypeId: {
       model: 'BaseCardType',
       columnName: 'base_card_type_id',
+      allowNull: true,
     },
     name: {
       type: 'string',

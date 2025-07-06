@@ -14,10 +14,8 @@ describe('CardType (model)', () => {
   });
 
   it('should create base and project card types', async () => {
-    const base = await BaseCardType.qm.createOne({ name: 'bug' });
     const cardType = await CardType.qm.createOne({
       projectId: project.id,
-      baseCardTypeId: base.id,
       name: 'Bug',
     });
 

@@ -19,7 +19,7 @@ exports.up = async (knex) => {
   await knex.schema.createTable('card_type', (table) => {
     table.bigInteger('id').primary().defaultTo(knex.raw('next_id()'));
     table.bigInteger('project_id').notNullable();
-    table.bigInteger('base_card_type_id').notNullable();
+    table.bigInteger('base_card_type_id');
     table.text('name').notNullable();
     table.text('icon');
     table.text('color');
