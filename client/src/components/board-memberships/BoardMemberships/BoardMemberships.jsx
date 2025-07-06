@@ -21,11 +21,6 @@ import styles from './BoardMemberships.module.scss';
 const BoardMemberships = React.memo(() => {
   const boardMemberships = useSelector(selectors.selectMembershipsForCurrentBoard);
   const { ownerProjectManagerId } = useSelector(selectors.selectCurrentProject);
-
-  if (ownerProjectManagerId) {
-    return null;
-  }
-
   const canAdd = useSelector((state) => {
     const user = selectors.selectCurrentUser(state);
 
@@ -42,6 +37,10 @@ const BoardMemberships = React.memo(() => {
   );
 
   const AddPopup = usePopup(AddStep);
+
+  if (ownerProjectManagerId) {
+    return null;
+  }
 
   return (
     <>
