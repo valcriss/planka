@@ -51,6 +51,10 @@ module.exports = {
       defaultsTo: Card.Types.PROJECT,
       columnName: 'default_card_type',
     },
+    defaultCardTypeId: {
+      model: 'CardType',
+      columnName: 'default_card_type_id',
+    },
     limitCardTypesToDefaultOne: {
       type: 'boolean',
       defaultsTo: false,
