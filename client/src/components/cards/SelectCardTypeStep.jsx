@@ -11,7 +11,7 @@ import { Button, Form } from 'semantic-ui-react';
 import { Popup } from '../../lib/custom-ui';
 
 import SelectCardType from './SelectCardType';
-import entryActions from '../entry-actions';
+import entryActions from '../../entry-actions';
 
 const SelectCardTypeStep = React.memo(
   ({ projectId, defaultValue, title, withButton, buttonContent, onSelect, onBack, onClose }) => {
