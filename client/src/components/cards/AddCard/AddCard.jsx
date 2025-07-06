@@ -104,11 +104,10 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) 
   }, [submit]);
 
   const handleTypeSelect = useCallback(
-    (typeId, typeName) => {
+    (typeId) => {
       setData((prevData) => ({
         ...prevData,
         cardTypeId: typeId,
-        type: typeName || prevData.type,
       }));
     },
     [setData],
