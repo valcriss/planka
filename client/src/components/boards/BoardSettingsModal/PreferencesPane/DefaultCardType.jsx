@@ -24,10 +24,10 @@ const DefaultCardType = React.memo(() => {
   const [t] = useTranslation();
 
   const handleSelect = useCallback(
-    (defaultCardType) => {
+    (defaultCardTypeId) => {
       dispatch(
         entryActions.updateBoard(boardId, {
-          defaultCardType,
+          defaultCardTypeId,
         }),
       );
     },
@@ -47,7 +47,11 @@ const DefaultCardType = React.memo(() => {
 
   return (
     <>
-      <SelectCardType value={board.defaultCardType} onSelect={handleSelect} />
+      <SelectCardType
+        projectId={board.projectId}
+        value={board.defaultCardTypeId}
+        onSelect={handleSelect}
+      />
       <Segment basic className={styles.settings}>
         <Radio
           toggle
