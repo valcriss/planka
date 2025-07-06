@@ -14,7 +14,7 @@ module.exports = {
     id: { ...idInput, required: true },
     name: { type: 'string' },
     icon: { type: 'string' },
-    color: { type: 'string' },
+    color: { type: 'string', allowNull: true },
     hasStopwatch: { type: 'boolean' },
     hasTaskList: { type: 'boolean' },
     canLinkCards: { type: 'boolean' },

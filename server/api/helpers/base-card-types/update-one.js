@@ -7,7 +7,11 @@ module.exports = {
   },
 
   async fn(inputs) {
-    const { values } = inputs;
+    const values = { ...inputs.values };
+
+    if (Object.prototype.hasOwnProperty.call(values, 'color') && values.color == null) {
+      values.color = '#000000';
+    }
 
     const baseCardType = await BaseCardType.qm.updateOne(inputs.record.id, values);
 

@@ -7,7 +7,7 @@ module.exports = {
   inputs: {
     name: { type: 'string', required: true },
     icon: { type: 'string' },
-    color: { type: 'string' },
+    color: { type: 'string', allowNull: true },
     hasStopwatch: { type: 'boolean', defaultsTo: true },
     hasTaskList: { type: 'boolean', defaultsTo: true },
     canLinkCards: { type: 'boolean', defaultsTo: true },

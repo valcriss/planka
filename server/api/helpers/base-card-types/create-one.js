@@ -6,7 +6,11 @@ module.exports = {
   },
 
   async fn(inputs) {
-    const { values } = inputs;
+    const values = { ...inputs.values };
+
+    if (values.color == null) {
+      values.color = '#000000';
+    }
 
     const baseCardType = await BaseCardType.qm.createOne(values);
 
