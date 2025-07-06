@@ -51,6 +51,11 @@ const ProjectContent = React.memo(({ onClose }) => {
 
   const card = useSelector(selectors.selectCurrentCard);
   const board = useSelector(selectors.selectCurrentBoard);
+  const cardType = useSelector((state) =>
+    card.cardTypeId ? selectors.selectCardTypeById(state, card.cardTypeId) : null,
+  );
+  const hasStopwatchFeature = cardType ? cardType.hasStopwatch : true;
+  const hasTaskListFeature = cardType ? cardType.hasTaskList : true;
   const userIds = useSelector(selectors.selectUserIdsForCurrentCard);
   const labelIds = useSelector(selectors.selectLabelIdsForCurrentCard);
   const attachmentIds = useSelector(selectors.selectAttachmentIdsForCurrentCard);
@@ -125,7 +130,7 @@ const ProjectContent = React.memo(({ onClose }) => {
       canEditName: isEditor,
       canEditDescription: isEditor,
       canEditDueDate: isEditor,
-      canEditStopwatch: isEditor,
+      canEditStopwatch: isEditor && hasStopwatchFeature,
       canSubscribe: isMember,
       canJoin: isEditor,
       canDuplicate: isEditor,
@@ -136,7 +141,7 @@ const ProjectContent = React.memo(({ onClose }) => {
       canUseLists: isEditor,
       canUseMembers: isEditor,
       canUseLabels: isEditor,
-      canAddTaskList: isEditor,
+      canAddTaskList: isEditor && hasTaskListFeature,
       canAddAttachment: isEditor,
       canAddCustomFieldGroup: isEditor,
     };
@@ -541,7 +546,7 @@ const ProjectContent = React.memo(({ onClose }) => {
             </div>
           )}
           <CustomFieldGroups />
-          <TaskLists />
+          {hasTaskListFeature && <TaskLists />}
           {attachmentIds.length > 0 && (
             <div className={styles.contentModule}>
               <div className={styles.moduleWrapper}>
