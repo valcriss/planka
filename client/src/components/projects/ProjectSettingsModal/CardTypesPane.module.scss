@@ -1,17 +1,39 @@
 :global(#app) {
   .wrapper {
-    padding: 0;
+    border: none;
+    box-shadow: none;
   }
 
   .actions {
-    margin-bottom: 16px;
+    text-align: right;
+    margin-bottom: 1rem;
+
+    &:after {
+      clear: both;
+      content: '';
+      display: table;
+    }
   }
 
   .addButton {
-    margin-bottom: 8px;
+    margin-right: 0;
   }
 
   .tableWrapper {
-    overflow-x: auto;
+    margin-right: -2.5rem;
+    overflow: auto;
+    padding-right: 2.5rem;
+
+    @supports (-moz-appearance: none) {
+      scrollbar-color: rgba(0, 0, 0, 0.32) transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+    }
   }
 }
