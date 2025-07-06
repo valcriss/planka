@@ -12,7 +12,7 @@ import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
 import { usePopupInClosableContext } from '../../../../hooks';
 import { CardTypeStep } from '../../../card-types';
-import ConfirmationStep from '../../ConfirmationStep';
+import ConfirmationStep from '../../../common/ConfirmationStep';
 
 import styles from './Item.module.scss';
 
