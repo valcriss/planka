@@ -4,40 +4,51 @@
  */
 
 import React from 'react';
-import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-import { Icon, Tab } from 'semantic-ui-react';
+import { useTranslation } from 'react-i18next';
+import { Button, Tab, Table } from 'semantic-ui-react';
 
 import selectors from '../../../selectors';
 import { usePopupInClosableContext } from '../../../hooks';
-import BaseCardTypeChip from '../../base-card-types/BaseCardTypeChip';
-import BaseCardTypeStep from '../../base-card-types/BaseCardTypeStep';
 import AddBaseCardTypeStep from '../../base-card-types/AddBaseCardTypeStep';
+import Item from './BaseCardTypesPane/Item';
 
 import styles from './BaseCardTypesPane.module.scss';
 
 const BaseCardTypesPane = React.memo(() => {
   const baseCardTypeIds = useSelector(selectors.selectBaseCardTypeIds);
 
-  const BaseCardTypePopup = usePopupInClosableContext(BaseCardTypeStep);
   const AddBaseCardTypePopup = usePopupInClosableContext(AddBaseCardTypeStep);
+  const [t] = useTranslation();
 
   return (
     <Tab.Pane attached={false} className={styles.wrapper}>
-      <div className={styles.types}>
-        {baseCardTypeIds.map((baseCardTypeId) => (
-          <span key={baseCardTypeId} className={styles.type}>
-            <BaseCardTypePopup id={baseCardTypeId}>
-              <BaseCardTypeChip id={baseCardTypeId} />
-            </BaseCardTypePopup>
-          </span>
-        ))}
+      <div className={styles.actions}>
         <AddBaseCardTypePopup>
-          <button type="button" className={classNames(styles.type, styles.addTypeButton)}>
-            <Icon name="plus" size="small" className={styles.addTypeButtonIcon} />
-          </button>
+          <Button positive className={styles.addButton}>
+            {t('action.createCardType')}
+          </Button>
         </AddBaseCardTypePopup>
       </div>
+      {baseCardTypeIds.length > 0 && (
+        <div className={styles.tableWrapper}>
+          <Table unstackable basic="very">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell width={2}>{t('common.icon')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.title')}</Table.HeaderCell>
+                <Table.HeaderCell width={1} />
+                <Table.HeaderCell width={1} />
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {baseCardTypeIds.map((baseCardTypeId) => (
+                <Item key={baseCardTypeId} id={baseCardTypeId} />
+              ))}
+            </Table.Body>
+          </Table>
+        </div>
+      )}
     </Tab.Pane>
   );
 });
