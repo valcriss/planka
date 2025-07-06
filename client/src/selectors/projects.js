@@ -202,6 +202,38 @@ export const selectManagerUserIdsForCurrentProject = createSelector(
   },
 );
 
+export const selectMemberUserIdsForCurrentProject = createSelector(
+  orm,
+  (state) => selectPath(state).projectId,
+  ({ Project }, id) => {
+    if (!id) {
+      return id;
+    }
+
+    const projectModel = Project.withId(id);
+
+    if (!projectModel) {
+      return projectModel;
+    }
+
+    const userIdSet = new Set();
+
+    projectModel
+      .getBoardsQuerySet()
+      .toModelArray()
+      .forEach((boardModel) => {
+        boardModel
+          .getMembershipsQuerySet()
+          .toRefArray()
+          .forEach((membership) => {
+            userIdSet.add(membership.userId);
+          });
+      });
+
+    return Array.from(userIdSet);
+  },
+);
+
 export const selectBackgroundImageIdsForCurrentProject = createSelector(
   orm,
   (state) => selectPath(state).projectId,
@@ -326,6 +358,7 @@ export default {
   selectCurrentProject,
   selectManagersForCurrentProject,
   selectManagerUserIdsForCurrentProject,
+  selectMemberUserIdsForCurrentProject,
   selectBackgroundImageIdsForCurrentProject,
   selectBaseCustomFieldGroupIdsForCurrentProject,
   selectBaseCustomFieldGroupsForCurrentProject,

@@ -71,6 +71,8 @@ export default {
       areYouSureYouWantToLeaveProject: 'Are you sure you want to leave the project?',
       areYouSureYouWantToMakeThisProjectShared:
         'Are you sure you want to make this project shared?',
+      areYouSureYouWantToMakeThisProjectPrivate:
+        'Are you sure you want to make this project private?',
       areYouSureYouWantToRemoveThisManagerFromProject:
         'Are you sure you want to remove this manager from the project?',
       areYouSureYouWantToRemoveThisMemberFromBoard:
@@ -205,6 +207,7 @@ export default {
       listActions_title: 'List Actions',
       lists: 'Lists',
       makeProjectShared_title: 'Make Project Shared',
+      makeProjectPrivate_title: 'Make Project Private',
       managers: 'Managers',
       memberActions_title: 'Member Actions',
       members: 'Members',
@@ -410,6 +413,8 @@ export default {
       makeCover_title: 'Make Cover',
       makeProjectShared: 'Make project shared',
       makeProjectShared_title: 'Make Project Shared',
+      makeProjectPrivate: 'Make project private',
+      makeProjectPrivate_title: 'Make Project Private',
       move: 'Move',
       moveCard_title: 'Move Card',
       remove: 'Remove',

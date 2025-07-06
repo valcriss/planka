@@ -78,6 +78,8 @@ export default {
       areYouSureYouWantToLeaveProject: 'Êtes-vous sûr de vouloir quitter ce projet ?',
       areYouSureYouWantToMakeThisProjectShared:
         "Etes-vous sûr de vouloir transformer ce projet en projet d'équipe ?",
+      areYouSureYouWantToMakeThisProjectPrivate:
+        'Êtes-vous sûr de vouloir transformer ce projet en projet privé ?',
       areYouSureYouWantToRemoveThisManagerFromProject:
         'Êtes-vous sûr de vouloir supprimer ce responsable du projet ?',
       areYouSureYouWantToRemoveThisMemberFromBoard:
@@ -214,6 +216,7 @@ export default {
       listActions_title: 'Liste des actions',
       lists: 'Listes',
       makeProjectShared_title: 'Transformer le projet en projet partagé',
+      makeProjectPrivate_title: 'Transformer le projet en projet privé',
       managers: 'Responsables',
       memberActions_title: 'Actions des membres',
       members: 'Membres',
@@ -419,6 +422,8 @@ export default {
       makeCover_title: 'Faire la couverture',
       makeProjectShared: "Transformer le projet en projet d'équipe",
       makeProjectShared_title: "Transformer le projet en projet d'équipe",
+      makeProjectPrivate: 'Transformer le projet en projet privé',
+      makeProjectPrivate_title: 'Transformer le projet en projet privé',
       move: 'Déplacer',
       moveCard_title: 'Déplacer la carte',
       remove: 'Supprimer',
