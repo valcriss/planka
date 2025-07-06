@@ -26,20 +26,20 @@ const SelectCardTypeStep = React.memo(
       }
     }, [dispatch, projectId]);
 
-    const handleSelect = useCallback(
-      (nextValue) => {
-        if (withButton) {
-          setValue(nextValue);
-        } else {
-          if (nextValue !== defaultValue) {
-            onSelect(nextValue);
-          }
-
-          onClose();
+  const handleSelect = useCallback(
+    (nextValue, nextName) => {
+      if (withButton) {
+        setValue(nextValue);
+      } else {
+        if (nextValue !== defaultValue) {
+          onSelect(nextValue, nextName);
         }
-      },
-      [defaultValue, withButton, onSelect, onClose],
-    );
+
+        onClose();
+      }
+    },
+    [defaultValue, withButton, onSelect, onClose],
+  );
 
     const handleSubmit = useCallback(() => {
       if (value !== defaultValue) {

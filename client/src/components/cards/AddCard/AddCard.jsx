@@ -108,7 +108,7 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) 
       setData((prevData) => ({
         ...prevData,
         cardTypeId: typeId,
-        type: typeName,
+        type: typeName || prevData.type,
       }));
     },
     [setData],
