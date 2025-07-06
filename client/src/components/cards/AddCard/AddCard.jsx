@@ -26,13 +26,22 @@ const DEFAULT_DATA = {
   cardTypeId: null,
 };
 
-const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
+const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) => {
   const {
-    defaultCardType: defaultType,
-    defaultCardTypeId: defaultTypeId,
+    defaultCardType: boardDefaultType,
+    defaultCardTypeId: boardDefaultTypeId,
     limitCardTypesToDefaultOne: limitTypesToDefaultOne,
     projectId,
   } = useSelector(selectors.selectCurrentBoard);
+
+  const selectListById = useMemo(() => selectors.makeSelectListById(), []);
+
+  const list = useSelector((state) =>
+    listId ? selectListById(state, listId) : null,
+  );
+
+  const defaultType = list && list.defaultCardTypeId ? list.defaultCardType : boardDefaultType;
+  const defaultTypeId = list && list.defaultCardTypeId ? list.defaultCardTypeId : boardDefaultTypeId;
 
   const [t] = useTranslation();
   const prevDefaultType = usePrevious(defaultType);
@@ -229,6 +238,7 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
 AddCard.propTypes = {
   isOpened: PropTypes.bool,
   className: PropTypes.string,
+  listId: PropTypes.string,
   onCreate: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
@@ -236,6 +246,7 @@ AddCard.propTypes = {
 AddCard.defaultProps = {
   isOpened: true,
   className: undefined,
+  listId: undefined,
 };
 
 export default AddCard;

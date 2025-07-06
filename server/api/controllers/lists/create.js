@@ -35,6 +35,15 @@ module.exports = {
       maxLength: 128,
       required: true,
     },
+    defaultCardTypeId: {
+      type: 'number',
+      allowNull: true,
+    },
+    defaultCardType: {
+      type: 'string',
+      isIn: Object.values(Card.Types),
+      allowNull: true,
+    },
   },
 
   exits: {
@@ -66,7 +75,13 @@ module.exports = {
       throw Errors.NOT_ENOUGH_RIGHTS;
     }
 
-    const values = _.pick(inputs, ['type', 'position', 'name']);
+    const values = _.pick(inputs, [
+      'type',
+      'position',
+      'name',
+      'defaultCardType',
+      'defaultCardTypeId',
+    ]);
 
     const list = await sails.helpers.lists.createOne.with({
       project,

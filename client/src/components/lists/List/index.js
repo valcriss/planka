@@ -4,5 +4,7 @@
  */
 
 import List from './List';
+import EditDefaultCardTypeStep from './EditDefaultCardTypeStep';
 
 export default List;
+export { EditDefaultCardTypeStep };

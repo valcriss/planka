@@ -10,6 +10,8 @@
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
+const Card = require('./Card');
+
 const Types = {
   ACTIVE: 'active',
   CLOSED: 'closed',
@@ -71,6 +73,16 @@ module.exports = {
       type: 'string',
       isNotEmptyString: true,
       allowNull: true,
+    },
+    defaultCardType: {
+      type: 'string',
+      isIn: Object.values(Card.Types),
+      defaultsTo: Card.Types.PROJECT,
+      columnName: 'default_card_type',
+    },
+    defaultCardTypeId: {
+      model: 'CardType',
+      columnName: 'default_card_type_id',
     },
     color: {
       type: 'string',

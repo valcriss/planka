@@ -400,6 +400,7 @@ export default {
       duplicateCard_title: 'Duplicate Card',
       edit: 'Edit',
       editColor_title: 'Edit Color',
+      editDefaultCardType_title: 'Edit Default Card Type',
       editDescription_title: 'Edit Description',
       editDueDate_title: 'Edit Due Date',
       editEmail_title: 'Edit E-mail',

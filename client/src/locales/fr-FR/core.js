@@ -409,6 +409,7 @@ export default {
       duplicateCard_title: 'Dupliquer la carte',
       edit: 'Modifier',
       editColor_title: 'Modifier la couleur',
+      editDefaultCardType_title: 'Modifier le type de carte par défaut',
       editDescription_title: 'Modifier la description',
       editDueDate_title: "Modifier la date d'échéance",
       editEmail_title: "Modifier l'e-mail",

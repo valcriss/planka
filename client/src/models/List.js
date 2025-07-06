@@ -37,6 +37,8 @@ export default class extends BaseModel {
     position: attr(),
     name: attr(),
     color: attr(),
+    defaultCardType: attr(),
+    defaultCardTypeId: attr(),
     lastCard: attr({
       getDefault: () => null,
     }),

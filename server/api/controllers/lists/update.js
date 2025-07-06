@@ -40,6 +40,15 @@ module.exports = {
       custom: (value) => HEX_COLOR_REGEX.test(value) || List.COLORS.includes(value),
       allowNull: true,
     },
+    defaultCardTypeId: {
+      type: 'number',
+      allowNull: true,
+    },
+    defaultCardType: {
+      type: 'string',
+      isIn: Object.values(Card.Types),
+      allowNull: true,
+    },
   },
 
   exits: {
@@ -78,7 +87,14 @@ module.exports = {
       throw Errors.NOT_ENOUGH_RIGHTS;
     }
 
-    const values = _.pick(inputs, ['type', 'position', 'name', 'color']);
+    const values = _.pick(inputs, [
+      'type',
+      'position',
+      'name',
+      'color',
+      'defaultCardType',
+      'defaultCardTypeId',
+    ]);
 
     list = await sails.helpers.lists.updateOne.with({
       values,
