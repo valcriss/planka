@@ -8,8 +8,8 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { Icon, Tab } from 'semantic-ui-react';
 
-import selectors from '../../selectors';
-import { usePopupInClosableContext } from '../../hooks';
+import selectors from '../../../selectors';
+import { usePopupInClosableContext } from '../../../hooks';
 import BaseCardTypeChip from '../base-card-types/BaseCardTypeChip';
 import BaseCardTypeStep from '../base-card-types/BaseCardTypeStep';
 import AddBaseCardTypeStep from '../base-card-types/AddBaseCardTypeStep';
