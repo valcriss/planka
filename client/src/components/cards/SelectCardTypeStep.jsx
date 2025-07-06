@@ -58,7 +58,7 @@ const SelectCardTypeStep = React.memo(
 );
 
 SelectCardTypeStep.propTypes = {
-  defaultValue: PropTypes.string.isRequired,
+  defaultValue: PropTypes.string,
   title: PropTypes.string,
   withButton: PropTypes.bool,
   buttonContent: PropTypes.string,
@@ -68,6 +68,7 @@ SelectCardTypeStep.propTypes = {
 };
 
 SelectCardTypeStep.defaultProps = {
+  defaultValue: undefined,
   title: 'common.selectType',
   withButton: false,
   buttonContent: 'action.selectType',
