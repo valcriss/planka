@@ -81,6 +81,18 @@ const createSocketEventsChannel = () =>
       emit(entryActions.handleBaseCustomFieldGroupDelete(item));
     };
 
+    const handleBaseCardTypeCreate = ({ item }) => {
+      emit(entryActions.handleBaseCardTypeCreate(item));
+    };
+
+    const handleBaseCardTypeUpdate = ({ item }) => {
+      emit(entryActions.handleBaseCardTypeUpdate(item));
+    };
+
+    const handleBaseCardTypeDelete = ({ item }) => {
+      emit(entryActions.handleBaseCardTypeDelete(item));
+    };
+
     const handleBoardCreate = ({ item, included: { boardMemberships }, requestId }) => {
       emit(entryActions.handleBoardCreate(item, boardMemberships, requestId));
     };
@@ -298,6 +310,10 @@ const createSocketEventsChannel = () =>
     socket.on('baseCustomFieldGroupUpdate', handleBaseCustomFieldGroupUpdate);
     socket.on('baseCustomFieldGroupDelete', handleBaseCustomFieldGroupDelete);
 
+    socket.on('baseCardTypeCreate', handleBaseCardTypeCreate);
+    socket.on('baseCardTypeUpdate', handleBaseCardTypeUpdate);
+    socket.on('baseCardTypeDelete', handleBaseCardTypeDelete);
+
     socket.on('boardCreate', handleBoardCreate);
     socket.on('boardUpdate', handleBoardUpdate);
     socket.on('boardDelete', handleBoardDelete);
@@ -387,6 +403,10 @@ const createSocketEventsChannel = () =>
       socket.off('baseCustomFieldGroupCreate', handleBaseCustomFieldGroupCreate);
       socket.off('baseCustomFieldGroupUpdate', handleBaseCustomFieldGroupUpdate);
       socket.off('baseCustomFieldGroupDelete', handleBaseCustomFieldGroupDelete);
+
+      socket.off('baseCardTypeCreate', handleBaseCardTypeCreate);
+      socket.off('baseCardTypeUpdate', handleBaseCardTypeUpdate);
+      socket.off('baseCardTypeDelete', handleBaseCardTypeDelete);
 
       socket.off('boardCreate', handleBoardCreate);
       socket.off('boardUpdate', handleBoardUpdate);

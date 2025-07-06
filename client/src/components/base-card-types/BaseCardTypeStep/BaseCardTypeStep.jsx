@@ -8,7 +8,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Button, Checkbox, Form } from 'semantic-ui-react';
+import { Button, Checkbox, Dropdown, Form, Icon } from 'semantic-ui-react';
 import { Input, Popup } from '../../../lib/custom-ui';
 
 import selectors from '../../../selectors';
@@ -17,6 +17,18 @@ import { useForm, useNestedRef, useSteps } from '../../../hooks';
 import ConfirmationStep from '../../common/ConfirmationStep';
 
 import styles from './BaseCardTypeStep.module.scss';
+
+const ICON_OPTIONS = [
+  'tasks',
+  'sticky note outline',
+  'file alternate outline',
+  'bookmark',
+  'flag',
+  'bug',
+  'calendar',
+  'book',
+  'bell',
+];
 
 const StepTypes = {
   DELETE: 'DELETE',
@@ -114,22 +126,38 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
             onChange={handleFieldChange}
           />
           <div className={styles.text}>{t('common.icon')}</div>
-          <Input
+          <Dropdown
             fluid
+            selection
+            search
             name="icon"
             value={data.icon}
-            maxLength={64}
+            options={ICON_OPTIONS.map((icon) => ({
+              key: icon,
+              text: icon,
+              value: icon,
+              content: (
+                <span>
+                  <Icon name={icon} /> {icon}
+                </span>
+              ),
+            }))}
             className={styles.field}
-            onChange={handleFieldChange}
+            onChange={(_, { value }) =>
+              handleFieldChange({ target: { name: 'icon', value } })
+            }
           />
           <div className={styles.text}>{t('common.color')}</div>
-          <Input
-            fluid
+          <input
+            type="color"
             name="color"
-            value={data.color}
-            maxLength={64}
-            className={styles.field}
-            onChange={handleFieldChange}
+            value={data.color || '#000000'}
+            className={styles.colorInput}
+            onChange={(e) =>
+              handleFieldChange({
+                target: { name: 'color', value: e.target.value },
+              })
+            }
           />
           <Form.Field>
             <Checkbox
