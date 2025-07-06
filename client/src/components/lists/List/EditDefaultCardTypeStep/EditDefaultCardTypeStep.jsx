@@ -16,6 +16,7 @@ import SelectCardType from '../../../cards/SelectCardType';
 
 const EditDefaultCardTypeStep = React.memo(({ listId, onBack, onClose }) => {
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
+  const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
   const selectCardTypeIdsByProjectId = useMemo(
     () => cardTypeSelectors.makeSelectCardTypeIdsByProjectId(),
     [],
@@ -30,8 +31,11 @@ const EditDefaultCardTypeStep = React.memo(({ listId, onBack, onClose }) => {
   );
 
   const list = useSelector((state) => selectListById(state, listId));
+  const board = useSelector((state) =>
+    list ? selectBoardById(state, list.boardId) : null,
+  );
   const cardTypeIds = useSelector((state) =>
-    selectCardTypeIdsByProjectId(state, list.board.projectId),
+    board ? selectCardTypeIdsByProjectId(state, board.projectId) : [],
   );
   const baseCardTypeIds = useSelector(cardTypeSelectors.selectBaseCardTypeIds);
 
@@ -68,11 +72,13 @@ const EditDefaultCardTypeStep = React.memo(({ listId, onBack, onClose }) => {
         {t('common.defaultCardType_title')}
       </Popup.Header>
       <Popup.Content>
-        <SelectCardType
-          projectId={list.board.projectId}
-          value={list.defaultCardTypeId}
-          onSelect={handleSelect}
-        />
+        {board && (
+          <SelectCardType
+            projectId={board.projectId}
+            value={list.defaultCardTypeId}
+            onSelect={handleSelect}
+          />
+        )}
       </Popup.Content>
     </>
   );
