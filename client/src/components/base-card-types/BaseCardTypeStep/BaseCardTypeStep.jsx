@@ -144,7 +144,7 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
             }))}
             className={styles.field}
             onChange={(_, { value }) =>
-              handleFieldChange({ target: { name: 'icon', value } })
+              handleFieldChange(null, { name: 'icon', value })
             }
           />
           <div className={styles.text}>{t('common.color')}</div>
@@ -154,9 +154,7 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
             value={data.color || '#000000'}
             className={styles.colorInput}
             onChange={(e) =>
-              handleFieldChange({
-                target: { name: 'color', value: e.target.value },
-              })
+              handleFieldChange(null, { name: 'color', value: e.target.value })
             }
           />
           <Form.Field>
@@ -165,7 +163,7 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
               checked={data.hasDescription}
               label={t('common.description')}
               onChange={(_, { checked }) =>
-                handleFieldChange({ target: { name: 'hasDescription', value: checked } })
+                handleFieldChange(null, { name: 'hasDescription', value: checked })
               }
             />
           </Form.Field>
@@ -175,7 +173,7 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
               checked={data.hasDueDate}
               label={t('common.dueDate')}
               onChange={(_, { checked }) =>
-                handleFieldChange({ target: { name: 'hasDueDate', value: checked } })
+                handleFieldChange(null, { name: 'hasDueDate', value: checked })
               }
             />
           </Form.Field>
@@ -185,7 +183,7 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
               checked={data.hasStopwatch}
               label={t('common.stopwatch')}
               onChange={(_, { checked }) =>
-                handleFieldChange({ target: { name: 'hasStopwatch', value: checked } })
+                handleFieldChange(null, { name: 'hasStopwatch', value: checked })
               }
             />
           </Form.Field>
@@ -195,7 +193,7 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
               checked={data.hasMembers}
               label={t('common.members')}
               onChange={(_, { checked }) =>
-                handleFieldChange({ target: { name: 'hasMembers', value: checked } })
+                handleFieldChange(null, { name: 'hasMembers', value: checked })
               }
             />
           </Form.Field>
