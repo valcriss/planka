@@ -51,10 +51,9 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
       name: baseCardType.name,
       icon: baseCardType.icon || '',
       color: baseCardType.color || '',
-      hasDescription: baseCardType.hasDescription,
-      hasDueDate: baseCardType.hasDueDate,
       hasStopwatch: baseCardType.hasStopwatch,
-      hasMembers: baseCardType.hasMembers,
+      hasTaskList: baseCardType.hasTaskList,
+      canLinkCards: baseCardType.canLinkCards,
     }),
     [baseCardType],
   );
@@ -159,21 +158,11 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
           />
           <Form.Field>
             <Checkbox
-              name="hasDescription"
-              checked={data.hasDescription}
-              label={t('common.description')}
+              name="hasTaskList"
+              checked={data.hasTaskList}
+              label={t('common.taskList_title')}
               onChange={(_, { checked }) =>
-                handleFieldChange(null, { name: 'hasDescription', value: checked })
-              }
-            />
-          </Form.Field>
-          <Form.Field>
-            <Checkbox
-              name="hasDueDate"
-              checked={data.hasDueDate}
-              label={t('common.dueDate')}
-              onChange={(_, { checked }) =>
-                handleFieldChange(null, { name: 'hasDueDate', value: checked })
+                handleFieldChange(null, { name: 'hasTaskList', value: checked })
               }
             />
           </Form.Field>
@@ -189,11 +178,11 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
           </Form.Field>
           <Form.Field>
             <Checkbox
-              name="hasMembers"
-              checked={data.hasMembers}
-              label={t('common.members')}
+              name="canLinkCards"
+              checked={data.canLinkCards}
+              label={t('common.linkCards')}
               onChange={(_, { checked }) =>
-                handleFieldChange(null, { name: 'hasMembers', value: checked })
+                handleFieldChange(null, { name: 'canLinkCards', value: checked })
               }
             />
           </Form.Field>

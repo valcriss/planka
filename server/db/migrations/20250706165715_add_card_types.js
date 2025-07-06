@@ -9,10 +9,9 @@ exports.up = async (knex) => {
     table.text('name').notNullable();
     table.text('icon');
     table.text('color');
-    table.boolean('has_description').notNullable().defaultTo(true);
-    table.boolean('has_due_date').notNullable().defaultTo(true);
     table.boolean('has_stopwatch').notNullable().defaultTo(true);
-    table.boolean('has_members').notNullable().defaultTo(true);
+    table.boolean('has_tasklist').notNullable().defaultTo(true);
+    table.boolean('can_link_cards').notNullable().defaultTo(true);
     table.timestamp('created_at', true);
     table.timestamp('updated_at', true);
   });
@@ -24,10 +23,9 @@ exports.up = async (knex) => {
     table.text('name').notNullable();
     table.text('icon');
     table.text('color');
-    table.boolean('has_description').notNullable().defaultTo(true);
-    table.boolean('has_due_date').notNullable().defaultTo(true);
     table.boolean('has_stopwatch').notNullable().defaultTo(true);
-    table.boolean('has_members').notNullable().defaultTo(true);
+    table.boolean('has_tasklist').notNullable().defaultTo(true);
+    table.boolean('can_link_cards').notNullable().defaultTo(true);
     table.timestamp('created_at', true);
     table.timestamp('updated_at', true);
     table.index('project_id');

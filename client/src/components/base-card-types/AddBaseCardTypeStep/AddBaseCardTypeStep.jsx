@@ -35,10 +35,9 @@ const AddBaseCardTypeStep = React.memo(({ onClose }) => {
     name: '',
     icon: '',
     color: '',
-    hasDescription: true,
-    hasDueDate: true,
     hasStopwatch: true,
-    hasMembers: true,
+    hasTaskList: true,
+    canLinkCards: true,
   });
 
   const [nameFieldRef, handleNameFieldRef] = useNestedRef('inputRef');
@@ -117,21 +116,11 @@ const AddBaseCardTypeStep = React.memo(({ onClose }) => {
           />
           <Form.Field>
             <Checkbox
-              name="hasDescription"
-              checked={data.hasDescription}
-              label={t('common.description')}
+              name="hasTaskList"
+              checked={data.hasTaskList}
+              label={t('common.taskList_title')}
               onChange={(_, { checked }) =>
-                handleFieldChange(null, { name: 'hasDescription', value: checked })
-              }
-            />
-          </Form.Field>
-          <Form.Field>
-            <Checkbox
-              name="hasDueDate"
-              checked={data.hasDueDate}
-              label={t('common.dueDate')}
-              onChange={(_, { checked }) =>
-                handleFieldChange(null, { name: 'hasDueDate', value: checked })
+                handleFieldChange(null, { name: 'hasTaskList', value: checked })
               }
             />
           </Form.Field>
@@ -147,11 +136,11 @@ const AddBaseCardTypeStep = React.memo(({ onClose }) => {
           </Form.Field>
           <Form.Field>
             <Checkbox
-              name="hasMembers"
-              checked={data.hasMembers}
-              label={t('common.members')}
+              name="canLinkCards"
+              checked={data.canLinkCards}
+              label={t('common.linkCards')}
               onChange={(_, { checked }) =>
-                handleFieldChange(null, { name: 'hasMembers', value: checked })
+                handleFieldChange(null, { name: 'canLinkCards', value: checked })
               }
             />
           </Form.Field>

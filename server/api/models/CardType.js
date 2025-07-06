@@ -21,25 +21,20 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
-    hasDescription: {
-      type: 'boolean',
-      defaultsTo: true,
-      columnName: 'has_description',
-    },
-    hasDueDate: {
-      type: 'boolean',
-      defaultsTo: true,
-      columnName: 'has_due_date',
-    },
     hasStopwatch: {
       type: 'boolean',
       defaultsTo: true,
       columnName: 'has_stopwatch',
     },
-    hasMembers: {
+    hasTaskList: {
       type: 'boolean',
       defaultsTo: true,
-      columnName: 'has_members',
+      columnName: 'has_tasklist',
+    },
+    canLinkCards: {
+      type: 'boolean',
+      defaultsTo: true,
+      columnName: 'can_link_cards',
     },
   },
   tableName: 'card_type',

@@ -284,6 +284,7 @@ export default {
       taskAssignmentAndProjectCompletion: 'Task assignment and project completion.',
       taskListActions_title: 'Task List Actions',
       taskList_title: 'Task List',
+      linkCards: 'Link cards',
       team: 'Team',
       thereIsNoPreviewAvailableForThisAttachment:
         'There is no preview available for this attachment.',

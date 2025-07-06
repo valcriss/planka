@@ -15,10 +15,9 @@ module.exports = {
     name: { type: 'string' },
     icon: { type: 'string' },
     color: { type: 'string' },
-    hasDescription: { type: 'boolean' },
-    hasDueDate: { type: 'boolean' },
     hasStopwatch: { type: 'boolean' },
-    hasMembers: { type: 'boolean' },
+    hasTaskList: { type: 'boolean' },
+    canLinkCards: { type: 'boolean' },
   },
 
   exits: {
@@ -38,10 +37,9 @@ module.exports = {
       'name',
       'icon',
       'color',
-      'hasDescription',
-      'hasDueDate',
       'hasStopwatch',
-      'hasMembers',
+      'hasTaskList',
+      'canLinkCards',
     ]);
 
     const updated = await sails.helpers.baseCardTypes.updateOne.with({

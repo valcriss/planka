@@ -293,6 +293,7 @@ export default {
       taskAssignmentAndProjectCompletion: 'Completion de tâches et d’un projet.',
       taskListActions_title: 'Actions de la liste de tâches',
       taskList_title: 'Liste de tâches',
+      linkCards: 'Lier les cartes',
       team: "Mes projets d'équipe",
       thereIsNoPreviewAvailableForThisAttachment:
         "Il n'y a pas d'aperçu disponible pour cette pièce jointe.",

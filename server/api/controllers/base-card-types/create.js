@@ -8,10 +8,9 @@ module.exports = {
     name: { type: 'string', required: true },
     icon: { type: 'string' },
     color: { type: 'string' },
-    hasDescription: { type: 'boolean', defaultsTo: true },
-    hasDueDate: { type: 'boolean', defaultsTo: true },
     hasStopwatch: { type: 'boolean', defaultsTo: true },
-    hasMembers: { type: 'boolean', defaultsTo: true },
+    hasTaskList: { type: 'boolean', defaultsTo: true },
+    canLinkCards: { type: 'boolean', defaultsTo: true },
   },
 
   async fn(inputs) {
@@ -21,10 +20,9 @@ module.exports = {
       'name',
       'icon',
       'color',
-      'hasDescription',
-      'hasDueDate',
       'hasStopwatch',
-      'hasMembers',
+      'hasTaskList',
+      'canLinkCards',
     ]);
 
     const baseCardType = await sails.helpers.baseCardTypes.createOne.with({

@@ -16,10 +16,9 @@ export default class extends BaseModel {
     name: attr(),
     icon: attr(),
     color: attr(),
-    hasDescription: attr({ getDefault: () => true }),
-    hasDueDate: attr({ getDefault: () => true }),
     hasStopwatch: attr({ getDefault: () => true }),
-    hasMembers: attr({ getDefault: () => true }),
+    hasTaskList: attr({ getDefault: () => true }),
+    canLinkCards: attr({ getDefault: () => true }),
     projectId: fk({ to: 'Project', as: 'project', relatedName: 'cardTypes' }),
     baseCardTypeId: fk({
       to: 'BaseCardType',
