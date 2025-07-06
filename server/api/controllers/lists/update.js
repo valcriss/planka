@@ -5,6 +5,8 @@
 
 const { idInput } = require('../../../utils/inputs');
 
+const HEX_COLOR_REGEX = /^#[0-9a-fA-F]{6}$/;
+
 const Errors = {
   NOT_ENOUGH_RIGHTS: {
     notEnoughRights: 'Not enough rights',
@@ -35,7 +37,7 @@ module.exports = {
     },
     color: {
       type: 'string',
-      isIn: List.COLORS,
+      custom: (value) => HEX_COLOR_REGEX.test(value) || List.COLORS.includes(value),
       allowNull: true,
     },
   },
