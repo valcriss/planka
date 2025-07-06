@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Radio, Segment } from 'semantic-ui-react';
 
 import selectors from '../../../../selectors';
+import cardTypeSelectors from '../../../../selectors/card-types';
 import entryActions from '../../../../entry-actions';
 import SelectCardType from '../../../cards/SelectCardType';
 
@@ -16,9 +17,32 @@ import styles from './DefaultCardType.module.scss';
 
 const DefaultCardType = React.memo(() => {
   const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
+  const selectCardTypeIdsByProjectId = useMemo(
+    () => cardTypeSelectors.makeSelectCardTypeIdsByProjectId(),
+    [],
+  );
+  const selectCardTypeById = useMemo(
+    () => cardTypeSelectors.makeSelectCardTypeById(),
+    [],
+  );
+  const selectBaseCardTypeById = useMemo(
+    () => cardTypeSelectors.makeSelectBaseCardTypeById(),
+    [],
+  );
 
   const boardId = useSelector((state) => selectors.selectCurrentModal(state).params.id);
   const board = useSelector((state) => selectBoardById(state, boardId));
+  const cardTypeIds = useSelector((state) =>
+    selectCardTypeIdsByProjectId(state, board.projectId),
+  );
+  const baseCardTypeIds = useSelector(cardTypeSelectors.selectBaseCardTypeIds);
+  const cardTypes = useSelector((state) =>
+    (cardTypeIds || []).map((id) => selectCardTypeById(state, id)),
+  );
+  const baseCardTypes = useSelector((state) =>
+    (baseCardTypeIds || []).map((id) => selectBaseCardTypeById(state, id)),
+  );
+  const allTypes = [...baseCardTypes, ...cardTypes];
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
@@ -26,6 +50,16 @@ const DefaultCardType = React.memo(() => {
   useEffect(() => {
     dispatch(entryActions.fetchBaseCardTypes());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!board.defaultCardTypeId && allTypes.length > 0) {
+      dispatch(
+        entryActions.updateBoard(boardId, {
+          defaultCardTypeId: allTypes[0].id,
+        }),
+      );
+    }
+  }, [board.defaultCardTypeId, allTypes, boardId, dispatch]);
 
   const handleSelect = useCallback(
     (defaultCardTypeId) => {
