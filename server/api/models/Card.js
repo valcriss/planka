@@ -25,7 +25,6 @@ module.exports = {
 
     type: {
       type: 'string',
-      isIn: Object.values(Types),
       required: true,
     },
     cardTypeId: {

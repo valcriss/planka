@@ -76,7 +76,6 @@ module.exports = {
     },
     defaultCardType: {
       type: 'string',
-      isIn: Object.values(Card.Types),
       defaultsTo: Card.Types.PROJECT,
       columnName: 'default_card_type',
     },

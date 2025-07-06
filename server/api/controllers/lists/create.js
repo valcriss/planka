@@ -12,6 +12,7 @@ const Errors = {
   BOARD_NOT_FOUND: {
     boardNotFound: 'Board not found',
   },
+  CARD_TYPE_NOT_FOUND: { cardTypeNotFound: 'Card type not found' },
 };
 
 module.exports = {
@@ -41,7 +42,6 @@ module.exports = {
     },
     defaultCardType: {
       type: 'string',
-      isIn: Object.values(Card.Types),
       allowNull: true,
     },
   },
@@ -53,6 +53,7 @@ module.exports = {
     boardNotFound: {
       responseType: 'notFound',
     },
+    cardTypeNotFound: { responseType: 'notFound' },
   },
 
   async fn(inputs) {
@@ -82,6 +83,18 @@ module.exports = {
       'defaultCardType',
       'defaultCardTypeId',
     ]);
+
+    if (values.defaultCardTypeId) {
+      const cardType = await CardType.qm.getOneById(values.defaultCardTypeId, {
+        projectId: project.id,
+      });
+
+      if (!cardType) {
+        throw Errors.CARD_TYPE_NOT_FOUND;
+      }
+
+      values.defaultCardType = cardType.name;
+    }
 
     const list = await sails.helpers.lists.createOne.with({
       project,

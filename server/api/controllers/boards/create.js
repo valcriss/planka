@@ -15,6 +15,7 @@ const Errors = {
   INVALID_IMPORT_FILE: {
     invalidImportFile: 'Invalid import file',
   },
+  CARD_TYPE_NOT_FOUND: { cardTypeNotFound: 'Card type not found' },
 };
 
 module.exports = {
@@ -61,6 +62,7 @@ module.exports = {
     uploadError: {
       responseType: 'unprocessableEntity',
     },
+    cardTypeNotFound: { responseType: 'notFound' },
   },
 
   async fn(inputs) {
@@ -106,6 +108,18 @@ module.exports = {
     }
 
     const values = _.pick(inputs, ['position', 'name', 'defaultCardTypeId']);
+
+    if (values.defaultCardTypeId) {
+      const cardType = await CardType.qm.getOneById(values.defaultCardTypeId, {
+        projectId: project.id,
+      });
+
+      if (!cardType) {
+        throw Errors.CARD_TYPE_NOT_FOUND;
+      }
+
+      values.defaultCardType = cardType.name;
+    }
 
     const { board, boardMembership } = await sails.helpers.boards.createOne.with({
       values: {

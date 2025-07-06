@@ -9,6 +9,7 @@ const Errors = {
   BOARD_NOT_FOUND: {
     boardNotFound: 'Board not found',
   },
+  CARD_TYPE_NOT_FOUND: { cardTypeNotFound: 'Card type not found' },
 };
 
 module.exports = {
@@ -32,7 +33,6 @@ module.exports = {
     },
     defaultCardType: {
       type: 'string',
-      isIn: Object.values(Card.Types),
       allowNull: true,
     },
     defaultCardTypeId: {
@@ -55,6 +55,7 @@ module.exports = {
     boardNotFound: {
       responseType: 'notFound',
     },
+    cardTypeNotFound: { responseType: 'notFound' },
   },
 
   async fn(inputs) {
@@ -104,6 +105,18 @@ module.exports = {
       'alwaysDisplayCardCreator',
       'isSubscribed',
     ]);
+
+    if (values.defaultCardTypeId) {
+      const cardType = await CardType.qm.getOneById(values.defaultCardTypeId, {
+        projectId: project.id,
+      });
+
+      if (!cardType) {
+        throw Errors.CARD_TYPE_NOT_FOUND;
+      }
+
+      values.defaultCardType = cardType.name;
+    }
 
     board = await sails.helpers.boards.updateOne.with({
       values,

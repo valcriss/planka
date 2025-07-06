@@ -14,6 +14,7 @@ const Errors = {
   LIST_NOT_FOUND: {
     listNotFound: 'List not found',
   },
+  CARD_TYPE_NOT_FOUND: { cardTypeNotFound: 'Card type not found' },
 };
 
 module.exports = {
@@ -46,7 +47,6 @@ module.exports = {
     },
     defaultCardType: {
       type: 'string',
-      isIn: Object.values(Card.Types),
       allowNull: true,
     },
   },
@@ -58,6 +58,7 @@ module.exports = {
     listNotFound: {
       responseType: 'notFound',
     },
+    cardTypeNotFound: { responseType: 'notFound' },
   },
 
   async fn(inputs) {
@@ -95,6 +96,18 @@ module.exports = {
       'defaultCardType',
       'defaultCardTypeId',
     ]);
+
+    if (values.defaultCardTypeId) {
+      const cardType = await CardType.qm.getOneById(values.defaultCardTypeId, {
+        projectId: project.id,
+      });
+
+      if (!cardType) {
+        throw Errors.CARD_TYPE_NOT_FOUND;
+      }
+
+      values.defaultCardType = cardType.name;
+    }
 
     list = await sails.helpers.lists.updateOne.with({
       values,
