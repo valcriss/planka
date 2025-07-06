@@ -30,29 +30,39 @@ const SelectCardType = React.memo(({ projectId, value, onSelect }) => {
     () => selectors.makeSelectCardTypeById(),
     [],
   );
+  const selectBaseCardTypeById = useMemo(
+    () => selectors.makeSelectBaseCardTypeById(),
+    [],
+  );
 
   const cardTypeIds = useSelector((state) =>
     selectCardTypeIdsByProjectId(state, projectId),
   );
+  const baseCardTypeIds = useSelector(selectors.selectBaseCardTypeIds);
 
   const cardTypes = useSelector((state) =>
     (cardTypeIds || []).map((id) => selectCardTypeById(state, id)),
   );
+  const baseCardTypes = useSelector((state) =>
+    (baseCardTypeIds || []).map((id) => selectBaseCardTypeById(state, id)),
+  );
+
+  const allTypes = [...baseCardTypes, ...cardTypes];
 
   const handleSelectClick = useCallback(
     (_, { value: nextValue }) => {
       if (nextValue !== value) {
-        const ct = cardTypes.find((item) => item && item.id === nextValue);
+        const ct = allTypes.find((item) => item && item.id === nextValue);
         onSelect(nextValue, ct ? ct.name : nextValue);
       }
     },
-    [value, onSelect, cardTypes],
+    [value, onSelect, allTypes],
   );
 
   return (
     <Menu secondary vertical className={styles.menu}>
-      {(cardTypes.length > 0
-        ? cardTypes
+      {(allTypes.length > 0
+        ? allTypes
         : [
             { id: CardTypes.PROJECT, name: CardTypes.PROJECT },
             { id: CardTypes.STORY, name: CardTypes.STORY },
@@ -67,9 +77,14 @@ const SelectCardType = React.memo(({ projectId, value, onSelect }) => {
         >
           <Icon
             name={(ct && ct.icon) || CardTypeIcons[ct.name]}
+            style={{ color: ct.color || '#000' }}
             className={styles.menuItemIcon}
           />
-          <div className={styles.menuItemTitle}>{t(`common.${ct.name}`)}</div>
+          <div className={styles.menuItemTitle}>
+            {ct.name === CardTypes.PROJECT || ct.name === CardTypes.STORY
+              ? t(`common.${ct.name}`)
+              : ct.name}
+          </div>
           <p className={styles.menuItemDescription}>{t(DESCRIPTION_BY_TYPE[ct.name] || '')}</p>
         </Menu.Item>
       ))}

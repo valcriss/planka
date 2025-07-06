@@ -3,7 +3,7 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Radio, Segment } from 'semantic-ui-react';
@@ -22,6 +22,10 @@ const DefaultCardType = React.memo(() => {
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
+
+  useEffect(() => {
+    dispatch(entryActions.fetchBaseCardTypes());
+  }, [dispatch]);
 
   const handleSelect = useCallback(
     (defaultCardTypeId) => {
