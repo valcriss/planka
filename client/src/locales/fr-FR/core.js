@@ -121,6 +121,7 @@ export default {
         '<0>Cliquez ici</0> ou rafraîchissez la page pour mettre à jour.',
       closed: 'Fermé',
       color: 'Couleur',
+      icon: 'Icône',
       comments: 'Commentaires',
       contentExceedsLimit: 'Le contenu dépasse la limite {{limit}}',
       contentOfThisAttachmentIsTooBigToDisplay:

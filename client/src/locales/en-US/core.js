@@ -113,6 +113,7 @@ export default {
       clickHereOrRefreshPageToUpdate: '<0>Click here</0> or refresh the page to update.',
       closed: 'Closed',
       color: 'Color',
+      icon: 'Icon',
       comments: 'Comments',
       contentExceedsLimit: 'Content exceeds {{limit}}',
       contentOfThisAttachmentIsTooBigToDisplay: 'Content of this attachment is too big to display.',
