@@ -209,8 +209,12 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
 
 BaseCardTypeStep.propTypes = {
   id: PropTypes.string.isRequired,
-  onBack: PropTypes.func.isRequired,
+  onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
+};
+
+BaseCardTypeStep.defaultProps = {
+  onBack: undefined,
 };
 
 export default BaseCardTypeStep;
