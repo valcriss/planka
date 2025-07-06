@@ -34,7 +34,7 @@ module.exports = {
       required: true,
     },
     defaultCardTypeId: {
-      type: 'number',
+      type: 'string',
       allowNull: true,
     },
     importType: {

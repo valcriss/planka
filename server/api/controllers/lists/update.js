@@ -41,7 +41,7 @@ module.exports = {
       allowNull: true,
     },
     defaultCardTypeId: {
-      type: 'number',
+      type: 'string',
       allowNull: true,
     },
     defaultCardType: {
