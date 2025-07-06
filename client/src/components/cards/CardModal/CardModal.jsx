@@ -86,6 +86,9 @@ const CardModal = React.memo(() => {
 
       break;
     default:
+      Content = ProjectContent;
+
+      break;
   }
 
   return (
