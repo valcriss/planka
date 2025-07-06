@@ -93,6 +93,18 @@ const createSocketEventsChannel = () =>
       emit(entryActions.handleBaseCardTypeDelete(item));
     };
 
+    const handleCardTypeCreate = ({ item }) => {
+      emit(entryActions.handleCardTypeCreate(item));
+    };
+
+    const handleCardTypeUpdate = ({ item }) => {
+      emit(entryActions.handleCardTypeUpdate(item));
+    };
+
+    const handleCardTypeDelete = ({ item }) => {
+      emit(entryActions.handleCardTypeDelete(item));
+    };
+
     const handleBoardCreate = ({ item, included: { boardMemberships }, requestId }) => {
       emit(entryActions.handleBoardCreate(item, boardMemberships, requestId));
     };
@@ -314,6 +326,10 @@ const createSocketEventsChannel = () =>
     socket.on('baseCardTypeUpdate', handleBaseCardTypeUpdate);
     socket.on('baseCardTypeDelete', handleBaseCardTypeDelete);
 
+    socket.on('cardTypeCreate', handleCardTypeCreate);
+    socket.on('cardTypeUpdate', handleCardTypeUpdate);
+    socket.on('cardTypeDelete', handleCardTypeDelete);
+
     socket.on('boardCreate', handleBoardCreate);
     socket.on('boardUpdate', handleBoardUpdate);
     socket.on('boardDelete', handleBoardDelete);
@@ -407,6 +423,10 @@ const createSocketEventsChannel = () =>
       socket.off('baseCardTypeCreate', handleBaseCardTypeCreate);
       socket.off('baseCardTypeUpdate', handleBaseCardTypeUpdate);
       socket.off('baseCardTypeDelete', handleBaseCardTypeDelete);
+
+      socket.off('cardTypeCreate', handleCardTypeCreate);
+      socket.off('cardTypeUpdate', handleCardTypeUpdate);
+      socket.off('cardTypeDelete', handleCardTypeDelete);
 
       socket.off('boardCreate', handleBoardCreate);
       socket.off('boardUpdate', handleBoardUpdate);

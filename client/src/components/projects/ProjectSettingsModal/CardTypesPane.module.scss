@@ -1,0 +1,17 @@
+:global(#app) {
+  .wrapper {
+    padding: 0;
+  }
+
+  .actions {
+    margin-bottom: 16px;
+  }
+
+  .addButton {
+    margin-bottom: 8px;
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+  }
+}
