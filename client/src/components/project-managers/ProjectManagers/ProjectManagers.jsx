@@ -18,6 +18,11 @@ import styles from './ProjectManagers.module.scss';
 
 const ProjectManagers = React.memo(() => {
   const projectManagers = useSelector(selectors.selectManagersForCurrentProject);
+  const { ownerProjectManagerId } = useSelector(selectors.selectCurrentProject);
+
+  if (ownerProjectManagerId) {
+    return null;
+  }
 
   const canAdd = useSelector((state) => {
     const user = selectors.selectCurrentUser(state);
