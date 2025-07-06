@@ -45,6 +45,16 @@ export default class extends BaseModel {
           });
         }
         break;
+      case ActionTypes.CARD_TYPE_CREATE:
+        CardType.upsert(payload.cardType);
+        break;
+      case ActionTypes.CARD_TYPE_CREATE__SUCCESS:
+        CardType.withId(payload.localId).delete();
+        CardType.upsert(payload.cardType);
+        break;
+      case ActionTypes.CARD_TYPE_CREATE__FAILURE:
+        CardType.withId(payload.localId).delete();
+        break;
       case ActionTypes.CARD_TYPE_CREATE_HANDLE:
       case ActionTypes.CARD_TYPE_UPDATE_HANDLE:
       case ActionTypes.CARD_TYPE_DELETE_HANDLE:
@@ -52,6 +62,22 @@ export default class extends BaseModel {
           CardType.upsert(payload.cardType);
         }
         break;
+      case ActionTypes.CARD_TYPE_UPDATE:
+        CardType.withId(payload.id).update(payload.data);
+        break;
+      case ActionTypes.CARD_TYPE_DELETE:
+        CardType.withId(payload.id).delete();
+        break;
+      case ActionTypes.CARD_TYPE_DELETE__SUCCESS:
+      case ActionTypes.CARD_TYPE_DELETE_HANDLE: {
+        const model = CardType.withId(payload.cardType.id);
+
+        if (model) {
+          model.delete();
+        }
+
+        break;
+      }
       default:
     }
   }
