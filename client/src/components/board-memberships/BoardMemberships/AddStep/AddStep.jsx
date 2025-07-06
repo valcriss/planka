@@ -25,8 +25,9 @@ const StepTypes = {
 const AddStep = React.memo(({ onClose }) => {
   const users = useSelector((state) => {
     const user = selectors.selectCurrentUser(state);
+    const project = selectors.selectCurrentProject(state);
 
-    if (!isUserAdminOrProjectOwner(user)) {
+    if (!isUserAdminOrProjectOwner(user) || project.ownerProjectManagerId) {
       return [user];
     }
 
