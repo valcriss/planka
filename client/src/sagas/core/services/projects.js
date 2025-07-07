@@ -154,9 +154,30 @@ export function* updateProject(id, data) {
 }
 
 export function* updateCurrentProject(data) {
-  const { projectId } = yield select(selectors.selectPath);
+  const { projectId, boardId } = yield select(selectors.selectPath);
+  const prevProject = yield select(selectors.selectProjectById, projectId);
+
+  let scrumBoards = [];
+
+  if (prevProject && prevProject.useScrum && data.useScrum === false) {
+    scrumBoards = yield select((state) => {
+      const ids = selectors.selectBoardIdsByProjectId(state, projectId);
+      return ids
+        .map((id) => selectors.selectBoardById(state, id))
+        .filter((b) => b && ['Backlog', 'Sprint'].includes(b.name));
+    });
+  }
 
   yield call(updateProject, projectId, data);
+
+  if (prevProject && prevProject.useScrum && data.useScrum === false) {
+    for (const board of scrumBoards) {
+      yield put(actions.handleBoardDelete(board));
+      if (board.id === boardId) {
+        yield call(goToProject, projectId);
+      }
+    }
+  }
 }
 
 export function* handleProjectUpdate(project) {
