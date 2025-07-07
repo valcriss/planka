@@ -28,6 +28,10 @@ module.exports = {
     request: {
       type: 'ref',
     },
+    allowFiniteList: {
+      type: 'boolean',
+      defaultsTo: false,
+    },
   },
 
   exits: {
@@ -38,8 +42,7 @@ module.exports = {
   async fn(inputs) {
     const { values } = inputs;
 
-    // TODO: allow for finite lists?
-    if (sails.helpers.lists.isFinite(values.list)) {
+    if (!inputs.allowFiniteList && sails.helpers.lists.isFinite(values.list)) {
       throw 'listInValuesMustBeEndless';
     }
 
