@@ -51,11 +51,6 @@ module.exports = {
       throw Errors.LIST_NOT_FOUND; // Forbidden
     }
 
-    // TODO: allow for other types?
-    if (list.type !== List.Types.CLOSED) {
-      throw Errors.NOT_ENOUGH_RIGHTS;
-    }
-
     if (boardMembership.role !== BoardMembership.Roles.EDITOR) {
       throw Errors.NOT_ENOUGH_RIGHTS;
     }
@@ -68,11 +63,6 @@ module.exports = {
       throw Errors.LIST_NOT_FOUND; // Forbidden
     }
 
-    // TODO: allow for other types?
-    if (nextList.type !== List.Types.ARCHIVE) {
-      throw Errors.LIST_NOT_FOUND;
-    }
-
     const { cards, actions } = await sails.helpers.lists.moveCards.with({
       project,
       board,
@@ -80,6 +70,7 @@ module.exports = {
       values: {
         list: nextList,
       },
+      allowFiniteList: sails.helpers.lists.isFinite(nextList),
       actorUser: currentUser,
       request: this.req,
     });
