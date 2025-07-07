@@ -39,6 +39,24 @@ const GeneralPane = React.memo(() => {
     [dispatch],
   );
 
+  const handleScrumToggleChange = useCallback(
+    (_, { checked }) => {
+      if (!checked) {
+        // eslint-disable-next-line no-alert
+        if (!window.confirm(t('common.areYouSureYouWantToDisableScrum'))) {
+          return;
+        }
+      }
+
+      dispatch(
+        entryActions.updateCurrentProject({
+          useScrum: checked,
+        }),
+      );
+    },
+    [dispatch, t],
+  );
+
   const handleDeleteConfirm = useCallback(() => {
     dispatch(entryActions.deleteCurrentProject());
   }, [dispatch]);
@@ -83,6 +101,14 @@ const GeneralPane = React.memo(() => {
             label={t('common.useStoryPointsInProject')}
             className={styles.radio}
             onChange={handleToggleChange}
+          />
+          <Radio
+            toggle
+            name="useScrum"
+            checked={project.useScrum}
+            label={t('common.useScrum')}
+            className={styles.radio}
+            onChange={handleScrumToggleChange}
           />
         </>
       )}

@@ -74,6 +74,8 @@ export default {
         'Are you sure you want to make this project shared?',
       areYouSureYouWantToMakeThisProjectPrivate:
         'Are you sure you want to make this project private?',
+      areYouSureYouWantToDisableScrum:
+        'Disabling scrum will delete the "Backlog" and "Sprint" boards and their content. Are you sure?',
       areYouSureYouWantToRemoveThisManagerFromProject:
         'Are you sure you want to remove this manager from the project?',
       areYouSureYouWantToRemoveThisMemberFromBoard:
@@ -164,6 +166,7 @@ export default {
       display: 'Display',
       configuration: 'Configuration',
       useStoryPointsInProject: 'Use story points in project',
+      useScrum: 'Use scrum',
       dropFileToUpload: 'Drop file to upload',
       dueDate_title: 'Due Date',
       dynamicAndUnevenlySpacedLayout: 'Dynamic and unevenly spaced layout.',

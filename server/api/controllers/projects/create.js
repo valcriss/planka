@@ -1,10 +1,9 @@
 /*!
  * Copyright (c) 2024 PLANKA Software GmbH
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
-*/
+ */
 
 const { POSITION_GAP } = require('../../../constants');
-
 
 module.exports = {
   inputs: {
@@ -34,9 +33,7 @@ module.exports = {
   async fn(inputs) {
     const { currentUser } = this.req;
 
-    const t = sails.helpers.utils.makeTranslator(
-      currentUser.language || this.req.getLocale(),
-    );
+    const t = sails.helpers.utils.makeTranslator(currentUser.language || this.req.getLocale());
 
     const values = _.pick(inputs, ['type', 'name', 'description']);
 

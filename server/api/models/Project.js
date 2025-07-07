@@ -89,6 +89,11 @@ module.exports = {
       defaultsTo: false,
       columnName: 'use_story_points',
     },
+    useScrum: {
+      type: 'boolean',
+      defaultsTo: false,
+      columnName: 'use_scrum',
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗

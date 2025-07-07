@@ -146,9 +146,7 @@ const AddProjectModal = React.memo(() => {
               { value: ProjectTemplates.KABAN, text: t('common.kabanProject') },
             ]}
             className={styles.field}
-            onChange={(_, { value }) =>
-              handleFieldChange(null, { name: 'template', value })
-            }
+            onChange={(_, { value }) => handleFieldChange(null, { name: 'template', value })}
           />
           <Button
             inverted

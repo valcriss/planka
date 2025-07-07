@@ -67,6 +67,9 @@ module.exports = {
       isIn: Project.BACKGROUND_GRADIENTS,
       allowNull: true,
     },
+    useScrum: {
+      type: 'boolean',
+    },
     useStoryPoints: {
       type: 'boolean',
     },
@@ -114,6 +117,8 @@ module.exports = {
       throw Errors.PROJECT_NOT_FOUND;
     }
 
+    const prevUseScrum = project.useScrum;
+
     const projectManager = await ProjectManager.qm.getOneByProjectIdAndUserId(
       project.id,
       currentUser.id,
@@ -126,12 +131,12 @@ module.exports = {
           throw Errors.NOT_ENOUGH_RIGHTS;
         }
 
-        availableInputKeys.push('ownerProjectManagerId', 'isHidden', 'useStoryPoints');
+        availableInputKeys.push('ownerProjectManagerId', 'isHidden', 'useStoryPoints', 'useScrum');
       }
     } else if (currentUser.role === User.Roles.ADMIN) {
-      availableInputKeys.push('ownerProjectManagerId', 'isHidden', 'useStoryPoints');
+      availableInputKeys.push('ownerProjectManagerId', 'isHidden', 'useStoryPoints', 'useScrum');
     } else if (projectManager) {
-      availableInputKeys.push('isHidden', 'useStoryPoints');
+      availableInputKeys.push('isHidden', 'useStoryPoints', 'useScrum');
     }
 
     if (projectManager) {
@@ -142,6 +147,7 @@ module.exports = {
         'backgroundType',
         'backgroundGradient',
         'useStoryPoints',
+        'useScrum',
       );
     }
 
@@ -200,6 +206,7 @@ module.exports = {
       'backgroundGradient',
       'isHidden',
       'useStoryPoints',
+      'useScrum',
       'isFavorite',
     ]);
 
@@ -233,6 +240,26 @@ module.exports = {
 
     if (!project) {
       throw Errors.PROJECT_NOT_FOUND;
+    }
+
+    if (!prevUseScrum && project.useScrum) {
+      await sails.helpers.projects.deleteScrumBoards.with({
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
+
+      await sails.helpers.projects.createScrumBoards.with({
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
+    } else if (prevUseScrum && !project.useScrum) {
+      await sails.helpers.projects.deleteScrumBoards.with({
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
     }
 
     return {

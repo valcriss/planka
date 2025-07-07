@@ -82,6 +82,8 @@ export default {
         "Etes-vous sûr de vouloir transformer ce projet en projet d'équipe ?",
       areYouSureYouWantToMakeThisProjectPrivate:
         'Êtes-vous sûr de vouloir transformer ce projet en projet privé ?',
+      areYouSureYouWantToDisableScrum:
+        'La désactivation de Scrum supprimera les tableaux "Backlog" et "Sprint" ainsi que leur contenu. Êtes-vous sûr ?',
       areYouSureYouWantToRemoveThisManagerFromProject:
         'Êtes-vous sûr de vouloir supprimer ce responsable du projet ?',
       areYouSureYouWantToRemoveThisMemberFromBoard:
@@ -174,6 +176,7 @@ export default {
       display: 'Affichage',
       configuration: 'Configuration',
       useStoryPointsInProject: 'Utiliser les story points dans le projet',
+      useScrum: 'Utiliser Scrum',
       dropFileToUpload: 'Déposer le fichier à télécharger',
       dueDate_title: "Date d'échéance",
       dynamicAndUnevenlySpacedLayout: 'Mise en page dynamique et inégalement espacée.',
