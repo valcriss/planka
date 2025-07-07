@@ -1,0 +1,29 @@
+:global(#app) {
+  .wrapper {
+    background: #dce0e4;
+    border-radius: 3px;
+    color: #6a808b;
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+    transition: background 0.3s ease;
+  }
+
+  /* Sizes */
+
+  .wrapperTiny {
+    font-size: 12px;
+    line-height: 20px;
+    padding: 0 6px;
+  }
+
+  .wrapperSmall {
+    font-size: 12px;
+    line-height: 20px;
+    padding: 2px 8px;
+  }
+
+  .wrapperMedium {
+    line-height: 20px;
+    padding: 6px 12px;
+  }
+}
