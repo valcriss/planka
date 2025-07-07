@@ -130,6 +130,23 @@ export function* moveListCardsToArchiveList(id) {
   yield call(moveListCards, id, archiveListId);
 }
 
+export function* moveListCardsToSlug(fromSlug, toSlug) {
+  const fromListId = yield select(
+    selectors.selectListIdBySlugForCurrentBoard,
+    fromSlug,
+  );
+  const toListId = yield select(
+    selectors.selectListIdBySlugForCurrentBoard,
+    toSlug,
+  );
+
+  if (!fromListId || !toListId) {
+    return;
+  }
+
+  yield call(moveListCards, fromListId, toListId);
+}
+
 export function* clearTrashListInCurrentBoard() {
   const trashListId = yield select(selectors.selectTrashListIdForCurrentBoard);
 
@@ -192,6 +209,7 @@ export default {
   moveList,
   sortList,
   moveListCardsToArchiveList,
+  moveListCardsToSlug,
   clearTrashListInCurrentBoard,
   handleListClear,
   deleteList,

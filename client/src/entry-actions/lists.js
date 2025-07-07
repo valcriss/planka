@@ -59,6 +59,14 @@ const moveListCardsToArchiveList = (id) => ({
   },
 });
 
+const moveListCardsToSlug = (fromSlug, toSlug) => ({
+  type: EntryActionTypes.LIST_CARDS_TO_SLUG_MOVE,
+  payload: {
+    fromSlug,
+    toSlug,
+  },
+});
+
 const clearTrashListInCurrentBoard = () => ({
   type: EntryActionTypes.TRASH_LIST_IN_CURRENT_BOARD_CLEAR,
   payload: {},
@@ -94,6 +102,7 @@ export default {
   moveList,
   sortList,
   moveListCardsToArchiveList,
+  moveListCardsToSlug,
   clearTrashListInCurrentBoard,
   handleListClear,
   deleteList,

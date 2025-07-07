@@ -458,6 +458,8 @@ export default {
       showMore: 'Show more',
       sortList_title: 'Sort List',
       start: 'Start',
+      startSprint: 'Start sprint',
+      startSprint_title: 'Start Sprint',
       stop: 'Stop',
       subscribe: 'Subscribe',
       unsubscribe: 'Unsubscribe',

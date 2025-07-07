@@ -31,6 +31,9 @@ export default function* listsWatchers() {
     takeEvery(EntryActionTypes.LIST_CARDS_TO_ARCHIVE_LIST_MOVE, ({ payload: { id } }) =>
       services.moveListCardsToArchiveList(id),
     ),
+    takeEvery(EntryActionTypes.LIST_CARDS_TO_SLUG_MOVE, ({ payload: { fromSlug, toSlug } }) =>
+      services.moveListCardsToSlug(fromSlug, toSlug),
+    ),
     takeEvery(EntryActionTypes.TRASH_LIST_IN_CURRENT_BOARD_CLEAR, () =>
       services.clearTrashListInCurrentBoard(),
     ),
