@@ -10,6 +10,7 @@ import request from '../request';
 import selectors from '../../../selectors';
 import actions from '../../../actions';
 import api from '../../../api';
+import cardsServices from './cards';
 import { createLocalId } from '../../../utils/local-id';
 import ToastTypes from '../../../constants/ToastTypes';
 
@@ -148,7 +149,19 @@ export function* moveListCardsToSlug(fromSlug, toSlug) {
     return;
   }
 
-  yield call(moveListCards, fromListId, toListId);
+  const fromList = yield select(selectors.selectListById, fromListId);
+  const toList = yield select(selectors.selectListById, toListId);
+
+  if (fromList.boardId === toList.boardId) {
+    yield call(moveListCards, fromListId, toListId);
+    return;
+  }
+
+  const cardIds = yield select(selectors.selectCardIdsByListId, fromListId);
+
+  for (const cardId of cardIds) {
+    yield call(cardsServices.transferCard, cardId, toList.boardId, toListId);
+  }
 }
 
 export function* clearTrashListInCurrentBoard() {
