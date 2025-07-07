@@ -20,6 +20,7 @@ import StopwatchChip from '../StopwatchChip';
 import UserAvatar from '../../users/UserAvatar';
 import LabelChip from '../../labels/LabelChip';
 import CustomFieldValueChip from '../../custom-field-values/CustomFieldValueChip';
+import { CardTypeIcons } from '../../../constants/Icons';
 
 import styles from './ProjectContent.module.scss';
 
@@ -53,6 +54,16 @@ const ProjectContent = React.memo(({ cardId }) => {
 
   const card = useSelector((state) => selectCardById(state, cardId));
   const list = useSelector((state) => selectListById(state, card.listId));
+  const cardType = useSelector((state) => {
+    if (!card.cardTypeId) {
+      return null;
+    }
+
+    return (
+      selectors.selectCardTypeById(state, card.cardTypeId) ||
+      selectors.selectBaseCardTypeById(state, card.cardTypeId)
+    );
+  });
   const userIds = useSelector((state) => selectUserIdsByCardId(state, cardId));
   const labelIds = useSelector((state) => selectLabelIdsByCardId(state, cardId));
 
@@ -148,6 +159,16 @@ const ProjectContent = React.memo(({ cardId }) => {
   return (
     <div className={styles.wrapper}>
       <div className={classNames(styles.name, isInClosedList && styles.nameClosed)}>
+        {(() => {
+          const iconName = (cardType && cardType.icon) || CardTypeIcons[card.type];
+          return iconName ? (
+            <Icon
+              name={iconName}
+              className={styles.typeIcon}
+              style={cardType && cardType.color ? { color: cardType.color } : undefined}
+            />
+          ) : null;
+        })()}
         {card.name}
       </div>
       {coverUrl && (

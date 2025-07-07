@@ -329,7 +329,11 @@ const ProjectContent = React.memo(({ onClose }) => {
       <Grid.Row className={styles.headerPadding}>
         <Grid.Column width={16} className={styles.headerPadding}>
           <div className={styles.headerWrapper}>
-            <Icon name={CardTypeIcons[CardTypes.PROJECT]} className={styles.moduleIcon} />
+            <Icon
+              name={(cardType && cardType.icon) || CardTypeIcons[card.type]}
+              className={styles.moduleIcon}
+              style={cardType && cardType.color ? { color: cardType.color } : undefined}
+            />
             <div className={styles.headerTitleWrapper}>
               {canEditName ? (
                 <NameField defaultValue={card.name} onUpdate={handleNameUpdate} />
