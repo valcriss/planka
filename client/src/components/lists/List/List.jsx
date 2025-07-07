@@ -25,6 +25,7 @@ import ActionsStep from './ActionsStep';
 import DraggableCard from '../../cards/DraggableCard';
 import AddCard from '../../cards/AddCard';
 import ArchiveCardsStep from '../../cards/ArchiveCardsStep';
+import StartSprintStep from './StartSprintStep';
 import PlusMathIcon from '../../../assets/images/plus-math-icon.svg?react';
 import StoryPointsChip from '../../cards/StoryPointsChip';
 
@@ -105,9 +106,6 @@ const List = React.memo(({ id, index }) => {
     setIsEditNameOpened(false);
   }, []);
 
-  const handleStartSprintClick = useCallback(() => {
-    dispatch(entryActions.moveListCardsToSlug('ready-for-sprint', 'sprint-todo'));
-  }, [dispatch]);
 
   const handleWrapperTransitionEnd = useTransitioning(
     wrapperRef,
@@ -123,6 +121,7 @@ const List = React.memo(({ id, index }) => {
 
   const ActionsPopup = usePopup(ActionsStep);
   const ArchiveCardsPopup = usePopup(ArchiveCardsStep);
+  const StartSprintPopup = usePopup(StartSprintStep);
 
   const cardsNode = (
     <Droppable
@@ -232,13 +231,14 @@ const List = React.memo(({ id, index }) => {
                   )
                 ))}
               {list.isPersisted && list.slug === 'ready-for-sprint' && (
-                <Button
-                  className={styles.headerButton}
-                  title={t('action.startSprint_title')}
-                  onClick={handleStartSprintClick}
-                >
-                  <Icon fitted name="play" size="small" />
-                </Button>
+                <StartSprintPopup>
+                  <Button
+                    className={styles.headerButton}
+                    title={t('action.startSprint_title')}
+                  >
+                    <Icon fitted name="play" size="small" />
+                  </Button>
+                </StartSprintPopup>
               )}
             </div>
             <div ref={cardsWrapperRef} className={styles.cardsInnerWrapper}>
