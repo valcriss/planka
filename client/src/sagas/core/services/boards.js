@@ -10,6 +10,7 @@ import { openModal } from './modals';
 import request from '../request';
 import selectors from '../../../selectors';
 import actions from '../../../actions';
+import entryActions from '../../../entry-actions';
 import api from '../../../api';
 import { createLocalId } from '../../../utils/local-id';
 import ActionTypes from '../../../constants/ActionTypes';
@@ -149,6 +150,11 @@ export function* fetchBoard(id) {
       customFieldValues,
     ),
   );
+
+  yield put(entryActions.fetchBaseCardTypes());
+  if (board.projectId) {
+    yield put(entryActions.fetchCardTypes(board.projectId));
+  }
 }
 
 export function* updateBoard(id, data) {
