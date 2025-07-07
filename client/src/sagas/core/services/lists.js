@@ -135,10 +135,14 @@ export function* moveListCardsToSlug(fromSlug, toSlug) {
     selectors.selectListIdBySlugForCurrentBoard,
     fromSlug,
   );
-  const toListId = yield select(
+  let toListId = yield select(
     selectors.selectListIdBySlugForCurrentBoard,
     toSlug,
   );
+
+  if (!toListId) {
+    toListId = yield select(selectors.selectListIdBySlug, toSlug);
+  }
 
   if (!fromListId || !toListId) {
     return;
