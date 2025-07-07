@@ -1,9 +1,9 @@
 import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { Input } from '../../lib/custom-ui';
-import { useDidUpdate, usePrevious, useToggle } from '../../lib/hooks';
-import { useEscapeInterceptor, useField, useNestedRef } from '../../hooks';
+import { Input } from '../../../lib/custom-ui';
+import { useDidUpdate, usePrevious, useToggle } from '../../../lib/hooks';
+import { useEscapeInterceptor, useField, useNestedRef } from '../../../hooks';
 
 import styles from './StoryPointsField.module.scss';
 

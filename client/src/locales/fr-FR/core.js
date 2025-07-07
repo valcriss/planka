@@ -64,7 +64,8 @@ export default {
       areYouSureYouWantToDeleteThisCustomFieldGroup:
         'Êtes-vous sûr de vouloir supprimer ce groupe de champs personnalisés ?',
       areYouSureYouWantToDeleteThisLabel: 'Êtes-vous sûr de vouloir supprimer cette étiquette ?',
-      areYouSureYouWantToDeleteThisCardType: 'Êtes-vous sûr de vouloir supprimer ce type de carte ?',
+      areYouSureYouWantToDeleteThisCardType:
+        'Êtes-vous sûr de vouloir supprimer ce type de carte ?',
       areYouSureYouWantToDeleteThisList: 'Êtes-vous sûr de vouloir supprimer cette liste ?',
       areYouSureYouWantToDeleteThisNotificationService:
         'Êtes-vous sûr de vouloir supprimer ce service de notification ?',

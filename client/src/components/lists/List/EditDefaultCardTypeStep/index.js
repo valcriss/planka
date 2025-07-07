@@ -1,1 +1,2 @@
-export { default } from './EditDefaultCardTypeStep.jsx';
+// eslint-disable-next-line no-restricted-exports
+export { default } from './EditDefaultCardTypeStep';

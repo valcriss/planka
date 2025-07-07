@@ -9,40 +9,34 @@ import { useTranslation } from 'react-i18next';
 import { Radio, Segment } from 'semantic-ui-react';
 
 import selectors from '../../../../selectors';
-import cardTypeSelectors from '../../../../selectors/card-types';
 import entryActions from '../../../../entry-actions';
 import SelectCardType from '../../../cards/SelectCardType';
 
 import styles from './DefaultCardType.module.scss';
+import {
+  makeSelectCardTypeIdsByProjectId,
+  makeSelectCardTypeById,
+  makeSelectBaseCardTypeById,
+  selectBaseCardTypeIds,
+} from '../../../../selectors/card-types';
 
 const DefaultCardType = React.memo(() => {
   const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
-  const selectCardTypeIdsByProjectId = useMemo(
-    () => cardTypeSelectors.makeSelectCardTypeIdsByProjectId(),
-    [],
-  );
-  const selectCardTypeById = useMemo(
-    () => cardTypeSelectors.makeSelectCardTypeById(),
-    [],
-  );
-  const selectBaseCardTypeById = useMemo(
-    () => cardTypeSelectors.makeSelectBaseCardTypeById(),
-    [],
-  );
+  const selectCardTypeIdsByProjectId = useMemo(() => makeSelectCardTypeIdsByProjectId(), []);
+  const selectCardTypeById = useMemo(() => makeSelectCardTypeById(), []);
+  const selectBaseCardTypeById = useMemo(() => makeSelectBaseCardTypeById(), []);
 
   const boardId = useSelector((state) => selectors.selectCurrentModal(state).params.id);
   const board = useSelector((state) => selectBoardById(state, boardId));
-  const cardTypeIds = useSelector((state) =>
-    selectCardTypeIdsByProjectId(state, board.projectId),
-  );
-  const baseCardTypeIds = useSelector(cardTypeSelectors.selectBaseCardTypeIds);
+  const cardTypeIds = useSelector((state) => selectCardTypeIdsByProjectId(state, board.projectId));
+  const baseCardTypeIds = useSelector(selectBaseCardTypeIds);
   const cardTypes = useSelector((state) =>
     (cardTypeIds || []).map((id) => selectCardTypeById(state, id)),
   );
   const baseCardTypes = useSelector((state) =>
     (baseCardTypeIds || []).map((id) => selectBaseCardTypeById(state, id)),
   );
-  const allTypes = [...baseCardTypes, ...cardTypes];
+  const allTypes = useMemo(() => [...baseCardTypes, ...cardTypes], [baseCardTypes, cardTypes]);
 
   const dispatch = useDispatch();
   const [t] = useTranslation();

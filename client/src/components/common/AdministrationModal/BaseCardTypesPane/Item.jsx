@@ -12,10 +12,7 @@ import ConfirmationStep from '../../ConfirmationStep';
 import styles from './Item.module.scss';
 
 const Item = React.memo(({ id }) => {
-  const selectBaseCardTypeById = useMemo(
-    () => selectors.makeSelectBaseCardTypeById(),
-    [],
-  );
+  const selectBaseCardTypeById = useMemo(() => selectors.makeSelectBaseCardTypeById(), []);
   const baseCardType = useSelector((state) => selectBaseCardTypeById(state, id));
 
   const dispatch = useDispatch();

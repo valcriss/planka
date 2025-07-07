@@ -19,12 +19,8 @@ import styles from './ManagersPane.module.scss';
 const ManagersPane = React.memo(() => {
   // TODO: rename?
   const projectManagers = useSelector(selectors.selectManagersForCurrentProject);
-  const managerUserIds = useSelector(
-    selectors.selectManagerUserIdsForCurrentProject,
-  );
-  const memberUserIds = useSelector(
-    selectors.selectMemberUserIdsForCurrentProject,
-  );
+  const managerUserIds = useSelector(selectors.selectManagerUserIdsForCurrentProject);
+  const memberUserIds = useSelector(selectors.selectMemberUserIdsForCurrentProject);
   const currentUserId = useSelector(selectors.selectCurrentUserId);
 
   const isShared = useSelector(

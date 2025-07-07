@@ -32,6 +32,7 @@ const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
     [linkStopPropagation],
   );
 
+  // eslint-disable-next-line react/no-unstable-nested-components,react/prop-types
   const CardLink = React.memo(({ id, href, content, ...linkProps }) => {
     const card = useSelector((state) => selectCardById(state, id));
     const cardType = useSelector((state) => {
@@ -56,7 +57,11 @@ const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
         {iconName && (
           <Icon
             name={iconName}
-            style={cardType && cardType.color ? { color: cardType.color, marginRight: 4 } : { marginRight: 4 }}
+            style={
+              cardType && cardType.color
+                ? { color: cardType.color, marginRight: 4 }
+                : { marginRight: 4 }
+            }
           />
         )}
         {content}

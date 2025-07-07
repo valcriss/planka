@@ -24,10 +24,7 @@ const StepTypes = {
 };
 
 const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
-  const selectBaseCardTypeById = useMemo(
-    () => selectors.makeSelectBaseCardTypeById(),
-    [],
-  );
+  const selectBaseCardTypeById = useMemo(() => selectors.makeSelectBaseCardTypeById(), []);
 
   const baseCardType = useSelector((state) => selectBaseCardTypeById(state, id));
 
@@ -131,9 +128,7 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
               ),
             }))}
             className={styles.field}
-            onChange={(_, { value }) =>
-              handleFieldChange(null, { name: 'icon', value })
-            }
+            onChange={(_, { value }) => handleFieldChange(null, { name: 'icon', value })}
           />
           <div className={styles.text}>{t('common.color')}</div>
           <input
@@ -141,9 +136,7 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
             name="color"
             value={data.color || '#000000'}
             className={styles.colorInput}
-            onChange={(e) =>
-              handleFieldChange(null, { name: 'color', value: e.target.value })
-            }
+            onChange={(e) => handleFieldChange(null, { name: 'color', value: e.target.value })}
           />
           <Form.Field>
             <Checkbox
@@ -177,7 +170,12 @@ const BaseCardTypeStep = React.memo(({ id, onBack, onClose }) => {
           </Form.Field>
           <div className={styles.actions}>
             <Button positive content={t('action.save')} />
-            <Button type="button" content={t('action.delete')} className={styles.deleteButton} onClick={handleDeleteClick} />
+            <Button
+              type="button"
+              content={t('action.delete')}
+              className={styles.deleteButton}
+              onClick={handleDeleteClick}
+            />
           </div>
         </Form>
       </Popup.Content>

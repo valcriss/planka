@@ -10,42 +10,15 @@ import { useTranslation } from 'react-i18next';
 import { Popup } from '../../../../lib/custom-ui';
 
 import selectors from '../../../../selectors';
-import cardTypeSelectors from '../../../../selectors/card-types';
 import entryActions from '../../../../entry-actions';
 import SelectCardType from '../../../cards/SelectCardType';
 
 const EditDefaultCardTypeStep = React.memo(({ listId, onBack, onClose }) => {
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
   const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
-  const selectCardTypeIdsByProjectId = useMemo(
-    () => cardTypeSelectors.makeSelectCardTypeIdsByProjectId(),
-    [],
-  );
-  const selectCardTypeById = useMemo(
-    () => cardTypeSelectors.makeSelectCardTypeById(),
-    [],
-  );
-  const selectBaseCardTypeById = useMemo(
-    () => cardTypeSelectors.makeSelectBaseCardTypeById(),
-    [],
-  );
 
   const list = useSelector((state) => selectListById(state, listId));
-  const board = useSelector((state) =>
-    list ? selectBoardById(state, list.boardId) : null,
-  );
-  const cardTypeIds = useSelector((state) =>
-    board ? selectCardTypeIdsByProjectId(state, board.projectId) : [],
-  );
-  const baseCardTypeIds = useSelector(cardTypeSelectors.selectBaseCardTypeIds);
-
-  const cardTypes = useSelector((state) =>
-    (cardTypeIds || []).map((id) => selectCardTypeById(state, id)),
-  );
-  const baseCardTypes = useSelector((state) =>
-    (baseCardTypeIds || []).map((id) => selectBaseCardTypeById(state, id)),
-  );
-  const allTypes = [...baseCardTypes, ...cardTypes];
+  const board = useSelector((state) => (list ? selectBoardById(state, list.boardId) : null));
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
@@ -71,9 +44,7 @@ const EditDefaultCardTypeStep = React.memo(({ listId, onBack, onClose }) => {
 
   return (
     <>
-      <Popup.Header onBack={onBack}>
-        {t('common.defaultCardType_title')}
-      </Popup.Header>
+      <Popup.Header onBack={onBack}>{t('common.defaultCardType_title')}</Popup.Header>
       <Popup.Content>
         {board && (
           <SelectCardType

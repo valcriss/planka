@@ -20,11 +20,7 @@ module.exports = {
     const userIds = await scoper.getProjectRelatedUserIds();
 
     userIds.forEach((userId) => {
-      sails.sockets.broadcast(
-        `user:${userId}`,
-        'cardTypeCreate',
-        { item: cardType },
-      );
+      sails.sockets.broadcast(`user:${userId}`, 'cardTypeCreate', { item: cardType });
     });
 
     return cardType;

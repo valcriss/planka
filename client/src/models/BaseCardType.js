@@ -67,8 +67,7 @@ export default class extends BaseModel {
       case ActionTypes.BASE_CARD_TYPE_DELETE:
         BaseCardType.withId(payload.id).delete();
         break;
-      case ActionTypes.BASE_CARD_TYPE_DELETE__SUCCESS:
-      case ActionTypes.BASE_CARD_TYPE_DELETE_HANDLE: {
+      case ActionTypes.BASE_CARD_TYPE_DELETE__SUCCESS: {
         const model = BaseCardType.withId(payload.baseCardType.id);
 
         if (model) {

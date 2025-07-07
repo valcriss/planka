@@ -26,18 +26,10 @@ const SelectCardType = React.memo(({ projectId, value, onSelect }) => {
     () => selectors.makeSelectCardTypeIdsByProjectId(),
     [],
   );
-  const selectCardTypeById = useMemo(
-    () => selectors.makeSelectCardTypeById(),
-    [],
-  );
-  const selectBaseCardTypeById = useMemo(
-    () => selectors.makeSelectBaseCardTypeById(),
-    [],
-  );
+  const selectCardTypeById = useMemo(() => selectors.makeSelectCardTypeById(), []);
+  const selectBaseCardTypeById = useMemo(() => selectors.makeSelectBaseCardTypeById(), []);
 
-  const cardTypeIds = useSelector((state) =>
-    selectCardTypeIdsByProjectId(state, projectId),
-  );
+  const cardTypeIds = useSelector((state) => selectCardTypeIdsByProjectId(state, projectId));
   const baseCardTypeIds = useSelector(selectors.selectBaseCardTypeIds);
 
   const cardTypes = useSelector((state) =>
@@ -47,6 +39,7 @@ const SelectCardType = React.memo(({ projectId, value, onSelect }) => {
     (baseCardTypeIds || []).map((id) => selectBaseCardTypeById(state, id)),
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const allTypes = [...baseCardTypes, ...cardTypes];
 
   const handleSelectClick = useCallback(

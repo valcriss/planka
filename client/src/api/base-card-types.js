@@ -5,11 +5,9 @@
 
 import socket from './socket';
 
-const getBaseCardTypes = (headers) =>
-  socket.get('/base-card-types', undefined, headers);
+const getBaseCardTypes = (headers) => socket.get('/base-card-types', undefined, headers);
 
-const createBaseCardType = (data, headers) =>
-  socket.post('/base-card-types', data, headers);
+const createBaseCardType = (data, headers) => socket.post('/base-card-types', data, headers);
 
 const updateBaseCardType = (id, data, headers) =>
   socket.patch(`/base-card-types/${id}`, data, headers);

@@ -89,9 +89,7 @@ const AddCardTypeStep = React.memo(({ onClose }) => {
               ),
             }))}
             className={styles.field}
-            onChange={(_, { value }) =>
-              handleFieldChange(null, { name: 'icon', value })
-            }
+            onChange={(_, { value }) => handleFieldChange(null, { name: 'icon', value })}
           />
           <div className={styles.text}>{t('common.color')}</div>
           <input
@@ -99,9 +97,7 @@ const AddCardTypeStep = React.memo(({ onClose }) => {
             name="color"
             value={data.color || '#000000'}
             className={styles.colorInput}
-            onChange={(e) =>
-              handleFieldChange(null, { name: 'color', value: e.target.value })
-            }
+            onChange={(e) => handleFieldChange(null, { name: 'color', value: e.target.value })}
           />
           <Form.Field>
             <Checkbox

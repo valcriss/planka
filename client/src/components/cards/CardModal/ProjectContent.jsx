@@ -16,7 +16,7 @@ import entryActions from '../../../entry-actions';
 import { usePopupInClosableContext } from '../../../hooks';
 import { startStopwatch, stopStopwatch } from '../../../utils/stopwatch';
 import { isUsableMarkdownElement } from '../../../utils/element-helpers';
-import { BoardMembershipRoles, CardTypes, ListTypes } from '../../../constants/Enums';
+import { BoardMembershipRoles, ListTypes } from '../../../constants/Enums';
 import { CardTypeIcons } from '../../../constants/Icons';
 import { ClosableContext } from '../../../contexts';
 import NameField from './NameField';
