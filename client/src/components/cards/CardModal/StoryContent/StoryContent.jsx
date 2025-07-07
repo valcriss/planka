@@ -47,6 +47,16 @@ const StoryContent = React.memo(({ onClose }) => {
 
   const card = useSelector(selectors.selectCurrentCard);
   const board = useSelector(selectors.selectCurrentBoard);
+  const cardType = useSelector((state) => {
+    if (!card.cardTypeId) {
+      return null;
+    }
+
+    return (
+      selectors.selectCardTypeById(state, card.cardTypeId) ||
+      selectors.selectBaseCardTypeById(state, card.cardTypeId)
+    );
+  });
   const userIds = useSelector(selectors.selectUserIdsForCurrentCard);
   const labelIds = useSelector(selectors.selectLabelIdsForCurrentCard);
   const attachmentIds = useSelector(selectors.selectAttachmentIdsForCurrentCard);
@@ -312,8 +322,9 @@ const StoryContent = React.memo(({ onClose }) => {
         <Grid.Column width={16} className={styles.headerPadding}>
           <div className={styles.headerWrapper}>
             <Icon
-              name={CardTypeIcons[CardTypes.STORY]}
+              name={(cardType && cardType.icon) || CardTypeIcons[card.type]}
               className={classNames(styles.moduleIcon, styles.moduleIconTitle)}
+              style={cardType && cardType.color ? { color: cardType.color } : undefined}
             />
             <div className={styles.headerTitleWrapper}>
               {canEditName ? (
