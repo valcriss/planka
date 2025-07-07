@@ -20,6 +20,7 @@ export default class extends BaseModel {
     backgroundGradient: attr(),
     isHidden: attr(),
     useStoryPoints: attr(),
+    useScrum: attr(),
     isFavorite: attr({
       getDefault: () => false,
     }),
