@@ -45,6 +45,7 @@ export const ProjectTypes = {
 export const ProjectTemplates = {
   NONE: 'none',
   KABAN: 'kaban',
+  SCRUM: 'scrum',
 };
 
 export const ProjectBackgroundTypes = {

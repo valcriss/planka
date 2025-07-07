@@ -55,7 +55,7 @@ export function* createProject(data) {
 
   yield put(actions.createProject.success(project, projectManagers));
 
-  if (data.template === ProjectTemplates.KABAN) {
+  if (data.template === ProjectTemplates.KABAN || data.template === ProjectTemplates.SCRUM) {
     let projectFull;
     let included;
     try {
