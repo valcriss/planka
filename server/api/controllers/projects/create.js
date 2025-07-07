@@ -5,6 +5,7 @@
 
 const { POSITION_GAP } = require('../../../constants');
 
+
 module.exports = {
   inputs: {
     type: {
@@ -33,6 +34,8 @@ module.exports = {
   async fn(inputs) {
     const { currentUser } = this.req;
 
+    const t = sails.helpers.utils.makeTranslator(currentUser.language);
+
     const values = _.pick(inputs, ['type', 'name', 'description']);
 
     const { project, projectManager } = await sails.helpers.projects.createOne.with({
@@ -46,7 +49,7 @@ module.exports = {
         values: {
           project,
           position: POSITION_GAP,
-          name: 'Board',
+          name: t('Board'),
         },
         actorUser: currentUser,
         request: this.req,
@@ -57,7 +60,7 @@ module.exports = {
           board,
           type: List.Types.ACTIVE,
           position: POSITION_GAP,
-          name: 'To do',
+          name: t('To do'),
         },
         project,
         actorUser: currentUser,
@@ -69,7 +72,7 @@ module.exports = {
           board,
           type: List.Types.ACTIVE,
           position: POSITION_GAP * 2,
-          name: 'Ongoing',
+          name: t('Ongoing'),
         },
         project,
         actorUser: currentUser,
@@ -81,7 +84,7 @@ module.exports = {
           board,
           type: List.Types.CLOSED,
           position: POSITION_GAP * 3,
-          name: 'Done',
+          name: t('Done'),
         },
         project,
         actorUser: currentUser,
