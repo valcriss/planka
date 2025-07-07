@@ -8,6 +8,9 @@ module.exports = {
   },
 
   async fn({ project, actorUser, request }) {
+    const t = sails.helpers.utils.makeTranslator(
+      actorUser.language || request.getLocale(),
+    );
     const boards = await Board.qm.getByProjectId(project.id);
     const startPos = POSITION_GAP * (boards.length + 1);
 
@@ -22,7 +25,7 @@ module.exports = {
         board: backlog,
         type: List.Types.ACTIVE,
         position: POSITION_GAP,
-        name: 'Raw Ideas',
+        name: t('Raw Ideas'),
       },
       project,
       actorUser,
@@ -34,7 +37,7 @@ module.exports = {
         board: backlog,
         type: List.Types.ACTIVE,
         position: POSITION_GAP * 2,
-        name: 'To Refine',
+        name: t('To Refine'),
       },
       project,
       actorUser,
@@ -46,7 +49,7 @@ module.exports = {
         board: backlog,
         type: List.Types.ACTIVE,
         position: POSITION_GAP * 3,
-        name: 'To Estimate',
+        name: t('To Estimate'),
       },
       project,
       actorUser,
@@ -58,7 +61,7 @@ module.exports = {
         board: backlog,
         type: List.Types.ACTIVE,
         position: POSITION_GAP * 4,
-        name: 'Ready for Sprint',
+        name: t('Ready for Sprint'),
       },
       project,
       actorUser,
@@ -72,7 +75,12 @@ module.exports = {
     });
 
     await sails.helpers.lists.createOne.with({
-      values: { board: sprint, type: List.Types.ACTIVE, position: POSITION_GAP, name: 'To Do' },
+      values: {
+        board: sprint,
+        type: List.Types.ACTIVE,
+        position: POSITION_GAP,
+        name: t('To Do'),
+      },
       project,
       actorUser,
       request,
@@ -83,7 +91,7 @@ module.exports = {
         board: sprint,
         type: List.Types.ACTIVE,
         position: POSITION_GAP * 2,
-        name: 'In Progress',
+        name: t('In Progress'),
       },
       project,
       actorUser,
@@ -95,7 +103,7 @@ module.exports = {
         board: sprint,
         type: List.Types.ACTIVE,
         position: POSITION_GAP * 3,
-        name: 'Code Review',
+        name: t('Code Review'),
       },
       project,
       actorUser,
@@ -107,7 +115,7 @@ module.exports = {
         board: sprint,
         type: List.Types.ACTIVE,
         position: POSITION_GAP * 4,
-        name: 'Testing',
+        name: t('Testing'),
       },
       project,
       actorUser,
@@ -115,7 +123,12 @@ module.exports = {
     });
 
     await sails.helpers.lists.createOne.with({
-      values: { board: sprint, type: List.Types.CLOSED, position: POSITION_GAP * 5, name: 'Done' },
+      values: {
+        board: sprint,
+        type: List.Types.CLOSED,
+        position: POSITION_GAP * 5,
+        name: t('Done'),
+      },
       project,
       actorUser,
       request,

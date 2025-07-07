@@ -16,5 +16,13 @@
         "Board": "Board",
         "To do": "To do",
         "Ongoing": "Ongoing",
-        "Done": "Done"
+        "Done": "Done",
+        "Raw Ideas": "Raw Ideas",
+        "To Refine": "To Refine",
+        "To Estimate": "To Estimate",
+        "Ready for Sprint": "Ready for Sprint",
+        "To Do": "To Do",
+        "In Progress": "In Progress",
+        "Code Review": "Code Review",
+        "Testing": "Testing"
 }
