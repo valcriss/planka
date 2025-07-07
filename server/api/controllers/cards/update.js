@@ -81,6 +81,11 @@ module.exports = {
       type: 'json',
       custom: isStopwatch,
     },
+    storyPoints: {
+      type: 'number',
+      min: 0,
+      allowNull: true,
+    },
     isSubscribed: {
       type: 'boolean',
     },
@@ -148,6 +153,7 @@ module.exports = {
         'description',
         'dueDate',
         'stopwatch',
+        'storyPoints',
       );
     }
 
@@ -208,6 +214,7 @@ module.exports = {
       'description',
       'dueDate',
       'stopwatch',
+      'storyPoints',
       'isSubscribed',
     ]);
 

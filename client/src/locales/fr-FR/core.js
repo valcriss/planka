@@ -289,6 +289,7 @@ export default {
       sortList_title: 'Trier la liste',
       stopwatch: 'Minuteur',
       story: 'Story',
+      storyPoints: 'Story points',
       subscribeToCardWhenCommenting: 'S’abonner à la carte lors de la rédaction d’un commentaire',
       subscribeToMyOwnCardsByDefault: "M'abonner à mes propres cartes par défaut",
       taskActions_title: 'Actions de tâche',

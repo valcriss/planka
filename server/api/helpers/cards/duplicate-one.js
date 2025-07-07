@@ -91,6 +91,7 @@ module.exports = {
         'description',
         'dueDate',
         'stopwatch',
+        'storyPoints',
       ]),
       ...values,
       creatorUserId: values.creatorUser.id,
