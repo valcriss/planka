@@ -131,6 +131,20 @@
     top: 10px;
   }
 
+  .storyPoints {
+    position: absolute;
+    right: 14px;
+    top: 9px;
+    margin-bottom: 8px;
+    background-color: #FFF;
+    color: #333333;
+  }
+
+  .storyPoints:has(+ i),
+  .storyPoints:has(+ button) {
+    right: 44px;
+  }
+
   .headerName {
     color: #17394d;
     font-weight: bold;
