@@ -1,4 +1,4 @@
-const { POSITION_GAP } = require('../../constants');
+const { POSITION_GAP } = require('../../../constants');
 
 module.exports = {
   inputs: {
@@ -18,28 +18,48 @@ module.exports = {
     });
 
     await sails.helpers.lists.createOne.with({
-      values: { board: backlog, type: List.Types.ACTIVE, position: POSITION_GAP, name: 'Raw Ideas' },
+      values: {
+        board: backlog,
+        type: List.Types.ACTIVE,
+        position: POSITION_GAP,
+        name: 'Raw Ideas',
+      },
       project,
       actorUser,
       request,
     });
 
     await sails.helpers.lists.createOne.with({
-      values: { board: backlog, type: List.Types.ACTIVE, position: POSITION_GAP * 2, name: 'To Refine' },
+      values: {
+        board: backlog,
+        type: List.Types.ACTIVE,
+        position: POSITION_GAP * 2,
+        name: 'To Refine',
+      },
       project,
       actorUser,
       request,
     });
 
     await sails.helpers.lists.createOne.with({
-      values: { board: backlog, type: List.Types.ACTIVE, position: POSITION_GAP * 3, name: 'To Estimate' },
+      values: {
+        board: backlog,
+        type: List.Types.ACTIVE,
+        position: POSITION_GAP * 3,
+        name: 'To Estimate',
+      },
       project,
       actorUser,
       request,
     });
 
     await sails.helpers.lists.createOne.with({
-      values: { board: backlog, type: List.Types.ACTIVE, position: POSITION_GAP * 4, name: 'Ready for Sprint' },
+      values: {
+        board: backlog,
+        type: List.Types.ACTIVE,
+        position: POSITION_GAP * 4,
+        name: 'Ready for Sprint',
+      },
       project,
       actorUser,
       request,
@@ -59,21 +79,36 @@ module.exports = {
     });
 
     await sails.helpers.lists.createOne.with({
-      values: { board: sprint, type: List.Types.ACTIVE, position: POSITION_GAP * 2, name: 'In Progress' },
+      values: {
+        board: sprint,
+        type: List.Types.ACTIVE,
+        position: POSITION_GAP * 2,
+        name: 'In Progress',
+      },
       project,
       actorUser,
       request,
     });
 
     await sails.helpers.lists.createOne.with({
-      values: { board: sprint, type: List.Types.ACTIVE, position: POSITION_GAP * 3, name: 'Code Review' },
+      values: {
+        board: sprint,
+        type: List.Types.ACTIVE,
+        position: POSITION_GAP * 3,
+        name: 'Code Review',
+      },
       project,
       actorUser,
       request,
     });
 
     await sails.helpers.lists.createOne.with({
-      values: { board: sprint, type: List.Types.ACTIVE, position: POSITION_GAP * 4, name: 'Testing' },
+      values: {
+        board: sprint,
+        type: List.Types.ACTIVE,
+        position: POSITION_GAP * 4,
+        name: 'Testing',
+      },
       project,
       actorUser,
       request,

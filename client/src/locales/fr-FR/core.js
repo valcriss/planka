@@ -83,7 +83,7 @@ export default {
       areYouSureYouWantToMakeThisProjectPrivate:
         'Êtes-vous sûr de vouloir transformer ce projet en projet privé ?',
       areYouSureYouWantToDisableScrum:
-        "La désactivation de Scrum supprimera les tableaux \"Backlog\" et \"Sprint\" ainsi que leur contenu. Êtes-vous sûr ?",
+        'La désactivation de Scrum supprimera les tableaux "Backlog" et "Sprint" ainsi que leur contenu. Êtes-vous sûr ?',
       areYouSureYouWantToRemoveThisManagerFromProject:
         'Êtes-vous sûr de vouloir supprimer ce responsable du projet ?',
       areYouSureYouWantToRemoveThisMemberFromBoard:
