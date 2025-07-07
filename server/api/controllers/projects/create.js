@@ -25,7 +25,7 @@ module.exports = {
     },
     template: {
       type: 'string',
-      isIn: ['none', 'kaban'],
+      isIn: ['none', 'kaban', 'scrum'],
       defaultsTo: 'none',
     },
   },
@@ -36,6 +36,10 @@ module.exports = {
     const t = sails.helpers.utils.makeTranslator(currentUser.language || this.req.getLocale());
 
     const values = _.pick(inputs, ['type', 'name', 'description']);
+    if (inputs.template === 'scrum') {
+      values.useStoryPoints = true;
+      values.useScrum = true;
+    }
 
     const { project, projectManager } = await sails.helpers.projects.createOne.with({
       values,
@@ -85,6 +89,12 @@ module.exports = {
           position: POSITION_GAP * 3,
           name: t('Done'),
         },
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
+    } else if (inputs.template === 'scrum') {
+      await sails.helpers.projects.createScrumBoards.with({
         project,
         actorUser: currentUser,
         request: this.req,

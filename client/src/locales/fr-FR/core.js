@@ -266,6 +266,7 @@ export default {
       projectTemplate: 'Modèle de projet',
       noTemplate: 'Aucun modèle',
       kabanProject: 'Projet Kaban',
+      scrumProject: 'Projet Scrum',
       referenceDataAndKnowledgeStorage: 'Stockage de données de référence et de connaissances.',
       removeManager_title: 'Supprimer le responsable',
       removeMember_title: 'Supprimer le membre',

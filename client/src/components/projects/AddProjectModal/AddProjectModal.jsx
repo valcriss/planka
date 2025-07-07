@@ -144,6 +144,7 @@ const AddProjectModal = React.memo(() => {
             options={[
               { value: ProjectTemplates.NONE, text: t('common.noTemplate') },
               { value: ProjectTemplates.KABAN, text: t('common.kabanProject') },
+              { value: ProjectTemplates.SCRUM, text: t('common.scrumProject') },
             ]}
             className={styles.field}
             onChange={(_, { value }) => handleFieldChange(null, { name: 'template', value })}
