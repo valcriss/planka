@@ -24,7 +24,6 @@ module.exports = {
         `user:${userId}`,
         'cardTypeCreate',
         { item: cardType },
-        inputs.request,
       );
     });
 
