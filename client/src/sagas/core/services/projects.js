@@ -6,7 +6,7 @@
 import omit from 'lodash/omit';
 import { call, put, select } from 'redux-saga/effects';
 
-import { goToProject, goToRoot } from './router';
+import { goToProject, goToBoard, goToRoot } from './router';
 import request from '../request';
 import requests from '../requests';
 import selectors from '../../../selectors';
@@ -77,6 +77,12 @@ export function* createProject(data) {
           included.notificationServices,
         ),
       );
+
+      const [board] = included.boards || [];
+      if (board) {
+        yield call(goToBoard, board.id);
+        return;
+      }
     }
   }
 

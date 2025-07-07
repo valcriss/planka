@@ -34,7 +34,9 @@ module.exports = {
   async fn(inputs) {
     const { currentUser } = this.req;
 
-    const t = sails.helpers.utils.makeTranslator(currentUser.language);
+    const t = sails.helpers.utils.makeTranslator(
+      currentUser.language || this.req.getLocale(),
+    );
 
     const values = _.pick(inputs, ['type', 'name', 'description']);
 
