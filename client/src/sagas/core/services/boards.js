@@ -10,7 +10,8 @@ import { openModal } from './modals';
 import request from '../request';
 import selectors from '../../../selectors';
 import actions from '../../../actions';
-import entryActions from '../../../entry-actions';
+import { fetchBaseCardTypes } from './base-card-types';
+import { fetchCardTypes } from './card-types';
 import api from '../../../api';
 import { createLocalId } from '../../../utils/local-id';
 import ActionTypes from '../../../constants/ActionTypes';
@@ -151,9 +152,10 @@ export function* fetchBoard(id) {
     ),
   );
 
-  yield put(entryActions.fetchBaseCardTypes());
+  // Fetch card types so icons are available immediately
+  yield call(fetchBaseCardTypes);
   if (board.projectId) {
-    yield put(entryActions.fetchCardTypes(board.projectId));
+    yield call(fetchCardTypes, board.projectId);
   }
 }
 
