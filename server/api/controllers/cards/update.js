@@ -211,15 +211,17 @@ module.exports = {
     ]);
 
     if (values.cardTypeId) {
-      const cardType = await CardType.qm.getOneById(values.cardTypeId, {
-        projectId: project.id,
-      });
-
-      if (!cardType) {
-        throw Errors.CARD_TYPE_NOT_FOUND;
-      }
+      const cardType = await sails.helpers.cardTypes
+        .getOrCreateForProject({
+          project,
+          id: values.cardTypeId,
+          actorUser: currentUser,
+          request: this.req,
+        })
+        .intercept('notFound', () => Errors.CARD_TYPE_NOT_FOUND);
 
       values.type = cardType.name;
+      values.cardTypeId = cardType.id;
     }
 
     card = await sails.helpers.cards.updateOne

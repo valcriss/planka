@@ -26,6 +26,9 @@ const getOneById = (id, { projectId } = {}) => {
   return CardType.findOne(criteria);
 };
 
+const getOneByProjectIdAndBaseCardTypeId = (projectId, baseCardTypeId) =>
+  CardType.findOne({ projectId, baseCardTypeId });
+
 const updateOne = (criteria, values) => CardType.updateOne(criteria).set({ ...values });
 
 // eslint-disable-next-line no-underscore-dangle
@@ -39,6 +42,7 @@ module.exports = {
   getByProjectId,
   getByProjectIds,
   getOneById,
+  getOneByProjectIdAndBaseCardTypeId,
   updateOne,
   deleteOne,
   delete: delete_,

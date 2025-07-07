@@ -110,15 +110,17 @@ module.exports = {
     const values = _.pick(inputs, ['position', 'name', 'defaultCardTypeId']);
 
     if (values.defaultCardTypeId) {
-      const cardType = await CardType.qm.getOneById(values.defaultCardTypeId, {
-        projectId: project.id,
-      });
-
-      if (!cardType) {
-        throw Errors.CARD_TYPE_NOT_FOUND;
-      }
+      const cardType = await sails.helpers.cardTypes
+        .getOrCreateForProject({
+          project,
+          id: values.defaultCardTypeId,
+          actorUser: currentUser,
+          request: this.req,
+        })
+        .intercept('notFound', () => Errors.CARD_TYPE_NOT_FOUND);
 
       values.defaultCardType = cardType.name;
+      values.defaultCardTypeId = cardType.id;
     }
 
     const { board, boardMembership } = await sails.helpers.boards.createOne.with({
