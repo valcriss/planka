@@ -17,18 +17,7 @@ import { useForm, useNestedRef, useSteps } from '../../../hooks';
 import ConfirmationStep from '../../common/ConfirmationStep';
 
 import styles from './BaseCardTypeStep.module.scss';
-
-const ICON_OPTIONS = [
-  'tasks',
-  'sticky note outline',
-  'file alternate outline',
-  'bookmark',
-  'flag',
-  'bug',
-  'calendar',
-  'book',
-  'bell',
-];
+import ICON_OPTIONS from '../../../constants/CardTypeIconOptions';
 
 const StepTypes = {
   DELETE: 'DELETE',
