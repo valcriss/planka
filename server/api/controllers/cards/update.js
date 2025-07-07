@@ -31,6 +31,9 @@ const Errors = {
   POSITION_MUST_BE_PRESENT: {
     positionMustBePresent: 'Position must be present',
   },
+  CARD_TYPE_NOT_FOUND: {
+    cardTypeNotFound: 'Card type not found',
+  },
 };
 
 module.exports = {
@@ -47,7 +50,11 @@ module.exports = {
     },
     type: {
       type: 'string',
-      isIn: Object.values(Card.Types),
+      allowNull: true,
+    },
+    cardTypeId: {
+      type: 'string',
+      allowNull: true,
     },
     position: {
       type: 'number',
@@ -104,6 +111,9 @@ module.exports = {
     positionMustBePresent: {
       responseType: 'unprocessableEntity',
     },
+    cardTypeNotFound: {
+      responseType: 'notFound',
+    },
   },
 
   async fn(inputs) {
@@ -132,6 +142,7 @@ module.exports = {
         'listId',
         'coverAttachmentId',
         'type',
+        'cardTypeId',
         'position',
         'name',
         'description',
@@ -191,6 +202,7 @@ module.exports = {
     const values = _.pick(inputs, [
       'coverAttachmentId',
       'type',
+      'cardTypeId',
       'position',
       'name',
       'description',
@@ -198,6 +210,20 @@ module.exports = {
       'stopwatch',
       'isSubscribed',
     ]);
+
+    if (values.cardTypeId) {
+      const cardType = await sails.helpers.cardTypes
+        .getOrCreateForProject.with({
+          project,
+          id: values.cardTypeId,
+          actorUser: currentUser,
+          request: this.req,
+        })
+        .intercept('notFound', () => Errors.CARD_TYPE_NOT_FOUND);
+
+      values.type = cardType.name;
+      values.cardTypeId = cardType.id;
+    }
 
     card = await sails.helpers.cards.updateOne
       .with({

@@ -3,33 +3,43 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'semantic-ui-react';
 import { Popup } from '../../lib/custom-ui';
 
 import SelectCardType from './SelectCardType';
+import entryActions from '../../entry-actions';
 
 const SelectCardTypeStep = React.memo(
-  ({ defaultValue, title, withButton, buttonContent, onSelect, onBack, onClose }) => {
+  ({ projectId, defaultValue, title, withButton, buttonContent, onSelect, onBack, onClose }) => {
     const [t] = useTranslation();
+    const dispatch = useDispatch();
     const [value, setValue] = useState(defaultValue);
 
-    const handleSelect = useCallback(
-      (nextValue) => {
-        if (withButton) {
-          setValue(nextValue);
-        } else {
-          if (nextValue !== defaultValue) {
-            onSelect(nextValue);
-          }
+    useEffect(() => {
+      dispatch(entryActions.fetchBaseCardTypes());
+      if (projectId) {
+        dispatch(entryActions.fetchCardTypes(projectId));
+      }
+    }, [dispatch, projectId]);
 
-          onClose();
+  const handleSelect = useCallback(
+    (nextValue, nextName) => {
+      if (withButton) {
+        setValue(nextValue);
+      } else {
+        if (nextValue !== defaultValue) {
+          onSelect(nextValue, nextName);
         }
-      },
-      [defaultValue, withButton, onSelect, onClose],
-    );
+
+        onClose();
+      }
+    },
+    [defaultValue, withButton, onSelect, onClose],
+  );
 
     const handleSubmit = useCallback(() => {
       if (value !== defaultValue) {
@@ -48,7 +58,11 @@ const SelectCardTypeStep = React.memo(
         </Popup.Header>
         <Popup.Content>
           <Form onSubmit={handleSubmit}>
-            <SelectCardType value={value} onSelect={handleSelect} />
+            <SelectCardType
+              projectId={projectId}
+              value={value}
+              onSelect={handleSelect}
+            />
             {withButton && <Button positive content={t(buttonContent)} />}
           </Form>
         </Popup.Content>
@@ -58,7 +72,8 @@ const SelectCardTypeStep = React.memo(
 );
 
 SelectCardTypeStep.propTypes = {
-  defaultValue: PropTypes.string.isRequired,
+  projectId: PropTypes.string,
+  defaultValue: PropTypes.string,
   title: PropTypes.string,
   withButton: PropTypes.bool,
   buttonContent: PropTypes.string,
@@ -68,6 +83,8 @@ SelectCardTypeStep.propTypes = {
 };
 
 SelectCardTypeStep.defaultProps = {
+  projectId: undefined,
+  defaultValue: undefined,
   title: 'common.selectType',
   withButton: false,
   buttonContent: 'action.selectType',

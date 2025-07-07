@@ -15,6 +15,7 @@ export default class extends BaseModel {
   static fields = {
     id: attr(),
     type: attr(),
+    cardTypeId: fk({ to: 'CardType', as: 'cardType', relatedName: 'cards' }),
     position: attr(),
     name: attr(),
     description: attr(),

@@ -9,6 +9,7 @@ const Errors = {
   BOARD_NOT_FOUND: {
     boardNotFound: 'Board not found',
   },
+  CARD_TYPE_NOT_FOUND: { cardTypeNotFound: 'Card type not found' },
 };
 
 module.exports = {
@@ -32,7 +33,10 @@ module.exports = {
     },
     defaultCardType: {
       type: 'string',
-      isIn: Object.values(Card.Types),
+      allowNull: true,
+    },
+    defaultCardTypeId: {
+      type: 'string',
       allowNull: true,
     },
     limitCardTypesToDefaultOne: {
@@ -51,6 +55,7 @@ module.exports = {
     boardNotFound: {
       responseType: 'notFound',
     },
+    cardTypeNotFound: { responseType: 'notFound' },
   },
 
   async fn(inputs) {
@@ -77,6 +82,7 @@ module.exports = {
         'name',
         'defaultView',
         'defaultCardType',
+        'defaultCardTypeId',
         'limitCardTypesToDefaultOne',
         'alwaysDisplayCardCreator',
       );
@@ -94,10 +100,25 @@ module.exports = {
       'name',
       'defaultView',
       'defaultCardType',
+      'defaultCardTypeId',
       'limitCardTypesToDefaultOne',
       'alwaysDisplayCardCreator',
       'isSubscribed',
     ]);
+
+    if (values.defaultCardTypeId) {
+      const cardType = await sails.helpers.cardTypes
+        .getOrCreateForProject.with({
+          project,
+          id: values.defaultCardTypeId,
+          actorUser: currentUser,
+          request: this.req,
+        })
+        .intercept('notFound', () => Errors.CARD_TYPE_NOT_FOUND);
+
+      values.defaultCardType = cardType.name;
+      values.defaultCardTypeId = cardType.id;
+    }
 
     board = await sails.helpers.boards.updateOne.with({
       values,

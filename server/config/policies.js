@@ -23,6 +23,10 @@ module.exports.policies = {
   'webhooks/update': ['is-admin'],
   'webhooks/delete': ['is-admin'],
 
+  'base-card-types/create': ['is-admin'],
+  'base-card-types/update': ['is-admin'],
+  'base-card-types/delete': ['is-admin'],
+
   'users/create': ['is-authenticated', 'is-admin'],
   'users/delete': ['is-authenticated', 'is-admin'],
 

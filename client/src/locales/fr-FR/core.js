@@ -64,6 +64,7 @@ export default {
       areYouSureYouWantToDeleteThisCustomFieldGroup:
         'Êtes-vous sûr de vouloir supprimer ce groupe de champs personnalisés ?',
       areYouSureYouWantToDeleteThisLabel: 'Êtes-vous sûr de vouloir supprimer cette étiquette ?',
+      areYouSureYouWantToDeleteThisCardType: 'Êtes-vous sûr de vouloir supprimer ce type de carte ?',
       areYouSureYouWantToDeleteThisList: 'Êtes-vous sûr de vouloir supprimer cette liste ?',
       areYouSureYouWantToDeleteThisNotificationService:
         'Êtes-vous sûr de vouloir supprimer ce service de notification ?',
@@ -120,6 +121,7 @@ export default {
         '<0>Cliquez ici</0> ou rafraîchissez la page pour mettre à jour.',
       closed: 'Fermé',
       color: 'Couleur',
+      icon: 'Icône',
       comments: 'Commentaires',
       contentExceedsLimit: 'Le contenu dépasse la limite {{limit}}',
       contentOfThisAttachmentIsTooBigToDisplay:
@@ -141,6 +143,11 @@ export default {
       date: 'Date',
       deactivateUser_title: 'Désactiver l’utilisateur',
       defaultCardType_title: 'Type de carte par défaut',
+      cardType_title: 'Type de carte',
+      cardTypes_title: 'Types de carte',
+      createCardType_title: 'Créer un type de carte',
+      editCardType_title: 'Modifier le type de carte',
+      deleteCardType_title: 'Supprimer le type de carte',
       defaultView_title: 'Vue par défaut',
       deleteAllBoardsToBeAbleToDeleteThisProject:
         'Supprimer tous les tableaux pour pouvoir supprimer ce projet.',
@@ -286,6 +293,7 @@ export default {
       taskAssignmentAndProjectCompletion: 'Completion de tâches et d’un projet.',
       taskListActions_title: 'Actions de la liste de tâches',
       taskList_title: 'Liste de tâches',
+      linkCards: 'Lier les cartes',
       team: "Mes projets d'équipe",
       thereIsNoPreviewAvailableForThisAttachment:
         "Il n'y a pas d'aperçu disponible pour cette pièce jointe.",
@@ -364,6 +372,7 @@ export default {
       createCustomFieldGroup: 'Créer un groupe de champs personnalisés',
       createFile: 'Créer un fichier',
       createLabel: 'Créer une étiquette',
+      createCardType: 'Créer un type de carte',
       createNewLabel: 'Créer une nouvelle étiquette',
       createProject: 'Créer un projet',
       deactivateUser: 'Désactiver l’utilisateur',
@@ -383,6 +392,7 @@ export default {
       deleteForever_title: 'Supprimer définitivement',
       deleteGroup: 'Supprimer le groupe',
       deleteLabel: "Supprimer l'étiquette",
+      deleteCardType: 'Supprimer le type de carte',
       deleteList: 'Supprimer la liste',
       deleteList_title: 'Supprimer la liste',
       deleteNotificationService: 'Supprimer le service de notification',
@@ -399,6 +409,7 @@ export default {
       duplicateCard_title: 'Dupliquer la carte',
       edit: 'Modifier',
       editColor_title: 'Modifier la couleur',
+      editDefaultCardType_title: 'Modifier le type de carte par défaut',
       editDescription_title: 'Modifier la description',
       editDueDate_title: "Modifier la date d'échéance",
       editEmail_title: "Modifier l'e-mail",

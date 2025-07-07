@@ -13,6 +13,7 @@ import entryActions from '../../../entry-actions';
 import { useClosableModal } from '../../../hooks';
 import UsersPane from './UsersPane';
 import WebhooksPane from './WebhooksPane';
+import BaseCardTypesPane from './BaseCardTypesPane';
 
 import styles from './AdministrationModal.module.scss';
 
@@ -43,6 +44,12 @@ const AdministrationModal = React.memo(() => {
         context: 'title',
       }),
       render: () => <WebhooksPane />,
+    },
+    {
+      menuItem: t('common.cardTypes', {
+        context: 'title',
+      }),
+      render: () => <BaseCardTypesPane />,
     },
   ];
 

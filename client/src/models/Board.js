@@ -29,6 +29,7 @@ export default class extends BaseModel {
     name: attr(),
     defaultView: attr(),
     defaultCardType: attr(),
+    defaultCardTypeId: attr(),
     limitCardTypesToDefaultOne: attr(),
     alwaysDisplayCardCreator: attr(),
     context: attr(),

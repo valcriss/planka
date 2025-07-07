@@ -25,8 +25,11 @@ module.exports = {
 
     type: {
       type: 'string',
-      isIn: Object.values(Types),
       required: true,
+    },
+    cardTypeId: {
+      model: 'CardType',
+      columnName: 'card_type_id',
     },
     position: {
       type: 'number',

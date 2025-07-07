@@ -87,6 +87,8 @@ const Card = React.memo(({ id, isInline }) => {
 
         break;
       default:
+        Content = ProjectContent;
+        break;
     }
   }
 

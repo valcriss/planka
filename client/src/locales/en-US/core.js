@@ -57,6 +57,7 @@ export default {
       areYouSureYouWantToDeleteThisCustomFieldGroup:
         'Are you sure you want to delete this custom field group?',
       areYouSureYouWantToDeleteThisLabel: 'Are you sure you want to delete this label?',
+      areYouSureYouWantToDeleteThisCardType: 'Are you sure you want to delete this card type?',
       areYouSureYouWantToDeleteThisList:
         'Are you sure you want to delete this list? All cards will be moved to trash.',
       areYouSureYouWantToDeleteThisNotificationService:
@@ -112,6 +113,7 @@ export default {
       clickHereOrRefreshPageToUpdate: '<0>Click here</0> or refresh the page to update.',
       closed: 'Closed',
       color: 'Color',
+      icon: 'Icon',
       comments: 'Comments',
       contentExceedsLimit: 'Content exceeds {{limit}}',
       contentOfThisAttachmentIsTooBigToDisplay: 'Content of this attachment is too big to display.',
@@ -132,6 +134,11 @@ export default {
       date: 'Date',
       deactivateUser_title: 'Deactivate User',
       defaultCardType_title: 'Default Card Type',
+      cardType_title: 'Card Type',
+      cardTypes_title: 'Card Types',
+      createCardType_title: 'Create Card Type',
+      editCardType_title: 'Edit Card Type',
+      deleteCardType_title: 'Delete Card Type',
       defaultView_title: 'Default View',
       deleteAllBoardsToBeAbleToDeleteThisProject:
         'Delete all boards to be able to delete this project',
@@ -277,6 +284,7 @@ export default {
       taskAssignmentAndProjectCompletion: 'Task assignment and project completion.',
       taskListActions_title: 'Task List Actions',
       taskList_title: 'Task List',
+      linkCards: 'Link cards',
       team: 'Team',
       thereIsNoPreviewAvailableForThisAttachment:
         'There is no preview available for this attachment.',
@@ -355,6 +363,7 @@ export default {
       createCustomFieldGroup: 'Create custom field group',
       createFile: 'Create file',
       createLabel: 'Create label',
+      createCardType: 'Create card type',
       createNewLabel: 'Create new label',
       createProject: 'Create project',
       deactivateUser: 'Deactivate user',
@@ -374,6 +383,7 @@ export default {
       deleteForever_title: 'Delete Forever',
       deleteGroup: 'Delete group',
       deleteLabel: 'Delete label',
+      deleteCardType: 'Delete card type',
       deleteList: 'Delete list',
       deleteList_title: 'Delete List',
       deleteNotificationService: 'Delete notification service',
@@ -390,6 +400,7 @@ export default {
       duplicateCard_title: 'Duplicate Card',
       edit: 'Edit',
       editColor_title: 'Edit Color',
+      editDefaultCardType_title: 'Edit Default Card Type',
       editDescription_title: 'Edit Description',
       editDueDate_title: 'Edit Due Date',
       editEmail_title: 'Edit E-mail',

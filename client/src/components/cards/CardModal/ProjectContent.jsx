@@ -51,6 +51,17 @@ const ProjectContent = React.memo(({ onClose }) => {
 
   const card = useSelector(selectors.selectCurrentCard);
   const board = useSelector(selectors.selectCurrentBoard);
+  const cardType = useSelector((state) => {
+    if (!card.cardTypeId) {
+      return null;
+    }
+    return (
+      selectors.selectCardTypeById(state, card.cardTypeId) ||
+      selectors.selectBaseCardTypeById(state, card.cardTypeId)
+    );
+  });
+  const hasStopwatchFeature = cardType ? cardType.hasStopwatch : true;
+  const hasTaskListFeature = cardType ? cardType.hasTaskList : true;
   const userIds = useSelector(selectors.selectUserIdsForCurrentCard);
   const labelIds = useSelector(selectors.selectLabelIdsForCurrentCard);
   const attachmentIds = useSelector(selectors.selectAttachmentIdsForCurrentCard);
@@ -125,7 +136,7 @@ const ProjectContent = React.memo(({ onClose }) => {
       canEditName: isEditor,
       canEditDescription: isEditor,
       canEditDueDate: isEditor,
-      canEditStopwatch: isEditor,
+      canEditStopwatch: isEditor && hasStopwatchFeature,
       canSubscribe: isMember,
       canJoin: isEditor,
       canDuplicate: isEditor,
@@ -136,7 +147,7 @@ const ProjectContent = React.memo(({ onClose }) => {
       canUseLists: isEditor,
       canUseMembers: isEditor,
       canUseLabels: isEditor,
-      canAddTaskList: isEditor,
+      canAddTaskList: isEditor && hasTaskListFeature,
       canAddAttachment: isEditor,
       canAddCustomFieldGroup: isEditor,
     };
@@ -156,10 +167,10 @@ const ProjectContent = React.memo(({ onClose }) => {
   );
 
   const handleTypeSelect = useCallback(
-    (type) => {
+    (typeId) => {
       dispatch(
         entryActions.updateCurrentCard({
-          type,
+          cardTypeId: typeId,
         }),
       );
     },
@@ -541,7 +552,7 @@ const ProjectContent = React.memo(({ onClose }) => {
             </div>
           )}
           <CustomFieldGroups />
-          <TaskLists />
+          {hasTaskListFeature && <TaskLists />}
           {attachmentIds.length > 0 && (
             <div className={styles.contentModule}>
               <div className={styles.moduleWrapper}>
@@ -712,8 +723,9 @@ const ProjectContent = React.memo(({ onClose }) => {
                 )}
                 {!board.limitCardTypesToDefaultOne && canEditType && (
                   <SelectCardTypePopup
+                    projectId={board.projectId}
                     withButton
-                    defaultValue={card.type}
+                    defaultValue={card.cardTypeId || card.type}
                     title="common.editType"
                     buttonContent="action.save"
                     onSelect={handleTypeSelect}
