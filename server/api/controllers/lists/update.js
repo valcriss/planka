@@ -99,7 +99,7 @@ module.exports = {
 
     if (values.defaultCardTypeId) {
       const cardType = await sails.helpers.cardTypes
-        .getOrCreateForProject({
+        .getOrCreateForProject.with({
           project,
           id: values.defaultCardTypeId,
           actorUser: currentUser,
