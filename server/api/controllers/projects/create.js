@@ -3,7 +3,7 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
 */
 
-const { POSITION_GAP } = require('../../constants');
+const { POSITION_GAP } = require('../../../constants');
 
 module.exports = {
   inputs: {
