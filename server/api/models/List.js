@@ -74,6 +74,10 @@ module.exports = {
       isNotEmptyString: true,
       allowNull: true,
     },
+    slug: {
+      type: 'string',
+      allowNull: true,
+    },
     defaultCardType: {
       type: 'string',
       defaultsTo: Card.Types.PROJECT,
