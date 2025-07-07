@@ -105,6 +105,10 @@ const List = React.memo(({ id, index }) => {
     setIsEditNameOpened(false);
   }, []);
 
+  const handleStartSprintClick = useCallback(() => {
+    dispatch(entryActions.moveListCardsToSlug('ready-for-sprint', 'sprint-todo'));
+  }, [dispatch]);
+
   const handleWrapperTransitionEnd = useTransitioning(
     wrapperRef,
     styles.outerWrapperTransitioning,
@@ -227,6 +231,15 @@ const List = React.memo(({ id, index }) => {
                     </ArchiveCardsPopup>
                   )
                 ))}
+              {list.isPersisted && list.slug === 'ready-for-sprint' && (
+                <Button
+                  className={styles.headerButton}
+                  title={t('action.startSprint_title')}
+                  onClick={handleStartSprintClick}
+                >
+                  <Icon fitted name="play" size="small" />
+                </Button>
+              )}
             </div>
             <div ref={cardsWrapperRef} className={styles.cardsInnerWrapper}>
               <div className={styles.cardsOuterWrapper}>{cardsNode}</div>

@@ -468,6 +468,8 @@ export default {
       showMore: 'Voir plus',
       sortList_title: 'Trier la liste',
       start: 'Commencer',
+      startSprint: 'D\u00e9marrer le sprint',
+      startSprint_title: 'D\u00e9marrer le sprint',
       stop: 'Arrêter',
       subscribe: "S'abonner",
       unsubscribe: 'Se désabonner',

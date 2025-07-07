@@ -64,6 +64,21 @@ export const makeSelectFilteredCardIdsByListId = () =>
 
 export const selectFilteredCardIdsByListId = makeSelectFilteredCardIdsByListId();
 
+export const makeSelectListIdBySlug = () =>
+  createSelector(
+    orm,
+    (_, slug) => slug,
+    ({ List }, slug) => {
+      const listModel = List.all()
+        .filter({ slug })
+        .first();
+
+      return listModel && listModel.id;
+    },
+  );
+
+export const selectListIdBySlug = makeSelectListIdBySlug();
+
 export const makeSelectStoryPointsTotalByListId = () =>
   createSelector(
     orm,
@@ -175,6 +190,8 @@ export default {
   selectFilteredCardIdsByListId,
   makeSelectStoryPointsTotalByListId,
   selectStoryPointsTotalByListId,
+  makeSelectListIdBySlug,
+  selectListIdBySlug,
   selectCurrentListId,
   selectCurrentList,
   selectFirstFiniteListId,

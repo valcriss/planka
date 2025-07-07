@@ -271,6 +271,32 @@ export const selectTrashListIdForCurrentBoard = createSelector(
   },
 );
 
+export const makeSelectListIdBySlugForCurrentBoard = () =>
+  createSelector(
+    orm,
+    (state) => selectPath(state).boardId,
+    (_, slug) => slug,
+    ({ Board }, boardId, slug) => {
+      if (!boardId) {
+        return boardId;
+      }
+
+      const boardModel = Board.withId(boardId);
+
+      if (!boardModel) {
+        return boardModel;
+      }
+
+      const listModel = boardModel.lists
+        .filter({ slug })
+        .first();
+
+      return listModel && listModel.id;
+    },
+  );
+
+export const selectListIdBySlugForCurrentBoard = makeSelectListIdBySlugForCurrentBoard();
+
 export const selectFiniteListIdsForCurrentBoard = createSelector(
   orm,
   (state) => selectPath(state).boardId,
@@ -463,6 +489,8 @@ export default {
   selectFiniteListIdsForCurrentBoard,
   selectAvailableListsForCurrentBoard,
   selectFilteredCardIdsForCurrentBoard,
+  makeSelectListIdBySlugForCurrentBoard,
+  selectListIdBySlugForCurrentBoard,
   selectCustomFieldGroupIdsForCurrentBoard,
   selectCustomFieldGroupsForCurrentBoard,
   selectActivityIdsForCurrentBoard,
