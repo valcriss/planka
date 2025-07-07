@@ -20,6 +20,12 @@ const EditInformation = React.memo(() => {
 
   const boardId = useSelector((state) => selectors.selectCurrentModal(state).params.id);
   const board = useSelector((state) => selectBoardById(state, boardId));
+  const project = useSelector((state) =>
+    board ? selectors.selectProjectById(state, board.projectId) : null,
+  );
+
+  const isScrumBoard =
+    board && project && project.useScrum && ['Backlog', 'Sprint'].includes(board.name);
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
@@ -66,8 +72,13 @@ const EditInformation = React.memo(() => {
         maxLength={128}
         className={styles.field}
         onChange={handleFieldChange}
+        disabled={isScrumBoard}
       />
-      <Button positive disabled={dequal(cleanData, defaultData)} content={t('action.save')} />
+      <Button
+        positive
+        disabled={dequal(cleanData, defaultData) || isScrumBoard}
+        content={t('action.save')}
+      />
     </Form>
   );
 });
