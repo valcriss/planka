@@ -11,6 +11,7 @@ import selectors from '../../../selectors';
 import actions from '../../../actions';
 import api from '../../../api';
 import cardsServices from './cards';
+import boardsServices from './boards';
 import { createLocalId } from '../../../utils/local-id';
 import ToastTypes from '../../../constants/ToastTypes';
 
@@ -143,6 +144,25 @@ export function* moveListCardsToSlug(fromSlug, toSlug) {
 
   if (!toListId) {
     toListId = yield select(selectors.selectListIdBySlug, toSlug);
+  }
+
+  if (!toListId) {
+    const { projectId } = yield select(selectors.selectPath);
+    const boardIds = yield select(selectors.selectBoardIdsByProjectId, projectId);
+
+    for (const boardId of boardIds) {
+      const board = yield select(selectors.selectBoardById, boardId);
+
+      if (board && board.isFetching === null) {
+        yield call(boardsServices.fetchBoard, boardId);
+      }
+
+      toListId = yield select(selectors.selectListIdBySlug, toSlug);
+
+      if (toListId) {
+        break;
+      }
+    }
   }
 
   if (!fromListId || !toListId) {
