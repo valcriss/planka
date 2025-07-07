@@ -41,6 +41,10 @@ module.exports = {
       custom: (value) => HEX_COLOR_REGEX.test(value) || List.COLORS.includes(value),
       allowNull: true,
     },
+    slug: {
+      type: 'string',
+      allowNull: true,
+    },
     defaultCardTypeId: {
       type: 'string',
       allowNull: true,

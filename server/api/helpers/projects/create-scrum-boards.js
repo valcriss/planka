@@ -8,9 +8,7 @@ module.exports = {
   },
 
   async fn({ project, actorUser, request }) {
-    const t = sails.helpers.utils.makeTranslator(
-      actorUser.language || request.getLocale(),
-    );
+    const t = sails.helpers.utils.makeTranslator(actorUser.language || request.getLocale());
     const boards = await Board.qm.getByProjectId(project.id);
     const startPos = POSITION_GAP * (boards.length + 1);
 
@@ -62,6 +60,7 @@ module.exports = {
         type: List.Types.ACTIVE,
         position: POSITION_GAP * 4,
         name: t('Ready for Sprint'),
+        slug: 'ready-for-sprint',
       },
       project,
       actorUser,
@@ -80,6 +79,7 @@ module.exports = {
         type: List.Types.ACTIVE,
         position: POSITION_GAP,
         name: t('To Do'),
+        slug: 'sprint-todo',
       },
       project,
       actorUser,

@@ -41,6 +41,12 @@ const getOneById = (id, { boardId } = {}) => {
   return List.findOne(criteria);
 };
 
+const getOneByBoardIdAndSlug = (boardId, slug) =>
+  List.findOne({
+    boardId,
+    slug,
+  });
+
 const getOneTrashByBoardId = (boardId) =>
   List.findOne({
     boardId,
@@ -59,6 +65,7 @@ module.exports = {
   getByIds,
   getByBoardId,
   getOneById,
+  getOneByBoardIdAndSlug,
   getOneTrashByBoardId,
   updateOne,
   deleteOne,
