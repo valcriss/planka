@@ -14,18 +14,7 @@ import entryActions from '../../../entry-actions';
 import { useForm, useNestedRef } from '../../../hooks';
 
 import styles from './AddBaseCardTypeStep.module.scss';
-
-const ICON_OPTIONS = [
-  'tasks',
-  'sticky note outline',
-  'file alternate outline',
-  'bookmark',
-  'flag',
-  'bug',
-  'calendar',
-  'book',
-  'bell',
-];
+import ICON_OPTIONS from '../../../constants/CardTypeIconOptions';
 
 const AddBaseCardTypeStep = React.memo(({ onClose }) => {
   const dispatch = useDispatch();
