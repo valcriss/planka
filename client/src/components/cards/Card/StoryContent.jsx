@@ -14,6 +14,7 @@ import markdownToText from '../../../utils/markdown-to-text';
 import { BoardViews, ListTypes } from '../../../constants/Enums';
 import LabelChip from '../../labels/LabelChip';
 import CustomFieldValueChip from '../../custom-field-values/CustomFieldValueChip';
+import StoryPointsChip from '../StoryPointsChip';
 
 import styles from './StoryContent.module.scss';
 
@@ -41,6 +42,7 @@ const StoryContent = React.memo(({ cardId }) => {
 
   const card = useSelector((state) => selectCardById(state, cardId));
   const list = useSelector((state) => selectListById(state, card.listId));
+  const project = useSelector(selectors.selectCurrentProject);
   const labelIds = useSelector((state) => selectLabelIdsByCardId(state, cardId));
   const attachmentsTotal = useSelector((state) => selectAttachmentsTotalByCardId(state, cardId));
 
@@ -107,8 +109,13 @@ const StoryContent = React.memo(({ cardId }) => {
             ))}
           </span>
         )}
-        <div className={classNames(styles.name, isInClosedList && styles.nameClosed)}>
-          {card.name}
+        <div className={styles.nameRow}>
+          <div className={classNames(styles.name, isInClosedList && styles.nameClosed)}>
+            {card.name}
+          </div>
+          {project.useStoryPoints && card.storyPoints !== 0 && (
+            <StoryPointsChip value={card.storyPoints} size="tiny" className={styles.storyPoints} />
+          )}
         </div>
         {card.description && <div className={styles.descriptionText}>{descriptionText}</div>}
         {(attachmentsTotal > 0 || notificationsTotal > 0 || listName) && (

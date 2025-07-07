@@ -76,6 +76,17 @@
     display: block;
   }
 
+  .nameRow {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .storyPoints {
+    flex-shrink: 0;
+    margin-left: 4px;
+  }
+
   .name {
     color: #17394d;
     font-size: 14px;

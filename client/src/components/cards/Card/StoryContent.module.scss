@@ -64,6 +64,12 @@
     overflow: hidden;
   }
 
+  .nameRow {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
   .name {
     color: #17394d;
     font-size: 16px;
@@ -76,6 +82,11 @@
 
   .nameClosed {
     text-decoration: line-through;
+  }
+
+  .storyPoints {
+    flex-shrink: 0;
+    margin-left: 4px;
   }
 
   .notification {

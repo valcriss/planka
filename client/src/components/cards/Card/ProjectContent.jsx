@@ -17,6 +17,7 @@ import { BoardMembershipRoles, BoardViews, ListTypes } from '../../../constants/
 import TaskList from './TaskList';
 import DueDateChip from '../DueDateChip';
 import StopwatchChip from '../StopwatchChip';
+import StoryPointsChip from '../StoryPointsChip';
 import UserAvatar from '../../users/UserAvatar';
 import LabelChip from '../../labels/LabelChip';
 import CustomFieldValueChip from '../../custom-field-values/CustomFieldValueChip';
@@ -54,6 +55,7 @@ const ProjectContent = React.memo(({ cardId }) => {
 
   const card = useSelector((state) => selectCardById(state, cardId));
   const list = useSelector((state) => selectListById(state, card.listId));
+  const project = useSelector(selectors.selectCurrentProject);
   const cardType = useSelector((state) => {
     if (!card.cardTypeId) {
       return null;
@@ -158,18 +160,23 @@ const ProjectContent = React.memo(({ cardId }) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={classNames(styles.name, isInClosedList && styles.nameClosed)}>
-        {(() => {
-          const iconName = (cardType && cardType.icon) || CardTypeIcons[card.type];
-          return iconName ? (
-            <Icon
-              name={iconName}
-              className={styles.typeIcon}
-              style={cardType && cardType.color ? { color: cardType.color } : undefined}
-            />
-          ) : null;
-        })()}
-        {card.name}
+      <div className={styles.nameRow}>
+        <div className={classNames(styles.name, isInClosedList && styles.nameClosed)}>
+          {(() => {
+            const iconName = (cardType && cardType.icon) || CardTypeIcons[card.type];
+            return iconName ? (
+              <Icon
+                name={iconName}
+                className={styles.typeIcon}
+                style={cardType && cardType.color ? { color: cardType.color } : undefined}
+              />
+            ) : null;
+          })()}
+          {card.name}
+        </div>
+        {project.useStoryPoints && card.storyPoints !== 0 && (
+          <StoryPointsChip value={card.storyPoints} size="tiny" className={styles.storyPoints} />
+        )}
       </div>
       {coverUrl && (
         <div className={styles.coverWrapper}>
