@@ -7,7 +7,7 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
-import { Button, Form, Header, Icon, TextArea } from 'semantic-ui-react';
+import { Button, Form, Header, Icon, TextArea, Dropdown } from 'semantic-ui-react';
 import { usePopup } from '../../../lib/popup';
 import { Input } from '../../../lib/custom-ui';
 
@@ -15,7 +15,7 @@ import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 import { useClosableModal, useForm, useNestedRef } from '../../../hooks';
 import { isModifierKeyPressed } from '../../../utils/event-helpers';
-import { ProjectTypes } from '../../../constants/Enums';
+import { ProjectTypes, ProjectTemplates } from '../../../constants/Enums';
 import { ProjectTypeIcons } from '../../../constants/Icons';
 import SelectTypeStep from './SelectTypeStep';
 
@@ -35,6 +35,7 @@ const AddProjectModal = React.memo(() => {
     name: '',
     description: '',
     type: ProjectTypes.PRIVATE,
+    template: ProjectTemplates.NONE,
     ...defaultData,
     ...(defaultType && {
       type: defaultType,
@@ -133,6 +134,21 @@ const AddProjectModal = React.memo(() => {
             className={styles.field}
             onKeyDown={handleDescriptionKeyDown}
             onChange={handleFieldChange}
+          />
+          <div className={styles.text}>{t('common.projectTemplate')}</div>
+          <Dropdown
+            fluid
+            selection
+            name="template"
+            value={data.template}
+            options={[
+              { value: ProjectTemplates.NONE, text: t('common.noTemplate') },
+              { value: ProjectTemplates.KABAN, text: t('common.kabanProject') },
+            ]}
+            className={styles.field}
+            onChange={(_, { value }) =>
+              handleFieldChange(null, { name: 'template', value })
+            }
           />
           <Button
             inverted

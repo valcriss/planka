@@ -1,7 +1,9 @@
 /*!
  * Copyright (c) 2024 PLANKA Software GmbH
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
- */
+*/
+
+const { POSITION_GAP } = require('../../constants');
 
 module.exports = {
   inputs: {
@@ -21,6 +23,11 @@ module.exports = {
       maxLength: 1024,
       allowNull: true,
     },
+    template: {
+      type: 'string',
+      isIn: ['none', 'kaban'],
+      defaultsTo: 'none',
+    },
   },
 
   async fn(inputs) {
@@ -33,6 +40,54 @@ module.exports = {
       actorUser: currentUser,
       request: this.req,
     });
+
+    if (inputs.template === 'kaban') {
+      const { board } = await sails.helpers.boards.createOne.with({
+        values: {
+          project,
+          position: POSITION_GAP,
+          name: 'Board',
+        },
+        actorUser: currentUser,
+        request: this.req,
+      });
+
+      await sails.helpers.lists.createOne.with({
+        values: {
+          board,
+          type: List.Types.ACTIVE,
+          position: POSITION_GAP,
+          name: 'To do',
+        },
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
+
+      await sails.helpers.lists.createOne.with({
+        values: {
+          board,
+          type: List.Types.ACTIVE,
+          position: POSITION_GAP * 2,
+          name: 'Ongoing',
+        },
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
+
+      await sails.helpers.lists.createOne.with({
+        values: {
+          board,
+          type: List.Types.CLOSED,
+          position: POSITION_GAP * 3,
+          name: 'Done',
+        },
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
+    }
 
     return {
       item: project,
