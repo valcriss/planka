@@ -12,13 +12,7 @@ const Sizes = {
 };
 
 const StoryPointsChip = React.memo(({ value, size, className }) => (
-  <span
-    className={classNames(
-      styles.wrapper,
-      styles[`wrapper${upperFirst(size)}`],
-      className,
-    )}
-  >
+  <span className={classNames(styles.wrapper, styles[`wrapper${upperFirst(size)}`], className)}>
     {value}
   </span>
 ));
