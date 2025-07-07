@@ -47,6 +47,11 @@ const ActionsStep = React.memo(({ cardId, onNameEdit, onClose }) => {
   const card = useSelector((state) => selectCardById(state, cardId));
   const list = useSelector((state) => selectListById(state, card.listId));
 
+  const cardType = useSelector((state) =>
+    card.cardTypeId ? selectors.selectCardTypeById(state, card.cardTypeId) : null,
+  );
+  const hasStopwatchFeature = cardType ? cardType.hasStopwatch : true;
+
   // TODO: check availability?
   const prevList = useSelector(
     (state) => card.prevListId && selectPrevListById(state, card.prevListId),
@@ -91,7 +96,7 @@ const ActionsStep = React.memo(({ cardId, onNameEdit, onClose }) => {
       canEditType: isEditor,
       canEditName: isEditor,
       canEditDueDate: isEditor,
-      canEditStopwatch: isEditor,
+      canEditStopwatch: isEditor && hasStopwatchFeature,
       canDuplicate: isEditor,
       canMove: isEditor,
       canRestore: null,
@@ -107,10 +112,10 @@ const ActionsStep = React.memo(({ cardId, onNameEdit, onClose }) => {
   const [step, openStep, handleBack] = useSteps();
 
   const handleTypeSelect = useCallback(
-    (type) => {
+    (typeId) => {
       dispatch(
         entryActions.updateCard(cardId, {
-          type,
+          cardTypeId: typeId,
         }),
       );
     },
@@ -219,7 +224,7 @@ const ActionsStep = React.memo(({ cardId, onNameEdit, onClose }) => {
           <SelectCardTypeStep
             projectId={board.projectId}
             withButton
-            defaultValue={card.type}
+            defaultValue={card.cardTypeId || card.type}
             title="common.editType"
             buttonContent="action.save"
             onSelect={handleTypeSelect}
@@ -331,7 +336,7 @@ const ActionsStep = React.memo(({ cardId, onNameEdit, onClose }) => {
               })}
             </Menu.Item>
           )}
-          {card.type === CardTypes.PROJECT && canEditStopwatch && (
+          {canEditStopwatch && (
             <Menu.Item className={styles.menuItem} onClick={handleEditStopwatchClick}>
               {t('action.editStopwatch', {
                 context: 'title',

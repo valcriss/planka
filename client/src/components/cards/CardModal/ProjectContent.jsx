@@ -161,10 +161,10 @@ const ProjectContent = React.memo(({ onClose }) => {
   );
 
   const handleTypeSelect = useCallback(
-    (type) => {
+    (typeId) => {
       dispatch(
         entryActions.updateCurrentCard({
-          type,
+          cardTypeId: typeId,
         }),
       );
     },
@@ -719,7 +719,7 @@ const ProjectContent = React.memo(({ onClose }) => {
                   <SelectCardTypePopup
                     projectId={board.projectId}
                     withButton
-                    defaultValue={card.type}
+                    defaultValue={card.cardTypeId || card.type}
                     title="common.editType"
                     buttonContent="action.save"
                     onSelect={handleTypeSelect}
