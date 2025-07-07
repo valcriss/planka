@@ -6,14 +6,14 @@
 import omit from 'lodash/omit';
 import { call, put, select } from 'redux-saga/effects';
 
-import { goToProject, goToRoot } from './router';
+import { goToProject, goToBoard, goToRoot } from './router';
 import request from '../request';
 import requests from '../requests';
 import selectors from '../../../selectors';
 import actions from '../../../actions';
 import api from '../../../api';
 import mergeRecords from '../../../utils/merge-records';
-import { UserRoles } from '../../../constants/Enums';
+import { UserRoles, ProjectTemplates } from '../../../constants/Enums';
 
 export function* searchProjects(value) {
   yield put(actions.searchProjects(value));
@@ -54,6 +54,38 @@ export function* createProject(data) {
   }
 
   yield put(actions.createProject.success(project, projectManagers));
+
+  if (data.template === ProjectTemplates.KABAN) {
+    let projectFull;
+    let included;
+    try {
+      ({ item: projectFull, included } = yield call(request, api.getProject, project.id));
+    } catch {
+      /* ignore */
+    }
+    if (projectFull) {
+      yield put(
+        actions.handleProjectCreate(
+          projectFull,
+          included.users,
+          included.projectManagers,
+          included.backgroundImages,
+          included.baseCustomFieldGroups,
+          included.boards,
+          included.boardMemberships,
+          included.customFields,
+          included.notificationServices,
+        ),
+      );
+
+      const [board] = included.boards || [];
+      if (board) {
+        yield call(goToBoard, board.id);
+        return;
+      }
+    }
+  }
+
   yield call(goToProject, project.id);
 }
 
