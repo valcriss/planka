@@ -65,10 +65,15 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) 
     () => selectors.makeSelectCardTypeById(),
     [],
   );
-
-  const cardType = useSelector((state) =>
-    selectCardTypeById(state, data.cardTypeId),
+  const selectBaseCardTypeById = useMemo(
+    () => selectors.makeSelectBaseCardTypeById(),
+    [],
   );
+
+  const cardType = useSelector((state) => {
+    const ct = selectCardTypeById(state, data.cardTypeId);
+    return ct || selectBaseCardTypeById(state, data.cardTypeId);
+  });
 
   const submit = useCallback(
     (autoOpen) => {

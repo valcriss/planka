@@ -47,9 +47,15 @@ const ActionsStep = React.memo(({ cardId, onNameEdit, onClose }) => {
   const card = useSelector((state) => selectCardById(state, cardId));
   const list = useSelector((state) => selectListById(state, card.listId));
 
-  const cardType = useSelector((state) =>
-    card.cardTypeId ? selectors.selectCardTypeById(state, card.cardTypeId) : null,
-  );
+  const cardType = useSelector((state) => {
+    if (!card.cardTypeId) {
+      return null;
+    }
+    return (
+      selectors.selectCardTypeById(state, card.cardTypeId) ||
+      selectors.selectBaseCardTypeById(state, card.cardTypeId)
+    );
+  });
   const hasStopwatchFeature = cardType ? cardType.hasStopwatch : true;
 
   // TODO: check availability?

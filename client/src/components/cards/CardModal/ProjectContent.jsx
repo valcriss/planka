@@ -51,9 +51,15 @@ const ProjectContent = React.memo(({ onClose }) => {
 
   const card = useSelector(selectors.selectCurrentCard);
   const board = useSelector(selectors.selectCurrentBoard);
-  const cardType = useSelector((state) =>
-    card.cardTypeId ? selectors.selectCardTypeById(state, card.cardTypeId) : null,
-  );
+  const cardType = useSelector((state) => {
+    if (!card.cardTypeId) {
+      return null;
+    }
+    return (
+      selectors.selectCardTypeById(state, card.cardTypeId) ||
+      selectors.selectBaseCardTypeById(state, card.cardTypeId)
+    );
+  });
   const hasStopwatchFeature = cardType ? cardType.hasStopwatch : true;
   const hasTaskListFeature = cardType ? cardType.hasTaskList : true;
   const userIds = useSelector(selectors.selectUserIdsForCurrentCard);

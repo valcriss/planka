@@ -11,7 +11,7 @@ module.exports = {
   },
 
   async fn({ project, id, actorUser, request }) {
-    let cardType = await CardType.qm.getOneById(id, { projectId: project.id });
+    const cardType = await CardType.qm.getOneById(id, { projectId: project.id });
 
     if (cardType) {
       return cardType;
@@ -23,28 +23,11 @@ module.exports = {
       throw 'notFound';
     }
 
-    cardType = await CardType.qm.getOneByProjectIdAndBaseCardTypeId(
+    const projectCardType = await CardType.qm.getOneByProjectIdAndBaseCardTypeId(
       project.id,
       baseCardType.id,
     );
 
-    if (!cardType) {
-      cardType = await sails.helpers.cardTypes.createOne.with({
-        values: {
-          baseCardTypeId: baseCardType.id,
-          name: baseCardType.name,
-          icon: baseCardType.icon,
-          color: baseCardType.color,
-          hasStopwatch: baseCardType.hasStopwatch,
-          hasTaskList: baseCardType.hasTaskList,
-          canLinkCards: baseCardType.canLinkCards,
-          project,
-        },
-        actorUser,
-        request,
-      });
-    }
-
-    return cardType;
+    return projectCardType || baseCardType;
   },
 };
