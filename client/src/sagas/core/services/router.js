@@ -13,6 +13,8 @@ import actions from '../../../actions';
 import api from '../../../api';
 import { getAccessToken } from '../../../utils/access-token-storage';
 import mergeRecords from '../../../utils/merge-records';
+import { fetchBaseCardTypes } from './base-card-types';
+import { fetchCardTypes } from './card-types';
 import ActionTypes from '../../../constants/ActionTypes';
 import Paths from '../../../constants/Paths';
 
@@ -226,6 +228,13 @@ export function* handleLocationChange() {
 
       break;
     default:
+  }
+
+  if (board) {
+    yield call(fetchBaseCardTypes);
+    if (board.projectId) {
+      yield call(fetchCardTypes, board.projectId);
+    }
   }
 
   yield put(
