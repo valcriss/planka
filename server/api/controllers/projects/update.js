@@ -113,31 +113,11 @@ module.exports = {
 
     let project = await Project.qm.getOneById(inputs.id);
 
-    const prevUseScrum = project ? project.useScrum : false;
-
     if (!project) {
       throw Errors.PROJECT_NOT_FOUND;
     }
 
-    if (!prevUseScrum && project.useScrum) {
-      await sails.helpers.projects.deleteScrumBoards.with({
-        project,
-        actorUser: currentUser,
-        request: this.req,
-      });
-
-      await sails.helpers.projects.createScrumBoards.with({
-        project,
-        actorUser: currentUser,
-        request: this.req,
-      });
-    } else if (prevUseScrum && !project.useScrum) {
-      await sails.helpers.projects.deleteScrumBoards.with({
-        project,
-        actorUser: currentUser,
-        request: this.req,
-      });
-    }
+    const prevUseScrum = project.useScrum;
 
     const projectManager = await ProjectManager.qm.getOneByProjectIdAndUserId(
       project.id,
@@ -260,6 +240,26 @@ module.exports = {
 
     if (!project) {
       throw Errors.PROJECT_NOT_FOUND;
+    }
+
+    if (!prevUseScrum && project.useScrum) {
+      await sails.helpers.projects.deleteScrumBoards.with({
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
+
+      await sails.helpers.projects.createScrumBoards.with({
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
+    } else if (prevUseScrum && !project.useScrum) {
+      await sails.helpers.projects.deleteScrumBoards.with({
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
     }
 
     return {
