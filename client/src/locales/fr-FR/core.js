@@ -64,7 +64,8 @@ export default {
       areYouSureYouWantToDeleteThisCustomFieldGroup:
         'Êtes-vous sûr de vouloir supprimer ce groupe de champs personnalisés ?',
       areYouSureYouWantToDeleteThisLabel: 'Êtes-vous sûr de vouloir supprimer cette étiquette ?',
-      areYouSureYouWantToDeleteThisCardType: 'Êtes-vous sûr de vouloir supprimer ce type de carte ?',
+      areYouSureYouWantToDeleteThisCardType:
+        'Êtes-vous sûr de vouloir supprimer ce type de carte ?',
       areYouSureYouWantToDeleteThisList: 'Êtes-vous sûr de vouloir supprimer cette liste ?',
       areYouSureYouWantToDeleteThisNotificationService:
         'Êtes-vous sûr de vouloir supprimer ce service de notification ?',
@@ -289,6 +290,7 @@ export default {
       sortList_title: 'Trier la liste',
       stopwatch: 'Minuteur',
       story: 'Story',
+      storyPoints: 'Story points',
       subscribeToCardWhenCommenting: 'S’abonner à la carte lors de la rédaction d’un commentaire',
       subscribeToMyOwnCardsByDefault: "M'abonner à mes propres cartes par défaut",
       taskActions_title: 'Actions de tâche',

@@ -8,11 +8,9 @@ import socket from './socket';
 const createCardType = (projectId, data, headers) =>
   socket.post(`/projects/${projectId}/card-types`, data, headers);
 
-const updateCardType = (id, data, headers) =>
-  socket.patch(`/card-types/${id}`, data, headers);
+const updateCardType = (id, data, headers) => socket.patch(`/card-types/${id}`, data, headers);
 
-const deleteCardType = (id, headers) =>
-  socket.delete(`/card-types/${id}`, undefined, headers);
+const deleteCardType = (id, headers) => socket.delete(`/card-types/${id}`, undefined, headers);
 
 const getCardTypes = (projectId, headers) =>
   socket.get(`/projects/${projectId}/card-types`, undefined, headers);

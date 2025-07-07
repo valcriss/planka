@@ -13,26 +13,20 @@ export default function* baseCardTypesWatchers() {
     takeEvery(EntryActionTypes.BASE_CARD_TYPE_CREATE, ({ payload: { data } }) =>
       services.createBaseCardType(data),
     ),
-    takeEvery(
-      EntryActionTypes.BASE_CARD_TYPE_CREATE_HANDLE,
-      ({ payload: { baseCardType } }) =>
-        services.handleBaseCardTypeCreate(baseCardType),
+    takeEvery(EntryActionTypes.BASE_CARD_TYPE_CREATE_HANDLE, ({ payload: { baseCardType } }) =>
+      services.handleBaseCardTypeCreate(baseCardType),
     ),
     takeEvery(EntryActionTypes.BASE_CARD_TYPE_UPDATE, ({ payload: { id, data } }) =>
       services.updateBaseCardType(id, data),
     ),
-    takeEvery(
-      EntryActionTypes.BASE_CARD_TYPE_UPDATE_HANDLE,
-      ({ payload: { baseCardType } }) =>
-        services.handleBaseCardTypeUpdate(baseCardType),
+    takeEvery(EntryActionTypes.BASE_CARD_TYPE_UPDATE_HANDLE, ({ payload: { baseCardType } }) =>
+      services.handleBaseCardTypeUpdate(baseCardType),
     ),
     takeEvery(EntryActionTypes.BASE_CARD_TYPE_DELETE, ({ payload: { id } }) =>
       services.deleteBaseCardType(id),
     ),
-    takeEvery(
-      EntryActionTypes.BASE_CARD_TYPE_DELETE_HANDLE,
-      ({ payload: { baseCardType } }) =>
-        services.handleBaseCardTypeDelete(baseCardType),
+    takeEvery(EntryActionTypes.BASE_CARD_TYPE_DELETE_HANDLE, ({ payload: { baseCardType } }) =>
+      services.handleBaseCardTypeDelete(baseCardType),
     ),
     takeEvery(EntryActionTypes.BASE_CARD_TYPES_FETCH, services.fetchBaseCardTypes),
   ]);

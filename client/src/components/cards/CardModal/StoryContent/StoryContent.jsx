@@ -16,12 +16,13 @@ import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
 import { usePopupInClosableContext } from '../../../../hooks';
 import { isUsableMarkdownElement } from '../../../../utils/element-helpers';
-import { BoardMembershipRoles, CardTypes, ListTypes } from '../../../../constants/Enums';
+import { BoardMembershipRoles, ListTypes } from '../../../../constants/Enums';
 import { CardTypeIcons } from '../../../../constants/Icons';
 import { ClosableContext } from '../../../../contexts';
 import Thumbnail from './Thumbnail';
 import NameField from '../NameField';
 import CustomFieldGroups from '../CustomFieldGroups';
+import StoryPointsField from '../StoryPointsField';
 import Communication from '../Communication';
 import CreationDetailsStep from '../CreationDetailsStep';
 import SelectCardTypeStep from '../../SelectCardTypeStep';
@@ -47,6 +48,7 @@ const StoryContent = React.memo(({ onClose }) => {
 
   const card = useSelector(selectors.selectCurrentCard);
   const board = useSelector(selectors.selectCurrentBoard);
+  const project = useSelector(selectors.selectCurrentProject);
   const cardType = useSelector((state) => {
     if (!card.cardTypeId) {
       return null;
@@ -187,6 +189,17 @@ const StoryContent = React.memo(({ onClose }) => {
       dispatch(
         entryActions.updateCurrentCard({
           description,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  const handleStoryPointsUpdate = useCallback(
+    (value) => {
+      dispatch(
+        entryActions.updateCurrentCard({
+          storyPoints: value,
         }),
       );
     },
@@ -490,6 +503,18 @@ const StoryContent = React.memo(({ onClose }) => {
               </div>
             )}
           </Gallery>
+          {project.useStoryPoints && (
+            <div className={styles.contentModule}>
+              <div className={styles.moduleWrapper}>
+                <Icon name="hashtag" className={styles.moduleIcon} />
+                <div className={styles.moduleHeader}>{t('common.storyPoints')}</div>
+                <StoryPointsField
+                  defaultValue={card.storyPoints}
+                  onUpdate={handleStoryPointsUpdate}
+                />
+              </div>
+            </div>
+          )}
           <CustomFieldGroups />
           {attachmentIds.length > 0 && (
             <div className={styles.contentModule}>

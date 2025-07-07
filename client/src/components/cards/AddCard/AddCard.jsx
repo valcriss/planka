@@ -37,12 +37,11 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) 
 
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
 
-  const list = useSelector((state) =>
-    listId ? selectListById(state, listId) : null,
-  );
+  const list = useSelector((state) => (listId ? selectListById(state, listId) : null));
 
   const defaultType = list && list.defaultCardTypeId ? list.defaultCardType : boardDefaultType;
-  const defaultTypeId = list && list.defaultCardTypeId ? list.defaultCardTypeId : boardDefaultTypeId;
+  const defaultTypeId =
+    list && list.defaultCardTypeId ? list.defaultCardTypeId : boardDefaultTypeId;
 
   const [t] = useTranslation();
   const prevDefaultType = usePrevious(defaultType);
@@ -61,14 +60,8 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) 
   const [submitButtonRef, handleSubmitButtonRef] = useNestedRef();
   const [selectTypeButtonRef, handleSelectTypeButtonRef] = useNestedRef();
 
-  const selectCardTypeById = useMemo(
-    () => selectors.makeSelectCardTypeById(),
-    [],
-  );
-  const selectBaseCardTypeById = useMemo(
-    () => selectors.makeSelectBaseCardTypeById(),
-    [],
-  );
+  const selectCardTypeById = useMemo(() => selectors.makeSelectCardTypeById(), []);
+  const selectBaseCardTypeById = useMemo(() => selectors.makeSelectBaseCardTypeById(), []);
 
   const cardType = useSelector((state) => {
     const ct = selectCardTypeById(state, data.cardTypeId);
@@ -101,7 +94,7 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) 
         focusNameField();
       }
     },
-    [onCreate, onClose, defaultType, data, setData, focusNameField, nameFieldRef],
+    [data, onCreate, setData, defaultType, defaultTypeId, nameFieldRef, onClose, focusNameField],
   );
 
   const handleSubmit = useCallback(() => {
@@ -166,10 +159,7 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) 
   }, [isOpened, nameFieldRef]);
 
   useEffect(() => {
-    if (
-      !isOpened &&
-      (defaultType !== prevDefaultType || defaultTypeId !== prevDefaultTypeId)
-    ) {
+    if (!isOpened && (defaultType !== prevDefaultType || defaultTypeId !== prevDefaultTypeId)) {
       setData((prevData) => ({
         ...prevData,
         type: defaultType,

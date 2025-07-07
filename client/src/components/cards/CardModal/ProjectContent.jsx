@@ -16,7 +16,7 @@ import entryActions from '../../../entry-actions';
 import { usePopupInClosableContext } from '../../../hooks';
 import { startStopwatch, stopStopwatch } from '../../../utils/stopwatch';
 import { isUsableMarkdownElement } from '../../../utils/element-helpers';
-import { BoardMembershipRoles, CardTypes, ListTypes } from '../../../constants/Enums';
+import { BoardMembershipRoles, ListTypes } from '../../../constants/Enums';
 import { CardTypeIcons } from '../../../constants/Icons';
 import { ClosableContext } from '../../../contexts';
 import NameField from './NameField';
@@ -42,6 +42,7 @@ import AddTaskListStep from '../../task-lists/AddTaskListStep';
 import Attachments from '../../attachments/Attachments';
 import AddAttachmentStep from '../../attachments/AddAttachmentStep';
 import AddCustomFieldGroupStep from '../../custom-field-groups/AddCustomFieldGroupStep';
+import StoryPointsField from './StoryPointsField';
 
 import styles from './ProjectContent.module.scss';
 
@@ -51,6 +52,7 @@ const ProjectContent = React.memo(({ onClose }) => {
 
   const card = useSelector(selectors.selectCurrentCard);
   const board = useSelector(selectors.selectCurrentBoard);
+  const project = useSelector(selectors.selectCurrentProject);
   const cardType = useSelector((state) => {
     if (!card.cardTypeId) {
       return null;
@@ -193,6 +195,17 @@ const ProjectContent = React.memo(({ onClose }) => {
       dispatch(
         entryActions.updateCurrentCard({
           description,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  const handleStoryPointsUpdate = useCallback(
+    (value) => {
+      dispatch(
+        entryActions.updateCurrentCard({
+          storyPoints: value,
         }),
       );
     },
@@ -552,6 +565,18 @@ const ProjectContent = React.memo(({ onClose }) => {
                   </>
                 )}
                 {!canEditDescription && <ExpandableMarkdown>{card.description}</ExpandableMarkdown>}
+              </div>
+            </div>
+          )}
+          {project.useStoryPoints && (
+            <div className={styles.contentModule}>
+              <div className={styles.moduleWrapper}>
+                <Icon name="hashtag" className={styles.moduleIcon} />
+                <div className={styles.moduleHeader}>{t('common.storyPoints')}</div>
+                <StoryPointsField
+                  defaultValue={card.storyPoints}
+                  onUpdate={handleStoryPointsUpdate}
+                />
               </div>
             </div>
           )}

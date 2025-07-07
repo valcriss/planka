@@ -10,6 +10,7 @@ module.exports = {
     notFound: {},
   },
 
+  // eslint-disable-next-line no-unused-vars
   async fn({ project, id, actorUser, request }) {
     const cardType = await CardType.qm.getOneById(id, { projectId: project.id });
 

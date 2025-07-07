@@ -28,10 +28,7 @@ module.exports = {
     }
 
     const project = await Project.qm.getOneById(cardType.projectId);
-    const isProjectManager = await sails.helpers.users.isProjectManager(
-      currentUser.id,
-      project.id,
-    );
+    const isProjectManager = await sails.helpers.users.isProjectManager(currentUser.id, project.id);
 
     if (!isProjectManager) {
       throw Errors.CARD_TYPE_NOT_FOUND; // Forbidden

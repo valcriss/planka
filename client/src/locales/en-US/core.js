@@ -280,6 +280,7 @@ export default {
       sortList_title: 'Sort List',
       stopwatch: 'Stopwatch',
       story: 'Story',
+      storyPoints: 'Story points',
       subscribeToCardWhenCommenting: 'Subscribe to card when commenting',
       subscribeToMyOwnCardsByDefault: 'Subscribe to my own cards by default',
       taskActions_title: 'Task Actions',

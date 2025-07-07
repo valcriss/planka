@@ -10,31 +10,26 @@ import EntryActionTypes from '../../../constants/EntryActionTypes';
 
 export default function* cardTypesWatchers() {
   yield all([
-    takeEvery(
-      EntryActionTypes.CARD_TYPE_IN_CURRENT_PROJECT_CREATE,
-      ({ payload: { data } }) => services.createCardTypeInCurrentProject(data),
+    takeEvery(EntryActionTypes.CARD_TYPE_IN_CURRENT_PROJECT_CREATE, ({ payload: { data } }) =>
+      services.createCardTypeInCurrentProject(data),
     ),
-    takeEvery(
-      EntryActionTypes.CARD_TYPE_CREATE_HANDLE,
-      ({ payload: { cardType } }) => services.handleCardTypeCreate(cardType),
+    takeEvery(EntryActionTypes.CARD_TYPE_CREATE_HANDLE, ({ payload: { cardType } }) =>
+      services.handleCardTypeCreate(cardType),
     ),
     takeEvery(EntryActionTypes.CARD_TYPE_UPDATE, ({ payload: { id, data } }) =>
       services.updateCardType(id, data),
     ),
-    takeEvery(
-      EntryActionTypes.CARD_TYPE_UPDATE_HANDLE,
-      ({ payload: { cardType } }) => services.handleCardTypeUpdate(cardType),
+    takeEvery(EntryActionTypes.CARD_TYPE_UPDATE_HANDLE, ({ payload: { cardType } }) =>
+      services.handleCardTypeUpdate(cardType),
     ),
     takeEvery(EntryActionTypes.CARD_TYPE_DELETE, ({ payload: { id } }) =>
       services.deleteCardType(id),
     ),
-    takeEvery(
-      EntryActionTypes.CARD_TYPE_DELETE_HANDLE,
-      ({ payload: { cardType } }) => services.handleCardTypeDelete(cardType),
+    takeEvery(EntryActionTypes.CARD_TYPE_DELETE_HANDLE, ({ payload: { cardType } }) =>
+      services.handleCardTypeDelete(cardType),
     ),
-    takeEvery(
-      EntryActionTypes.CARD_TYPES_FETCH,
-      ({ payload: { projectId } }) => services.fetchCardTypes(projectId),
+    takeEvery(EntryActionTypes.CARD_TYPES_FETCH, ({ payload: { projectId } }) =>
+      services.fetchCardTypes(projectId),
     ),
   ]);
 }

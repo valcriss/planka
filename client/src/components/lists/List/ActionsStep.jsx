@@ -107,13 +107,7 @@ const ActionsStep = React.memo(({ listId, onNameEdit, onCardAdd, onClose }) => {
       case StepTypes.EDIT_COLOR:
         return <EditColorStep listId={listId} onBack={handleBack} onClose={onClose} />;
       case StepTypes.EDIT_DEFAULT_CARD_TYPE:
-        return (
-          <EditDefaultCardTypeStep
-            listId={listId}
-            onBack={handleBack}
-            onClose={onClose}
-          />
-        );
+        return <EditDefaultCardTypeStep listId={listId} onBack={handleBack} onClose={onClose} />;
       case StepTypes.SORT:
         return <SortStep listId={listId} onBack={handleBack} onClose={onClose} />;
       case StepTypes.ARCHIVE_CARDS:

@@ -26,20 +26,20 @@ const SelectCardTypeStep = React.memo(
       }
     }, [dispatch, projectId]);
 
-  const handleSelect = useCallback(
-    (nextValue, nextName) => {
-      if (withButton) {
-        setValue(nextValue);
-      } else {
-        if (nextValue !== defaultValue) {
-          onSelect(nextValue, nextName);
-        }
+    const handleSelect = useCallback(
+      (nextValue, nextName) => {
+        if (withButton) {
+          setValue(nextValue);
+        } else {
+          if (nextValue !== defaultValue) {
+            onSelect(nextValue, nextName);
+          }
 
-        onClose();
-      }
-    },
-    [defaultValue, withButton, onSelect, onClose],
-  );
+          onClose();
+        }
+      },
+      [defaultValue, withButton, onSelect, onClose],
+    );
 
     const handleSubmit = useCallback(() => {
       if (value !== defaultValue) {
@@ -58,11 +58,7 @@ const SelectCardTypeStep = React.memo(
         </Popup.Header>
         <Popup.Content>
           <Form onSubmit={handleSubmit}>
-            <SelectCardType
-              projectId={projectId}
-              value={value}
-              onSelect={handleSelect}
-            />
+            <SelectCardType projectId={projectId} value={value} onSelect={handleSelect} />
             {withButton && <Button positive content={t(buttonContent)} />}
           </Form>
         </Popup.Content>

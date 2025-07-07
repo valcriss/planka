@@ -21,10 +21,7 @@ const Sizes = {
 };
 
 const BaseCardTypeChip = React.memo(({ id, size, onClick }) => {
-  const selectBaseCardTypeById = useMemo(
-    () => selectors.makeSelectBaseCardTypeById(),
-    [],
-  );
+  const selectBaseCardTypeById = useMemo(() => selectors.makeSelectBaseCardTypeById(), []);
 
   const baseCardType = useSelector((state) => selectBaseCardTypeById(state, id));
 
@@ -38,9 +35,7 @@ const BaseCardTypeChip = React.memo(({ id, size, onClick }) => {
       )}
       style={{ background: baseCardType.color || '#dce0e4', color: '#fff' }}
     >
-      {baseCardType.icon && (
-        <Icon name={baseCardType.icon} className={styles.icon} />
-      )}
+      {baseCardType.icon && <Icon name={baseCardType.icon} className={styles.icon} />}
       {baseCardType.name}
     </span>
   );

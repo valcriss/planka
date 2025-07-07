@@ -51,6 +51,11 @@ module.exports = {
     stopwatch: {
       type: 'json',
     },
+    storyPoints: {
+      type: 'number',
+      defaultsTo: 0,
+      columnName: 'story_points',
+    },
     commentsTotal: {
       type: 'number',
       defaultsTo: 0,

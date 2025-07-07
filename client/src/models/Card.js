@@ -21,6 +21,9 @@ export default class extends BaseModel {
     description: attr(),
     dueDate: attr(),
     stopwatch: attr(),
+    storyPoints: attr({
+      getDefault: () => 0,
+    }),
     commentsTotal: attr({
       getDefault: () => 0,
     }),
@@ -555,6 +558,7 @@ export default class extends BaseModel {
       description: this.description,
       dueDate: this.dueDate,
       stopwatch: this.stopwatch,
+      storyPoints: this.storyPoints,
       ...data,
     });
 

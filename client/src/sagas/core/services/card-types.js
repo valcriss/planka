@@ -14,9 +14,7 @@ import { createLocalId } from '../../../utils/local-id';
 export function* createCardType(projectId, data) {
   const localId = yield call(createLocalId);
 
-  yield put(
-    actions.createCardType(projectId, { ...data, id: localId }),
-  );
+  yield put(actions.createCardType(projectId, { ...data, id: localId }));
 
   let cardType;
   try {

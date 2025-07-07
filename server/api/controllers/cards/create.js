@@ -59,6 +59,11 @@ module.exports = {
       type: 'json',
       custom: isStopwatch,
     },
+    storyPoints: {
+      type: 'number',
+      min: 0,
+      allowNull: true,
+    },
   },
 
   exits: {
@@ -104,11 +109,12 @@ module.exports = {
       'dueDate',
       'stopwatch',
       'cardTypeId',
+      'storyPoints',
     ]);
 
     if (values.cardTypeId) {
-      const cardType = await sails.helpers.cardTypes
-        .getOrCreateForProject.with({
+      const cardType = await sails.helpers.cardTypes.getOrCreateForProject
+        .with({
           project,
           id: values.cardTypeId,
           actorUser: currentUser,
