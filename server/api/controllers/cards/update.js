@@ -142,6 +142,7 @@ module.exports = {
         'listId',
         'coverAttachmentId',
         'type',
+        'cardTypeId',
         'position',
         'name',
         'description',
