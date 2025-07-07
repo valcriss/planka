@@ -71,6 +71,25 @@ const GeneralPane = React.memo(() => {
         <>
           <Divider horizontal section>
             <Header as="h4">
+              {t('common.configuration', {
+                context: 'title',
+              })}
+            </Header>
+          </Divider>
+          <Radio
+            toggle
+            name="useStoryPoints"
+            checked={project.useStoryPoints}
+            label={t('common.useStoryPointsInProject')}
+            className={styles.radio}
+            onChange={handleToggleChange}
+          />
+        </>
+      )}
+      {canEdit && (
+        <>
+          <Divider horizontal section>
+            <Header as="h4">
               {t('common.dangerZone', {
                 context: 'title',
               })}

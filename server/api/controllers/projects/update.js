@@ -67,6 +67,9 @@ module.exports = {
       isIn: Project.BACKGROUND_GRADIENTS,
       allowNull: true,
     },
+    useStoryPoints: {
+      type: 'boolean',
+    },
     isHidden: {
       type: 'boolean',
     },
@@ -123,12 +126,12 @@ module.exports = {
           throw Errors.NOT_ENOUGH_RIGHTS;
         }
 
-        availableInputKeys.push('ownerProjectManagerId', 'isHidden');
+        availableInputKeys.push('ownerProjectManagerId', 'isHidden', 'useStoryPoints');
       }
     } else if (currentUser.role === User.Roles.ADMIN) {
-      availableInputKeys.push('ownerProjectManagerId', 'isHidden');
+      availableInputKeys.push('ownerProjectManagerId', 'isHidden', 'useStoryPoints');
     } else if (projectManager) {
-      availableInputKeys.push('isHidden');
+      availableInputKeys.push('isHidden', 'useStoryPoints');
     }
 
     if (projectManager) {
@@ -138,6 +141,7 @@ module.exports = {
         'description',
         'backgroundType',
         'backgroundGradient',
+        'useStoryPoints',
       );
     }
 
@@ -195,6 +199,7 @@ module.exports = {
       'backgroundType',
       'backgroundGradient',
       'isHidden',
+      'useStoryPoints',
       'isFavorite',
     ]);
 

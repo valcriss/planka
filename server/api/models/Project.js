@@ -84,6 +84,11 @@ module.exports = {
       defaultsTo: false, // TODO: implement via normalizeValues?
       columnName: 'is_hidden',
     },
+    useStoryPoints: {
+      type: 'boolean',
+      defaultsTo: false,
+      columnName: 'use_story_points',
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗

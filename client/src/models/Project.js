@@ -19,6 +19,7 @@ export default class extends BaseModel {
     backgroundType: attr(),
     backgroundGradient: attr(),
     isHidden: attr(),
+    useStoryPoints: attr(),
     isFavorite: attr({
       getDefault: () => false,
     }),
