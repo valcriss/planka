@@ -230,10 +230,11 @@ export function* handleLocationChange() {
     default:
   }
 
-  if (board) {
+  const boardForTypes = board || currentBoard;
+  if (boardForTypes) {
     yield call(fetchBaseCardTypes);
-    if (board.projectId) {
-      yield call(fetchCardTypes, board.projectId);
+    if (boardForTypes.projectId) {
+      yield call(fetchCardTypes, boardForTypes.projectId);
     }
   }
 
