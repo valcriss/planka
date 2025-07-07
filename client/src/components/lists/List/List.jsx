@@ -26,6 +26,7 @@ import DraggableCard from '../../cards/DraggableCard';
 import AddCard from '../../cards/AddCard';
 import ArchiveCardsStep from '../../cards/ArchiveCardsStep';
 import PlusMathIcon from '../../../assets/images/plus-math-icon.svg?react';
+import StoryPointsChip from '../../cards/StoryPointsChip';
 
 import styles from './List.module.scss';
 import globalStyles from '../../../styles.module.scss';
@@ -38,9 +39,16 @@ const List = React.memo(({ id, index }) => {
     [],
   );
 
+  const selectStoryPointsTotalByListId = useMemo(
+    () => selectors.makeSelectStoryPointsTotalByListId(),
+    [],
+  );
+
   const isFavoritesActive = useSelector(selectors.selectIsFavoritesActiveForCurrentUser);
   const list = useSelector((state) => selectListById(state, id));
   const cardIds = useSelector((state) => selectFilteredCardIdsByListId(state, id));
+  const storyPointsTotal = useSelector((state) => selectStoryPointsTotalByListId(state, id));
+  const project = useSelector(selectors.selectCurrentProject);
 
   const { canEdit, canArchiveCards, canAddCard, canDropCard } = useSelector((state) => {
     const isEditModeEnabled = selectors.selectIsEditModeEnabled(state); // TODO: move out?
@@ -186,6 +194,13 @@ const List = React.memo(({ id, index }) => {
                   )}
                   {list.name}
                 </div>
+              )}
+              {project.useStoryPoints && storyPointsTotal !== 0 && (
+                <StoryPointsChip
+                  value={storyPointsTotal}
+                  size="tiny"
+                  className={styles.storyPoints}
+                />
               )}
               {list.type !== ListTypes.ACTIVE && (
                 <Icon
