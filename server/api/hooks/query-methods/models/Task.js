@@ -57,6 +57,20 @@ const delete_ = (criteria) => Task.destroy(criteria).fetch();
 
 const deleteOne = (criteria) => Task.destroyOne(criteria);
 
+const deleteByLinkedCardIds = async (cardIdOrIds) => {
+  const ids = Array.isArray(cardIdOrIds) ? cardIdOrIds : [cardIdOrIds];
+
+  if (ids.length === 0) {
+    return [];
+  }
+
+  const orCriteria = ids.map((cardId) => ({
+    name: { contains: `/cards/${cardId}` },
+  }));
+
+  return Task.destroy({ or: orCriteria }).fetch();
+};
+
 module.exports = {
   create,
   createOne,
@@ -67,5 +81,6 @@ module.exports = {
   update,
   updateOne,
   deleteOne,
+  deleteByLinkedCardIds,
   delete: delete_,
 };

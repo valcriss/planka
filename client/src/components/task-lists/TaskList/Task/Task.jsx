@@ -41,7 +41,7 @@ const Task = React.memo(({ id, index }) => {
       const card = selectCardById(state, cardId);
       if (card) {
         const list = selectListById(state, card.listId);
-        if (list && list.type === ListTypes.CLOSED) {
+        if (list && [ListTypes.CLOSED, ListTypes.ARCHIVE, ListTypes.TRASH].includes(list.type)) {
           return true;
         }
       }

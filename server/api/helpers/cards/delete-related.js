@@ -33,6 +33,8 @@ module.exports = {
       cardId: cardIdOrIds,
     });
 
+    await Task.qm.deleteByLinkedCardIds(cardIdOrIds);
+
     const taskLists = await TaskList.qm.delete({
       cardId: cardIdOrIds,
     });

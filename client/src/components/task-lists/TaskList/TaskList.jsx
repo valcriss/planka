@@ -64,7 +64,7 @@ const TaskList = React.memo(({ id }) => {
         if (card) {
           const list = selectListById(state, card.listId);
 
-          if (list && list.type === ListTypes.CLOSED) {
+          if (list && [ListTypes.CLOSED, ListTypes.ARCHIVE, ListTypes.TRASH].includes(list.type)) {
             return result + 1;
           }
         }
