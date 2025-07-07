@@ -316,7 +316,53 @@ export const selectFiniteListIdsForCurrentBoard = createSelector(
       .toRefArray()
       .map((list) => list.id);
   },
-);
+  );
+
+export const makeSelectFiniteListIdsByBoardId = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ Board }, id) => {
+      if (!id) {
+        return id;
+      }
+
+      const boardModel = Board.withId(id);
+
+      if (!boardModel) {
+        return boardModel;
+      }
+
+      return boardModel
+        .getFiniteListsQuerySet()
+        .toRefArray()
+        .map((list) => list.id);
+    },
+  );
+
+export const makeSelectListIdByTypeByBoardId = () =>
+  createSelector(
+    orm,
+    (_, boardId) => boardId,
+    (_, __, type) => type,
+    ({ Board }, boardId, type) => {
+      if (!boardId) {
+        return boardId;
+      }
+
+      const boardModel = Board.withId(boardId);
+
+      if (!boardModel) {
+        return boardModel;
+      }
+
+      const listModel = boardModel.lists
+        .filter({ type })
+        .first();
+
+      return listModel && listModel.id;
+    },
+  );
 
 // TODO: rename?
 export const selectAvailableListsForCurrentBoard = createSelector(
@@ -487,6 +533,8 @@ export default {
   selectArchiveListIdForCurrentBoard,
   selectTrashListIdForCurrentBoard,
   selectFiniteListIdsForCurrentBoard,
+  makeSelectFiniteListIdsByBoardId,
+  makeSelectListIdByTypeByBoardId,
   selectAvailableListsForCurrentBoard,
   selectFilteredCardIdsForCurrentBoard,
   makeSelectListIdBySlugForCurrentBoard,
