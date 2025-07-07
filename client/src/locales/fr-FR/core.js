@@ -171,6 +171,8 @@ export default {
       description: 'Description',
       detectAutomatically: 'Détecter automatiquement',
       display: 'Affichage',
+      configuration: 'Configuration',
+      useStoryPointsInProject: 'Utiliser les story points dans le projet',
       dropFileToUpload: 'Déposer le fichier à télécharger',
       dueDate_title: "Date d'échéance",
       dynamicAndUnevenlySpacedLayout: 'Mise en page dynamique et inégalement espacée.',

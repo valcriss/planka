@@ -162,6 +162,8 @@ export default {
       description: 'Description',
       detectAutomatically: 'Detect automatically',
       display: 'Display',
+      configuration: 'Configuration',
+      useStoryPointsInProject: 'Use story points in project',
       dropFileToUpload: 'Drop file to upload',
       dueDate_title: 'Due Date',
       dynamicAndUnevenlySpacedLayout: 'Dynamic and unevenly spaced layout.',
