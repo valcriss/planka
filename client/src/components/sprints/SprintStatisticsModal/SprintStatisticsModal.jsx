@@ -24,7 +24,13 @@ const SprintStatisticsModal = React.memo(() => {
   const [ClosableModal] = useClosableModal();
 
   return (
-    <ClosableModal closeIcon centered={false} className={styles.wrapper} onClose={handleClose}>
+    <ClosableModal
+      closeIcon
+      centered={false}
+      size="fullscreen"
+      className={styles.wrapper}
+      onClose={handleClose}
+    >
       <ClosableModal.Header>
         {t('common.sprintStatistics', { context: 'title' })}
       </ClosableModal.Header>
