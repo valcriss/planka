@@ -98,13 +98,9 @@ const StartSprintStep = React.memo(({ onClose }) => {
 
   const handleConfirm = useCallback(async () => {
     try {
-      await socket.post(
-        `/projects/${projectId}/start-sprint`,
-        undefined,
-        {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      );
+      await socket.post(`/projects/${projectId}/start-sprint`, undefined, {
+        Authorization: `Bearer ${accessToken}`,
+      });
     } catch {
       /* ignore */
     }

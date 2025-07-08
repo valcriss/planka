@@ -17,6 +17,7 @@ const SprintBanner = React.memo(() => {
   const { projectId } = useSelector(selectors.selectPath);
   const board = useSelector(selectors.selectCurrentBoard);
   const project = useSelector(selectors.selectCurrentProject);
+  const accessToken = useSelector(selectors.selectAccessToken);
   const [sprint, setSprint] = useState(null);
   const [t, i18n] = useTranslation();
 
@@ -24,7 +25,9 @@ const SprintBanner = React.memo(() => {
     let isMounted = true;
 
     api
-      .getCurrentSprint(projectId)
+      .getCurrentSprint(projectId, {
+        Authorization: `Bearer ${accessToken}`,
+      })
       .then(({ item }) => {
         if (isMounted) {
           setSprint(item);
@@ -37,7 +40,7 @@ const SprintBanner = React.memo(() => {
     return () => {
       isMounted = false;
     };
-  }, [projectId]);
+  }, [projectId, accessToken]);
 
   const selectFiniteListIdsByBoardId = useMemo(
     () => selectors.makeSelectFiniteListIdsByBoardId(),
