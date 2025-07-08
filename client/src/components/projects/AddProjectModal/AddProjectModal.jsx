@@ -36,6 +36,7 @@ const AddProjectModal = React.memo(() => {
     description: '',
     type: ProjectTypes.PRIVATE,
     template: ProjectTemplates.NONE,
+    sprintDuration: 2,
     ...defaultData,
     ...(defaultType && {
       type: defaultType,

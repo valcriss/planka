@@ -12,6 +12,7 @@ const initialState = {
     description: '',
     type: ProjectTypes.PRIVATE,
     template: ProjectTemplates.NONE,
+    sprintDuration: 2,
   },
   isSubmitting: false,
 };

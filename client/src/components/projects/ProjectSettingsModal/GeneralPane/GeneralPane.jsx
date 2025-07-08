@@ -6,7 +6,7 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Button, Divider, Header, Radio, Tab } from 'semantic-ui-react';
+import { Button, Divider, Header, Radio, Tab, Dropdown } from 'semantic-ui-react';
 
 import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
@@ -55,6 +55,17 @@ const GeneralPane = React.memo(() => {
       );
     },
     [dispatch, t],
+  );
+
+  const handleSprintDurationChange = useCallback(
+    (_, { value }) => {
+      dispatch(
+        entryActions.updateCurrentProject({
+          sprintDuration: value,
+        }),
+      );
+    },
+    [dispatch],
   );
 
   const handleDeleteConfirm = useCallback(() => {
@@ -110,6 +121,22 @@ const GeneralPane = React.memo(() => {
             className={styles.radio}
             onChange={handleScrumToggleChange}
           />
+          {project.useScrum && (
+            <Dropdown
+              fluid
+              selection
+              name="sprintDuration"
+              value={project.sprintDuration}
+              options={[
+                { value: 1, text: t('common.oneWeek') },
+                { value: 2, text: t('common.twoWeeks') },
+                { value: 3, text: t('common.threeWeeks') },
+                { value: 4, text: t('common.fourWeeks') },
+              ]}
+              className={styles.field}
+              onChange={handleSprintDurationChange}
+            />
+          )}
         </>
       )}
       {canEdit && (

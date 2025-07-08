@@ -28,6 +28,11 @@ module.exports = {
       isIn: ['none', 'kaban', 'scrum'],
       defaultsTo: 'none',
     },
+    sprintDuration: {
+      type: 'number',
+      isIn: [1, 2, 3, 4],
+      defaultsTo: 2,
+    },
   },
 
   async fn(inputs) {
@@ -35,10 +40,16 @@ module.exports = {
 
     const t = sails.helpers.utils.makeTranslator(currentUser.language || this.req.getLocale());
 
-    const values = _.pick(inputs, ['type', 'name', 'description']);
+    const values = _.pick(inputs, ['type', 'name', 'description', 'sprintDuration']);
+    if (!values.sprintDuration) {
+      values.sprintDuration = 2;
+    }
     if (inputs.template === 'scrum') {
       values.useStoryPoints = true;
       values.useScrum = true;
+      if (!values.sprintDuration) {
+        values.sprintDuration = 2;
+      }
     }
 
     const { project, projectManager } = await sails.helpers.projects.createOne.with({

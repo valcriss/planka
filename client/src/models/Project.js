@@ -21,6 +21,7 @@ export default class extends BaseModel {
     isHidden: attr(),
     useStoryPoints: attr(),
     useScrum: attr(),
+    sprintDuration: attr(),
     isFavorite: attr({
       getDefault: () => false,
     }),
