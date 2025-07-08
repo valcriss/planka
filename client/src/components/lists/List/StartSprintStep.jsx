@@ -21,12 +21,20 @@ const StartSprintStep = React.memo(({ onClose }) => {
   const dispatch = useDispatch();
   const [t] = useTranslation();
 
-  const [data, handleFieldChange] = useForm({
-    startDate: '',
-    endDate: '',
-  });
-
   const project = useSelector(selectors.selectCurrentProject);
+
+  const [data, handleFieldChange] = useForm(() => {
+    const start = new Date();
+    const startDate = start.toISOString().slice(0, 10);
+
+    const end = new Date(start);
+    if (project && project.sprintDuration) {
+      end.setDate(end.getDate() + project.sprintDuration * 7);
+    }
+    const endDate = end.toISOString().slice(0, 10);
+
+    return { startDate, endDate };
+  });
 
   const selectListIdBySlug = useMemo(() => selectors.makeSelectListIdBySlug(), []);
   const readyListId = useSelector((state) => selectListIdBySlug(state, 'ready-for-sprint'));
