@@ -1,11 +1,15 @@
 :global(#app) {
   .wrapper {
-    background-color: rgba(248, 248, 248, 0.93);
-    border-bottom: 1px solid #E0E0E0;
-    padding: 8px 20px;
+    background-color: rgba(248, 248, 248, 0.7);
+    padding: 0 20px;
+    height: 32px;
+    width: 100%;
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
     gap: 20px;
+    margin-bottom: 15px;
   }
 
   .item {
