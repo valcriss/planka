@@ -98,15 +98,18 @@ const StartSprintStep = React.memo(({ onClose }) => {
     !data.startDate || !data.endDate || data.startDate >= data.endDate || readyCardIds.length === 0;
 
   const handleConfirm = useCallback(() => {
-    if (doneListId) {
-      dispatch(entryActions.moveListCardsToArchiveList(doneListId));
-    }
-    dispatch(entryActions.moveListCardsToSlug('ready-for-sprint', 'sprint-todo'));
-
-    api.startSprint(projectId).catch(() => {
-      /* ignore */
-    });
-    onClose();
+    api
+      .startSprint(projectId)
+      .then(() => {
+        if (doneListId) {
+          dispatch(entryActions.moveListCardsToArchiveList(doneListId));
+        }
+        dispatch(entryActions.moveListCardsToSlug('ready-for-sprint', 'sprint-todo'));
+      })
+      .catch(() => {
+        /* ignore */
+      })
+      .finally(onClose);
   }, [dispatch, doneListId, projectId, onClose]);
 
   return (
