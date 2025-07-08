@@ -15,6 +15,7 @@ import EndlessContent from './EndlessContent';
 import CardModal from '../../cards/CardModal';
 import BoardActivitiesModal from '../../activities/BoardActivitiesModal';
 import SprintBanner from '../SprintBanner';
+import styles from './Board.module.scss';
 
 const Board = React.memo(() => {
   const board = useSelector(selectors.selectCurrentBoard);
@@ -55,11 +56,11 @@ const Board = React.memo(() => {
   }
 
   return (
-    <>
+    <div className={styles.wrapper}>
       {project && project.useScrum && board.name === 'Sprint' && <SprintBanner />}
       <Content />
       {modalNode}
-    </>
+    </div>
   );
 });
 
