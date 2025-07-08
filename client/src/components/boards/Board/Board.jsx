@@ -14,6 +14,7 @@ import FiniteContent from './FiniteContent';
 import EndlessContent from './EndlessContent';
 import CardModal from '../../cards/CardModal';
 import BoardActivitiesModal from '../../activities/BoardActivitiesModal';
+import SprintStatisticsModal from '../../sprints/SprintStatisticsModal';
 import SprintBanner from '../SprintBanner';
 import styles from './Board.module.scss';
 
@@ -49,6 +50,10 @@ const Board = React.memo(() => {
     switch (modal.type) {
       case ModalTypes.BOARD_ACTIVITIES:
         modalNode = <BoardActivitiesModal />;
+
+        break;
+      case ModalTypes.SPRINT_STATISTICS:
+        modalNode = <SprintStatisticsModal />;
 
         break;
       default:

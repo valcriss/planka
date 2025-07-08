@@ -3,13 +3,15 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { Icon, Button } from 'semantic-ui-react';
 
 import api from '../../../api';
 import selectors from '../../../selectors';
 import { ListTypes } from '../../../constants/Enums';
+import entryActions from '../../../entry-actions';
 
 import styles from './SprintBanner.module.scss';
 
@@ -18,6 +20,7 @@ const SprintBanner = React.memo(() => {
   const board = useSelector(selectors.selectCurrentBoard);
   const project = useSelector(selectors.selectCurrentProject);
   const accessToken = useSelector(selectors.selectAccessToken);
+  const dispatch = useDispatch();
   const [sprint, setSprint] = useState(null);
   const [t, i18n] = useTranslation();
 
@@ -69,6 +72,10 @@ const SprintBanner = React.memo(() => {
   );
   const remainingPoints = sprintPoints - donePoints;
 
+  const handleStatisticsClick = useCallback(() => {
+    dispatch(entryActions.openSprintStatisticsModal());
+  }, [dispatch]);
+
   if (!sprint) {
     return (
       <div className={styles.wrapper}>
@@ -93,6 +100,15 @@ const SprintBanner = React.memo(() => {
           <div className={styles.item}>{`${t('common.remainingPoints')}: ${remainingPoints}`}</div>
         </>
       )}
+      <Button
+        basic
+        icon
+        title={t('common.sprintStatistics_title')}
+        className={styles.iconButton}
+        onClick={handleStatisticsClick}
+      >
+        <Icon name="chart bar" />
+      </Button>
     </div>
   );
 });
