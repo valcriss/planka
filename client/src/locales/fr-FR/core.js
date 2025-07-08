@@ -206,6 +206,7 @@ export default {
       sprintPoints: 'Points du Sprint',
       donePoints: 'Points terminés',
       remainingPoints: 'Points restants',
+      noActiveSprint: 'Aucun Sprint actif dans le projet',
       editEmail_title: "Modifier l'e-mail",
       editInformation_title: 'Modifier les informations',
       editLabel_title: "Modifier l'étiquette",

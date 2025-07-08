@@ -43,9 +43,7 @@ const SprintBanner = React.memo(() => {
     () => selectors.makeSelectFiniteListIdsByBoardId(),
     [],
   );
-  const listIds = useSelector((state) =>
-    selectFiniteListIdsByBoardId(state, board.id),
-  );
+  const listIds = useSelector((state) => selectFiniteListIdsByBoardId(state, board.id));
 
   const selectListIdByTypeByBoardId = useMemo(
     () => selectors.makeSelectListIdByTypeByBoardId(),
@@ -61,10 +59,7 @@ const SprintBanner = React.memo(() => {
   );
 
   const sprintPoints = useSelector((state) =>
-    listIds.reduce(
-      (total, id) => total + selectStoryPointsTotalByListId(state, id),
-      0,
-    ),
+    listIds.reduce((total, id) => total + selectStoryPointsTotalByListId(state, id), 0),
   );
   const donePoints = useSelector((state) =>
     doneListId ? selectStoryPointsTotalByListId(state, doneListId) : 0,
@@ -72,7 +67,11 @@ const SprintBanner = React.memo(() => {
   const remainingPoints = sprintPoints - donePoints;
 
   if (!sprint) {
-    return null;
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.item}>{t('common.noActiveSprint')}</div>
+      </div>
+    );
   }
 
   const formatDate = (iso) => new Date(iso).toLocaleDateString(i18n.language);
@@ -80,7 +79,9 @@ const SprintBanner = React.memo(() => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.item}>{`${t('common.sprint')}: ${sprint.number}`}</div>
-      <div className={styles.item}>{`${t('common.startDate')}: ${formatDate(sprint.startDate)}`}</div>
+      <div
+        className={styles.item}
+      >{`${t('common.startDate')}: ${formatDate(sprint.startDate)}`}</div>
       <div className={styles.item}>{`${t('common.endDate')}: ${formatDate(sprint.endDate)}`}</div>
       {project.useStoryPoints && (
         <>
