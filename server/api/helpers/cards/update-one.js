@@ -380,6 +380,15 @@ module.exports = {
       if (values.list) {
         values.listChangedAt = new Date().toISOString();
 
+        if (values.list.type === List.Types.CLOSED && inputs.list.type !== List.Types.CLOSED) {
+          values.closedAt = new Date().toISOString();
+        } else if (
+          values.list.type !== List.Types.CLOSED &&
+          inputs.list.type === List.Types.CLOSED
+        ) {
+          values.closedAt = null;
+        }
+
         if (values.board || inputs.list.type === List.Types.TRASH) {
           values.prevListId = null;
         } else if (sails.helpers.lists.isArchiveOrTrash(values.list)) {

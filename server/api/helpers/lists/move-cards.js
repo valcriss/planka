@@ -58,16 +58,27 @@ module.exports = {
       values.prevListId = null;
     }
 
+    const updateValues = {
+      ...values,
+      listId: values.list.id,
+      position: null,
+      listChangedAt: new Date().toISOString(),
+    };
+
+    if (values.list.type === List.Types.CLOSED && inputs.record.type !== List.Types.CLOSED) {
+      updateValues.closedAt = new Date().toISOString();
+    } else if (
+      values.list.type !== List.Types.CLOSED &&
+      inputs.record.type === List.Types.CLOSED
+    ) {
+      updateValues.closedAt = null;
+    }
+
     const cards = await Card.qm.update(
       {
         listId: inputs.record.id,
       },
-      {
-        ...values,
-        listId: values.list.id,
-        position: null,
-        listChangedAt: new Date().toISOString(),
-      },
+      updateValues,
     );
 
     const actions = await Action.qm.create(
