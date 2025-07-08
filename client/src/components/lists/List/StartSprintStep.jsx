@@ -133,7 +133,16 @@ const StartSprintStep = React.memo(({ onClose }) => {
           </div>
           {project.useStoryPoints && (
             <div className={styles.info}>
-              {t('common.totalSprintPoints')}: {totalPoints}
+              <div className={styles.text}>{t('common.totalSprintPoints')}</div>
+              <div className={styles.subInfo}>
+                {t('common.fromPreviousSprint')}: {sprintPoints}
+              </div>
+              <div className={styles.subInfo}>
+                {t('common.newSprintPoints')}: {readyPoints}
+              </div>
+              <div className={styles.subInfo}>
+                {t('common.total')}: {totalPoints}
+              </div>
             </div>
           )}
           <div className={styles.info}>{t('common.startingSprintWill')}</div>
