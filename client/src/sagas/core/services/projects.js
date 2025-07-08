@@ -171,6 +171,7 @@ export function* updateCurrentProject(data) {
   yield call(updateProject, projectId, data);
 
   if (prevProject && prevProject.useScrum && data.useScrum === false) {
+    // eslint-disable-next-line no-restricted-syntax
     for (const board of scrumBoards) {
       yield put(actions.handleBoardDelete(board));
       if (board.id === boardId) {

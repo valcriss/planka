@@ -287,9 +287,7 @@ export const makeSelectListIdBySlugForCurrentBoard = () =>
         return boardModel;
       }
 
-      const listModel = boardModel.lists
-        .filter({ slug })
-        .first();
+      const listModel = boardModel.lists.filter({ slug }).first();
 
       return listModel && listModel.id;
     },
@@ -316,7 +314,7 @@ export const selectFiniteListIdsForCurrentBoard = createSelector(
       .toRefArray()
       .map((list) => list.id);
   },
-  );
+);
 
 export const makeSelectFiniteListIdsByBoardId = () =>
   createSelector(
@@ -356,9 +354,7 @@ export const makeSelectListIdByTypeByBoardId = () =>
         return boardModel;
       }
 
-      const listModel = boardModel.lists
-        .filter({ type })
-        .first();
+      const listModel = boardModel.lists.filter({ type }).first();
 
       return listModel && listModel.id;
     },

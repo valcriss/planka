@@ -106,7 +106,6 @@ const List = React.memo(({ id, index }) => {
     setIsEditNameOpened(false);
   }, []);
 
-
   const handleWrapperTransitionEnd = useTransitioning(
     wrapperRef,
     styles.outerWrapperTransitioning,
@@ -232,10 +231,7 @@ const List = React.memo(({ id, index }) => {
                 ))}
               {list.isPersisted && list.slug === 'ready-for-sprint' && (
                 <StartSprintPopup>
-                  <Button
-                    className={styles.headerButton}
-                    title={t('action.startSprint_title')}
-                  >
+                  <Button className={styles.headerButton} title={t('action.startSprint_title')}>
                     <Icon fitted name="play" size="small" />
                   </Button>
                 </StartSprintPopup>

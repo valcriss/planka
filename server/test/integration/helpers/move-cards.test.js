@@ -8,8 +8,6 @@ describe('helpers/lists.moveCards', () => {
   let board;
   let listA;
   let listB;
-  let card1;
-  let card2;
 
   before(async () => {
     user = await User.qm.createOne({

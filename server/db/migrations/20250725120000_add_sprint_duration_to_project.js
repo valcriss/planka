@@ -8,4 +8,3 @@ exports.down = (knex) =>
   knex.schema.table('project', (table) => {
     table.dropColumn('sprint_duration');
   });
-

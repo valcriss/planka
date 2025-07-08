@@ -69,9 +69,7 @@ export const makeSelectListIdBySlug = () =>
     orm,
     (_, slug) => slug,
     ({ List }, slug) => {
-      const listModel = List.all()
-        .filter({ slug })
-        .first();
+      const listModel = List.all().filter({ slug }).first();
 
       return listModel && listModel.id;
     },

@@ -133,14 +133,8 @@ export function* moveListCardsToArchiveList(id) {
 }
 
 export function* moveListCardsToSlug(fromSlug, toSlug) {
-  const fromListId = yield select(
-    selectors.selectListIdBySlugForCurrentBoard,
-    fromSlug,
-  );
-  let toListId = yield select(
-    selectors.selectListIdBySlugForCurrentBoard,
-    toSlug,
-  );
+  const fromListId = yield select(selectors.selectListIdBySlugForCurrentBoard, fromSlug);
+  let toListId = yield select(selectors.selectListIdBySlugForCurrentBoard, toSlug);
 
   if (!toListId) {
     toListId = yield select(selectors.selectListIdBySlug, toSlug);
@@ -150,10 +144,12 @@ export function* moveListCardsToSlug(fromSlug, toSlug) {
     const { projectId } = yield select(selectors.selectPath);
     const boardIds = yield select(selectors.selectBoardIdsByProjectId, projectId);
 
+    // eslint-disable-next-line no-restricted-syntax
     for (const boardId of boardIds) {
       const board = yield select(selectors.selectBoardById, boardId);
 
       if (board && board.isFetching === null) {
+        // eslint-disable-next-line import/no-named-as-default-member
         yield call(boardsServices.fetchBoard, boardId);
       }
 
@@ -179,7 +175,9 @@ export function* moveListCardsToSlug(fromSlug, toSlug) {
 
   const cardIds = yield select(selectors.selectCardIdsByListId, fromListId);
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const cardId of cardIds) {
+    // eslint-disable-next-line import/no-named-as-default-member
     yield call(cardsServices.transferCard, cardId, toList.boardId, toListId);
   }
 }

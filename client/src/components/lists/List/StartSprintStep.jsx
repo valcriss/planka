@@ -58,6 +58,7 @@ const StartSprintStep = React.memo(({ onClose }) => {
   const projectId = useSelector((state) => selectors.selectPath(state).projectId);
   const sprintBoardId = useSelector((state) => {
     const ids = selectors.selectBoardIdsByProjectId(state, projectId);
+    // eslint-disable-next-line no-restricted-syntax
     for (const id of ids) {
       const board = selectors.selectBoardById(state, id);
       if (board && board.name === 'Sprint') {
@@ -93,10 +94,7 @@ const StartSprintStep = React.memo(({ onClose }) => {
   const totalPoints = readyPoints + sprintPoints;
 
   const isConfirmDisabled =
-    !data.startDate ||
-    !data.endDate ||
-    data.startDate >= data.endDate ||
-    readyCardIds.length === 0;
+    !data.startDate || !data.endDate || data.startDate >= data.endDate || readyCardIds.length === 0;
 
   const handleConfirm = useCallback(() => {
     if (doneListId) {
@@ -132,22 +130,32 @@ const StartSprintStep = React.memo(({ onClose }) => {
             />
           </div>
           {project.useStoryPoints && (
-            <div className={styles.info}>
+            <div className={styles.box}>
               <div className={styles.text}>{t('common.totalSprintPoints')}</div>
-              <div className={styles.subInfo}>
-                {t('common.fromPreviousSprint')}: {sprintPoints}
-              </div>
-              <div className={styles.subInfo}>
-                {t('common.newSprintPoints')}: {readyPoints}
-              </div>
-              <div className={styles.subInfo}>
-                {t('common.total')}: {totalPoints}
-              </div>
+              <table className={styles.table}>
+                <tbody>
+                  <tr>
+                    <td className={styles.subInfo}>{t('common.fromPreviousSprint')}</td>
+                    <td className={styles.value}>{sprintPoints}</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.subInfo}>{t('common.newSprintPoints')}</td>
+                    <td className={styles.value}>{readyPoints}</td>
+                  </tr>
+                  <tr className={styles.rowSeparator}>
+                    <td className={styles.subInfo}>{t('common.total')}</td>
+                    <td className={styles.value}>{totalPoints}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           )}
-          <div className={styles.info}>{t('common.startingSprintWill')}</div>
-          <div className={styles.info}>- {t('common.archiveFinishedCardsOnSprintBoard')}</div>
-          <div className={styles.info}>- {t('common.moveReadyForSprintCardsOnSprintBoard')}</div>
+          <div className={styles.boxYellow}>
+            <div className={styles.text}>{t('common.startingSprintWill')}</div>
+            <div className={styles.subInfo}>{t('common.archiveFinishedCardsOnSprintBoard')}</div>
+            <div className={styles.subInfo}>{t('common.moveReadyForSprintCardsOnSprintBoard')}</div>
+          </div>
+          <hr className={styles.separator} />
           <Button
             positive
             disabled={isConfirmDisabled}

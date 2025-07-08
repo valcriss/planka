@@ -200,7 +200,8 @@ export default {
       total: 'Total',
       startingSprintWill: 'Démarrer le sprint va :',
       archiveFinishedCardsOnSprintBoard: 'Archiver toutes les cartes terminées du tableau Sprint',
-      moveReadyForSprintCardsOnSprintBoard: 'Déplacer toutes les cartes prêtes pour Sprint sur le tableau Sprint',
+      moveReadyForSprintCardsOnSprintBoard:
+        'Déplacer toutes les cartes prêtes pour Sprint sur le tableau Sprint',
       editEmail_title: "Modifier l'e-mail",
       editInformation_title: 'Modifier les informations',
       editLabel_title: "Modifier l'étiquette",
