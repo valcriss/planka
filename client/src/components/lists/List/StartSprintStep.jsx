@@ -5,19 +5,21 @@
 
 import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'semantic-ui-react';
 import { Input, Popup } from '../../../lib/custom-ui';
 
 import selectors from '../../../selectors';
 import api from '../../../api';
+import entryActions from '../../../entry-actions';
 import { useForm } from '../../../hooks';
 import { ListTypes } from '../../../constants/Enums';
 
 import styles from './StartSprintStep.module.scss';
 
 const StartSprintStep = React.memo(({ onClose }) => {
+  const dispatch = useDispatch();
   const [t] = useTranslation();
 
   const project = useSelector(selectors.selectCurrentProject);
@@ -96,11 +98,16 @@ const StartSprintStep = React.memo(({ onClose }) => {
     !data.startDate || !data.endDate || data.startDate >= data.endDate || readyCardIds.length === 0;
 
   const handleConfirm = useCallback(() => {
+    if (doneListId) {
+      dispatch(entryActions.moveListCardsToArchiveList(doneListId));
+    }
+    dispatch(entryActions.moveListCardsToSlug('ready-for-sprint', 'sprint-todo'));
+
     api.startSprint(projectId).catch(() => {
       /* ignore */
     });
     onClose();
-  }, [projectId, onClose]);
+  }, [dispatch, doneListId, projectId, onClose]);
 
   return (
     <>
