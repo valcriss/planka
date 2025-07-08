@@ -94,6 +94,11 @@ module.exports = {
       defaultsTo: false,
       columnName: 'use_scrum',
     },
+    sprintDuration: {
+      type: 'number',
+      defaultsTo: 2,
+      columnName: 'sprint_duration',
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗

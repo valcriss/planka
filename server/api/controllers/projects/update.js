@@ -70,6 +70,10 @@ module.exports = {
     useScrum: {
       type: 'boolean',
     },
+    sprintDuration: {
+      type: 'number',
+      isIn: [1, 2, 3, 4],
+    },
     useStoryPoints: {
       type: 'boolean',
     },
@@ -131,12 +135,24 @@ module.exports = {
           throw Errors.NOT_ENOUGH_RIGHTS;
         }
 
-        availableInputKeys.push('ownerProjectManagerId', 'isHidden', 'useStoryPoints', 'useScrum');
+        availableInputKeys.push(
+          'ownerProjectManagerId',
+          'isHidden',
+          'useStoryPoints',
+          'useScrum',
+          'sprintDuration',
+        );
       }
     } else if (currentUser.role === User.Roles.ADMIN) {
-      availableInputKeys.push('ownerProjectManagerId', 'isHidden', 'useStoryPoints', 'useScrum');
+      availableInputKeys.push(
+        'ownerProjectManagerId',
+        'isHidden',
+        'useStoryPoints',
+        'useScrum',
+        'sprintDuration',
+      );
     } else if (projectManager) {
-      availableInputKeys.push('isHidden', 'useStoryPoints', 'useScrum');
+      availableInputKeys.push('isHidden', 'useStoryPoints', 'useScrum', 'sprintDuration');
     }
 
     if (projectManager) {
@@ -148,6 +164,7 @@ module.exports = {
         'backgroundGradient',
         'useStoryPoints',
         'useScrum',
+        'sprintDuration',
       );
     }
 
@@ -207,6 +224,7 @@ module.exports = {
       'isHidden',
       'useStoryPoints',
       'useScrum',
+      'sprintDuration',
       'isFavorite',
     ]);
 
