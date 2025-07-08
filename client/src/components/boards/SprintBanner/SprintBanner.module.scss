@@ -1,0 +1,16 @@
+:global(#app) {
+  .wrapper {
+    background-color: rgba(248, 248, 248, 0.93);
+    border-bottom: 1px solid #E0E0E0;
+    padding: 8px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .item {
+    font-size: 12px;
+    color: #444444;
+    font-weight: bold;
+  }
+}

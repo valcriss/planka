@@ -32,6 +32,7 @@ import comments from './comments';
 import activities from './activities';
 import notifications from './notifications';
 import notificationServices from './notification-services';
+import sprints from './sprints';
 
 export { http, socket };
 
@@ -59,6 +60,7 @@ export default {
   ...customFieldGroups,
   ...customFields,
   ...customFieldValues,
+  ...sprints,
   ...comments,
   ...activities,
   ...notifications,

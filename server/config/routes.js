@@ -89,6 +89,7 @@ module.exports.routes = {
   'PATCH /api/projects/:id': 'projects/update',
   'DELETE /api/projects/:id': 'projects/delete',
   'POST /api/projects/:projectId/start-sprint': 'projects/start-sprint',
+  'GET /api/projects/:projectId/current-sprint': 'sprints/current',
 
   'POST /api/projects/:projectId/project-managers': 'project-managers/create',
   'DELETE /api/project-managers/:id': 'project-managers/delete',

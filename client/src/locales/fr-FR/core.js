@@ -202,6 +202,11 @@ export default {
       archiveFinishedCardsOnSprintBoard: 'Archiver toutes les cartes terminées du tableau Sprint',
       moveReadyForSprintCardsOnSprintBoard:
         'Déplacer toutes les cartes prêtes pour Sprint sur le tableau Sprint',
+      sprint: 'Sprint',
+      sprintPoints: 'Points du Sprint',
+      donePoints: 'Points terminés',
+      remainingPoints: 'Points restants',
+      noActiveSprint: 'Aucun Sprint actif dans le projet',
       editEmail_title: "Modifier l'e-mail",
       editInformation_title: 'Modifier les informations',
       editLabel_title: "Modifier l'étiquette",
