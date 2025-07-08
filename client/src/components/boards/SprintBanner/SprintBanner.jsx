@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import api from '../../../api';
+import eventBus from '../../../utils/event-bus';
 import selectors from '../../../selectors';
 import { ListTypes } from '../../../constants/Enums';
 
@@ -23,19 +24,25 @@ const SprintBanner = React.memo(() => {
   useEffect(() => {
     let isMounted = true;
 
-    api
-      .getCurrentSprint(projectId)
-      .then(({ item }) => {
-        if (isMounted) {
-          setSprint(item);
-        }
-      })
-      .catch(() => {
-        /* ignore */
-      });
+    const fetchSprint = () => {
+      api
+        .getCurrentSprint(projectId)
+        .then(({ item }) => {
+          if (isMounted) {
+            setSprint(item);
+          }
+        })
+        .catch(() => {
+          /* ignore */
+        });
+    };
+
+    fetchSprint();
+    eventBus.on('sprintStarted', fetchSprint);
 
     return () => {
       isMounted = false;
+      eventBus.off('sprintStarted', fetchSprint);
     };
   }, [projectId]);
 
