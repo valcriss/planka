@@ -11,7 +11,7 @@ import { Button, Form } from 'semantic-ui-react';
 import { Input, Popup } from '../../../lib/custom-ui';
 
 import selectors from '../../../selectors';
-import api from '../../../api';
+import { socket } from '../../../api';
 import entryActions from '../../../entry-actions';
 import { useForm } from '../../../hooks';
 import { ListTypes } from '../../../constants/Enums';
@@ -98,9 +98,11 @@ const StartSprintStep = React.memo(({ onClose }) => {
     !data.startDate || !data.endDate || data.startDate >= data.endDate || readyCardIds.length === 0;
 
   const handleConfirm = useCallback(() => {
-    api.startSprint(projectId).catch(() => {
-      /* ignore */
-    });
+    socket
+      .post(`/projects/${projectId}/start-sprint`)
+      .catch(() => {
+        /* ignore */
+      });
     if (doneListId) {
       dispatch(entryActions.moveListCardsToArchiveList(doneListId));
     }
