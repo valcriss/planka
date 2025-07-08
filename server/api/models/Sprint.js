@@ -17,7 +17,6 @@ module.exports = {
     closeDate: {
       type: 'ref',
       columnName: 'close_date',
-      allowNull: true,
     },
     projectId: {
       model: 'Project',
