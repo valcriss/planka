@@ -513,6 +513,29 @@ module.exports = {
         }),
         user: inputs.actorUser,
       });
+
+      if (project.useScrum) {
+        const sprintBoard = (await Board.qm.getByProjectId(project.id)).find(
+          (b) => b.name === 'Sprint',
+        );
+
+        if (sprintBoard && inputs.board.id !== sprintBoard.id && card.boardId === sprintBoard.id) {
+          const sprint = await Sprint.qm.getOneCurrentByProjectId(project.id);
+          if (sprint) {
+            try {
+              await SprintCard.qm.createOne({
+                sprintId: sprint.id,
+                cardId: card.id,
+                addedAt: new Date().toISOString(),
+              });
+            } catch (error) {
+              if (error.code !== 'E_UNIQUE') {
+                throw error;
+              }
+            }
+          }
+        }
+      }
     }
 
     if (!_.isUndefined(isSubscribed)) {

@@ -132,5 +132,10 @@ module.exports = {
       collection: 'Action',
       via: 'cardId',
     },
+    sprints: {
+      collection: 'Sprint',
+      via: 'cardId',
+      through: 'SprintCard',
+    },
   },
 };
