@@ -65,6 +65,10 @@ module.exports = {
       type: 'ref',
       columnName: 'list_changed_at',
     },
+    closedAt: {
+      type: 'ref',
+      columnName: 'closed_at',
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
