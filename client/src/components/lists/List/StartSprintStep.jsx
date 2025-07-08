@@ -31,6 +31,14 @@ const StartSprintStep = React.memo(({ onClose }) => {
   const selectListIdBySlug = useMemo(() => selectors.makeSelectListIdBySlug(), []);
   const readyListId = useSelector((state) => selectListIdBySlug(state, 'ready-for-sprint'));
 
+  const selectFilteredCardIdsByListId = useMemo(
+    () => selectors.makeSelectFilteredCardIdsByListId(),
+    [],
+  );
+  const readyCardIds = useSelector((state) =>
+    readyListId ? selectFilteredCardIdsByListId(state, readyListId) : [],
+  );
+
   const selectStoryPointsTotalByListId = useMemo(
     () => selectors.makeSelectStoryPointsTotalByListId(),
     [],
@@ -76,6 +84,12 @@ const StartSprintStep = React.memo(({ onClose }) => {
 
   const totalPoints = readyPoints + sprintPoints;
 
+  const isConfirmDisabled =
+    !data.startDate ||
+    !data.endDate ||
+    data.startDate >= data.endDate ||
+    readyCardIds.length === 0;
+
   const handleConfirm = useCallback(() => {
     if (doneListId) {
       dispatch(entryActions.moveListCardsToArchiveList(doneListId));
@@ -117,7 +131,12 @@ const StartSprintStep = React.memo(({ onClose }) => {
           <div className={styles.info}>{t('common.startingSprintWill')}</div>
           <div className={styles.info}>- {t('common.archiveFinishedCardsOnSprintBoard')}</div>
           <div className={styles.info}>- {t('common.moveReadyForSprintCardsOnSprintBoard')}</div>
-          <Button positive content={t('action.startTheSprint')} className={styles.button} />
+          <Button
+            positive
+            disabled={isConfirmDisabled}
+            content={t('action.startTheSprint')}
+            className={styles.button}
+          />
           <Button type="button" content={t('action.cancel')} onClick={onClose} />
         </Form>
       </Popup.Content>
