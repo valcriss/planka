@@ -5,23 +5,23 @@
 
 import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'semantic-ui-react';
 import { Input, Popup } from '../../../lib/custom-ui';
 
 import selectors from '../../../selectors';
-import entryActions from '../../../entry-actions';
+import { socket } from '../../../api';
 import { useForm } from '../../../hooks';
 import { ListTypes } from '../../../constants/Enums';
 
 import styles from './StartSprintStep.module.scss';
 
 const StartSprintStep = React.memo(({ onClose }) => {
-  const dispatch = useDispatch();
   const [t] = useTranslation();
 
   const project = useSelector(selectors.selectCurrentProject);
+  const accessToken = useSelector(selectors.selectAccessToken);
 
   const [data, handleFieldChange] = useForm(() => {
     const start = new Date();
@@ -96,13 +96,20 @@ const StartSprintStep = React.memo(({ onClose }) => {
   const isConfirmDisabled =
     !data.startDate || !data.endDate || data.startDate >= data.endDate || readyCardIds.length === 0;
 
-  const handleConfirm = useCallback(() => {
-    if (doneListId) {
-      dispatch(entryActions.moveListCardsToArchiveList(doneListId));
+  const handleConfirm = useCallback(async () => {
+    try {
+      await socket.post(
+        `/projects/${projectId}/start-sprint`,
+        undefined,
+        {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      );
+    } catch {
+      /* ignore */
     }
-    dispatch(entryActions.moveListCardsToSlug('ready-for-sprint', 'sprint-todo'));
     onClose();
-  }, [dispatch, doneListId, onClose]);
+  }, [accessToken, projectId, onClose]);
 
   return (
     <>
