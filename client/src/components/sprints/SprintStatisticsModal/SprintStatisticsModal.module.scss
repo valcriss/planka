@@ -1,6 +1,6 @@
 :global(#app) {
   .wrapper {
-    margin: 0 !important;
-    width: 100% !important;
+    margin: 15px !important;
+    width: calc(100% - 30px) !important;
   }
 }
