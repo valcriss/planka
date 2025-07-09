@@ -2,7 +2,7 @@
   .wrapper {
     background-color: rgba(248, 248, 248, 0.7);
     padding: 0 20px;
-    height: 32px;
+    height: 48px;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -16,5 +16,10 @@
     font-size: 12px;
     color: #444444;
     font-weight: bold;
+  }
+
+  .iconButton {
+    margin-left: auto;
+    box-shadow: none;
   }
 }
