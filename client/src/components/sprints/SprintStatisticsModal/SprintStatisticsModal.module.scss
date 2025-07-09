@@ -3,4 +3,39 @@
     margin: 15px !important;
     width: calc(100% - 30px) !important;
   }
+
+  .content {
+    display: flex;
+    gap: 20px;
+  }
+
+  .sidebar {
+    width: 20%;
+    min-width: 150px;
+    border-right: 1px solid #555;
+    padding-right: 10px;
+  }
+
+  .item {
+    cursor: pointer;
+    padding: 4px 0;
+  }
+
+  .activeItem {
+    composes: item;
+    font-weight: bold;
+  }
+
+  .details {
+    flex: 1;
+  }
+
+  .field {
+    margin-bottom: 8px;
+  }
+
+  .chart {
+    width: 100%;
+    margin-top: 10px;
+  }
 }
