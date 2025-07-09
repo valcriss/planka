@@ -6,9 +6,9 @@
 const ROOT = '/';
 const LOGIN = '/login';
 const OIDC_CALLBACK = '/oidc-callback';
-const PROJECTS = '/projects/:id';
+const PROJECTS = '/projects/:code';
 const BOARDS = '/boards/:id';
-const CARDS = '/cards/:id';
+const CARDS = '/cards/:projectCode-:number';
 
 export default {
   ROOT,

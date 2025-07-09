@@ -35,6 +35,10 @@ module.exports = {
       type: 'number',
       allowNull: true,
     },
+    number: {
+      type: 'number',
+      required: true,
+    },
     name: {
       type: 'string',
       required: true,

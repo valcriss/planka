@@ -95,7 +95,7 @@ const ProjectCard = React.memo(
           to={
             firstBoardId
               ? Paths.BOARDS.replace(':id', firstBoardId)
-              : Paths.PROJECTS.replace(':id', id)
+              : Paths.PROJECTS.replace(':code', project.code)
           }
           className={styles.content}
         >

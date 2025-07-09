@@ -26,6 +26,8 @@ const Item = React.memo(({ id, onClose }) => {
   const selectNotificationById = useMemo(() => selectors.makeSelectNotificationById(), []);
   const selectCreatorUserById = useMemo(() => selectors.makeSelectUserById(), []);
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
+  const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
+  const selectProjectById = useMemo(() => selectors.makeSelectProjectById(), []);
 
   const notification = useSelector((state) => selectNotificationById(state, id));
 
@@ -34,6 +36,16 @@ const Item = React.memo(({ id, onClose }) => {
   );
 
   const card = useSelector((state) => selectCardById(state, notification.cardId));
+  const board = useSelector((state) =>
+    card ? selectBoardById(state, card.boardId) : null,
+  );
+  const project = useSelector((state) =>
+    board ? selectProjectById(state, board.projectId) : null,
+  );
+
+  const cardPath = project && card
+    ? Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number)
+    : `/cards/${notification.cardId}`;
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
@@ -71,7 +83,7 @@ const Item = React.memo(({ id, onClose }) => {
         >
           <span className={styles.author}>{creatorUserName}</span>
           {' moved '}
-          <Link to={Paths.CARDS.replace(':id', notification.cardId)} onClick={onClose}>
+          <Link to={cardPath} onClick={onClose}>
             {cardName}
           </Link>
           {' from '}
@@ -97,7 +109,7 @@ const Item = React.memo(({ id, onClose }) => {
         >
           <span className={styles.author}>{creatorUserName}</span>
           {` left a new comment «${commentText}» to `}
-          <Link to={Paths.CARDS.replace(':id', notification.cardId)} onClick={onClose}>
+          <Link to={cardPath} onClick={onClose}>
             {cardName}
           </Link>
         </Trans>
@@ -116,7 +128,7 @@ const Item = React.memo(({ id, onClose }) => {
         >
           <span className={styles.author}>{creatorUserName}</span>
           {` added you to `}
-          <Link to={Paths.CARDS.replace(':id', notification.cardId)} onClick={onClose}>
+          <Link to={cardPath} onClick={onClose}>
             {cardName}
           </Link>
         </Trans>
@@ -137,7 +149,7 @@ const Item = React.memo(({ id, onClose }) => {
         >
           <span className={styles.author}>{creatorUserName}</span>
           {` mentioned you in «${commentText}» on `}
-          <Link to={Paths.CARDS.replace(':id', notification.cardId)} onClick={onClose}>
+          <Link to={cardPath} onClick={onClose}>
             {cardName}
           </Link>
         </Trans>

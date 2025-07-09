@@ -31,7 +31,9 @@ export const selectPath = createReduxOrmSelector(
 
       switch (pathsMatch.pattern.path) {
         case Paths.PROJECTS: {
-          const projectModel = Project.withId(pathsMatch.params.id);
+          const projectModel = Project.all()
+            .toModelArray()
+            .find((p) => p.code === pathsMatch.params.code);
 
           if (!projectModel || !projectModel.isAvailableForUser(currentUserModel)) {
             return {
@@ -59,7 +61,18 @@ export const selectPath = createReduxOrmSelector(
           };
         }
         case Paths.CARDS: {
-          const cardModel = Card.withId(pathsMatch.params.id);
+          const projectModel = Project.all()
+            .toModelArray()
+            .find((p) => p.code === pathsMatch.params.projectCode);
+          const cardModel =
+            projectModel &&
+            Card.all()
+              .toModelArray()
+              .find(
+                (c) =>
+                  c.number === Number(pathsMatch.params.number) &&
+                  c.board.projectId === projectModel.id,
+              );
 
           if (!cardModel || !cardModel.isAvailableForUser(currentUserModel)) {
             return {

@@ -62,6 +62,10 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    code: {
+      type: 'string',
+      required: true,
+    },
     description: {
       type: 'string',
       isNotEmptyString: true,

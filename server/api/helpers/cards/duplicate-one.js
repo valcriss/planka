@@ -81,7 +81,17 @@ module.exports = {
       }
     }
 
+    const { rows } = await sails.sendNativeQuery(
+      `SELECT COALESCE(MAX(card.number), 0) + 1 AS next
+       FROM card
+       JOIN board ON board.id = card.board_id
+       WHERE board.project_id = $1`,
+      [inputs.project.id],
+    );
+    const nextNumber = rows.length > 0 ? rows[0].next : 1;
+
     let card = await Card.qm.createOne({
+      number: nextNumber,
       ..._.pick(inputs.record, [
         'boardId',
         'listId',

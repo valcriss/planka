@@ -345,6 +345,7 @@ const StoryContent = React.memo(({ onClose }) => {
               ) : (
                 <div className={styles.headerTitle}>{card.name}</div>
               )}
+              <div className={styles.headerKey}>{project.code}-{card.number}</div>
             </div>
           </div>
         </Grid.Column>

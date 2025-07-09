@@ -76,6 +76,18 @@ const getCard = (id, headers) =>
     },
   }));
 
+const getCardByProjectCodeAndNumber = (projectCode, number, headers) =>
+  socket
+    .get(`/cards/${projectCode}/${number}`, undefined, headers)
+    .then((body) => ({
+      ...body,
+      item: transformCard(body.item),
+      included: {
+        ...body.included,
+        attachments: body.included.attachments.map(transformAttachment),
+      },
+    }));
+
 const updateCard = (id, data, headers) =>
   socket.patch(`/cards/${id}`, transformCardData(data), headers).then((body) => ({
     ...body,
@@ -136,6 +148,7 @@ export default {
   getCards,
   createCard,
   getCard,
+  getCardByProjectCodeAndNumber,
   updateCard,
   duplicateCard,
   readCardNotifications,

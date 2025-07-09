@@ -59,7 +59,12 @@ export function* fetchBoardByCurrentPath() {
           customFields: customFields1,
           customFieldValues: customFieldValues1,
         },
-      } = yield call(request, api.getCard, pathsMatch.params.id));
+      } = yield call(
+        request,
+        api.getCardByProjectCodeAndNumber,
+        pathsMatch.params.projectCode,
+        pathsMatch.params.number,
+      ));
     }
 
     if (boardId) {

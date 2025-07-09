@@ -29,9 +29,13 @@ const Card = React.memo(({ id, isInline }) => {
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
   const selectIsCardWithIdRecent = useMemo(() => selectors.makeSelectIsCardWithIdRecent(), []);
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
+  const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
+  const selectProjectById = useMemo(() => selectors.makeSelectProjectById(), []);
 
   const card = useSelector((state) => selectCardById(state, id));
   const list = useSelector((state) => selectListById(state, card.listId));
+  const board = useSelector((state) => selectBoardById(state, card.boardId));
+  const project = useSelector((state) => selectProjectById(state, board.projectId));
 
   const isHighlightedAsRecent = useSelector((state) => {
     const { turnOffRecentCardHighlighting } = selectors.selectCurrentUser(state);
@@ -56,8 +60,12 @@ const Card = React.memo(({ id, isInline }) => {
       document.activeElement.blur();
     }
 
-    dispatch(push(Paths.CARDS.replace(':id', id)));
-  }, [id, dispatch]);
+    const path =
+      card && project
+        ? Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number)
+        : `/cards/${id}`;
+    dispatch(push(path));
+  }, [id, dispatch, card, project]);
 
   const handleNameEdit = useCallback(() => {
     setIsEditNameOpened(true);

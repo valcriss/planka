@@ -33,6 +33,7 @@ const AddProjectModal = React.memo(() => {
 
   const [data, handleFieldChange, setData] = useForm(() => ({
     name: '',
+    code: '',
     description: '',
     type: ProjectTypes.PRIVATE,
     template: ProjectTemplates.NONE,
@@ -49,6 +50,7 @@ const AddProjectModal = React.memo(() => {
     const cleanData = {
       ...data,
       name: data.name.trim(),
+      code: data.code.trim(),
       description: data.description.trim() || null,
     };
 
@@ -120,6 +122,17 @@ const AddProjectModal = React.memo(() => {
             name="name"
             value={data.name}
             maxLength={128}
+            readOnly={isSubmitting}
+            className={styles.field}
+            onChange={handleFieldChange}
+          />
+          <div className={styles.text}>{t('common.code')}</div>
+          <Input
+            fluid
+            inverted
+            name="code"
+            value={data.code}
+            maxLength={64}
             readOnly={isSubmitting}
             className={styles.field}
             onChange={handleFieldChange}

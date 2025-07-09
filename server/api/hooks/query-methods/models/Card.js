@@ -200,6 +200,19 @@ const getOneById = (id, { listId } = {}) => {
   return Card.findOne(criteria);
 };
 
+const getOneByProjectCodeAndNumber = async (projectCode, number) => {
+  const query = `
+    SELECT card.* FROM card
+    JOIN board ON board.id = card.board_id
+    JOIN project ON project.id = board.project_id
+    WHERE project.code = $1 AND card.number = $2
+    LIMIT 1
+  `;
+  const { rows } = await sails.sendNativeQuery(query, [projectCode, number]);
+
+  return rows[0] || null;
+};
+
 const update = (criteria, values) => Card.update(criteria).set(values).fetch();
 
 const updateOne = (criteria, values) => Card.updateOne(criteria).set({ ...values });
@@ -219,6 +232,7 @@ module.exports = {
   getByEndlessListId,
   getByListIds,
   getOneById,
+  getOneByProjectCodeAndNumber,
   update,
   updateOne,
   deleteOne,
