@@ -21,10 +21,11 @@
     padding: 4px 0;
   }
 
-  .activeItem {
-    composes: item;
-    font-weight: bold;
-  }
+    .activeItem {
+      cursor: pointer;
+      padding: 4px 0;
+      font-weight: bold;
+    }
 
   .details {
     flex: 1;

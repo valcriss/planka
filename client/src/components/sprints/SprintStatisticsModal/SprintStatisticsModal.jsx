@@ -141,7 +141,7 @@ const SprintStatisticsModal = React.memo(() => {
       onClose={handleClose}
     >
       <ClosableModal.Header>
-        {t('common.sprintStatistics', { context: 'title' })}
+        {t('common.sprintStatistics_title')}
       </ClosableModal.Header>
       <ClosableModal.Content>
         <div className={styles.content}>
