@@ -1,4 +1,4 @@
-const { idInput } = require('../../utils/inputs');
+const { idInput } = require('../../../utils/inputs');
 
 const Errors = {
   SPRINT_NOT_FOUND: { sprintNotFound: 'Sprint not found' },
