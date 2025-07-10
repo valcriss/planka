@@ -94,7 +94,7 @@ const ProjectCard = React.memo(
         <Link
           to={
             firstBoardId
-              ? Paths.BOARDS.replace(':id', firstBoardId)
+              ? Paths.BOARDS.replace(':code', project.code)
               : Paths.PROJECTS.replace(':code', project.code)
           }
           className={styles.content}

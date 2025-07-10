@@ -43,7 +43,17 @@ export function* fetchBoardByCurrentPath() {
   if (pathsMatch) {
     let boardId;
     if (pathsMatch.pattern.path === Paths.BOARDS) {
-      boardId = pathsMatch.params.id;
+      const project = yield select(
+        selectors.selectProjectByCode,
+        pathsMatch.params.code,
+      );
+
+      if (project) {
+        boardId = yield select(
+          selectors.selectFirstBoardIdByProjectId,
+          project.id,
+        );
+      }
     } else if (pathsMatch.pattern.path === Paths.CARDS) {
       ({
         item: card,

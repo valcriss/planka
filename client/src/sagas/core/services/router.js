@@ -33,7 +33,10 @@ export function* goToProject(projectId) {
 }
 
 export function* goToBoard(boardId) {
-  yield call(goTo, Paths.BOARDS.replace(':id', boardId));
+  const board = yield select(selectors.selectBoardById, boardId);
+  const project = board ? yield select(selectors.selectProjectById, board.projectId) : null;
+  const code = project ? project.code : boardId;
+  yield call(goTo, Paths.BOARDS.replace(':code', code));
 }
 
 export function* goToCard(cardId) {
