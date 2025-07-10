@@ -84,11 +84,14 @@ export const selectPath = createReduxOrmSelector(
             projectModel &&
             Card.all()
               .toModelArray()
-              .find(
-                (c) =>
-                  c.number === Number(pathsMatch.params.number) &&
-                  c.board.projectId === projectModel.id,
-              );
+              .find((c) => {
+                if (c.number !== Number(pathsMatch.params.number)) {
+                  return false;
+                }
+
+                const boardModel = Board.withId(c.boardId);
+                return boardModel && boardModel.projectId === projectModel.id;
+              });
 
           if (!cardModel || !cardModel.isAvailableForUser(currentUserModel)) {
             return {
@@ -98,10 +101,12 @@ export const selectPath = createReduxOrmSelector(
             };
           }
 
+          const boardModel = Board.withId(cardModel.boardId);
+
           return {
             cardId: cardModel.id,
-            boardId: cardModel.boardId,
-            projectId: cardModel.board.projectId,
+            boardId: boardModel ? boardModel.id : null,
+            projectId: boardModel ? boardModel.projectId : null,
           };
         }
         default:
