@@ -49,6 +49,7 @@ const StoryContent = React.memo(({ onClose }) => {
   const card = useSelector(selectors.selectCurrentCard);
   const board = useSelector(selectors.selectCurrentBoard);
   const project = useSelector(selectors.selectCurrentProject);
+  const isTeamProject = !project.ownerProjectManagerId;
   const cardType = useSelector((state) => {
     if (!card.cardTypeId) {
       return null;
@@ -345,7 +346,11 @@ const StoryContent = React.memo(({ onClose }) => {
               ) : (
                 <div className={styles.headerTitle}>{card.name}</div>
               )}
-              <div className={styles.headerKey}>{project.code}-{card.number}</div>
+              {isTeamProject && (
+                <div className={styles.headerKey}>
+                  {project.code}-{card.number}
+                </div>
+              )}
             </div>
           </div>
         </Grid.Column>

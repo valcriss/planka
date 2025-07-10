@@ -43,6 +43,7 @@ const StoryContent = React.memo(({ cardId }) => {
   const card = useSelector((state) => selectCardById(state, cardId));
   const list = useSelector((state) => selectListById(state, card.listId));
   const project = useSelector(selectors.selectCurrentProject);
+  const isTeamProject = !project.ownerProjectManagerId;
   const labelIds = useSelector((state) => selectLabelIdsByCardId(state, cardId));
   const attachmentsTotal = useSelector((state) => selectAttachmentsTotalByCardId(state, cardId));
 
@@ -117,6 +118,11 @@ const StoryContent = React.memo(({ cardId }) => {
             <StoryPointsChip value={card.storyPoints} size="tiny" className={styles.storyPoints} />
           )}
         </div>
+        {isTeamProject && (
+          <div className={styles.cardKey}>
+            {project.code}-{card.number}
+          </div>
+        )}
         {card.description && <div className={styles.descriptionText}>{descriptionText}</div>}
         {(attachmentsTotal > 0 || notificationsTotal > 0 || listName) && (
           <span className={styles.attachments}>
