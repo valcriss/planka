@@ -1,4 +1,4 @@
-import { isUrl, isUsername, isPassword } from './validator';
+import { isUrl, isUsername, isPassword } from '../src/utils/validator';
 import zxcvbn from 'zxcvbn';
 
 jest.mock('zxcvbn');

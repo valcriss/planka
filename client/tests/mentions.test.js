@@ -1,4 +1,4 @@
-import { formatTextWithMentions } from './mentions';
+import { formatTextWithMentions } from '../src/utils/mentions';
 
 describe('formatTextWithMentions', () => {
   test('replaces mention markup with username', () => {

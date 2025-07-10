@@ -1,4 +1,4 @@
-import parseTime from './parse-time';
+import parseTime from '../src/utils/parse-time';
 
 describe('parseTime', () => {
   const ref = new Date('2024-01-01T00:00:00Z');

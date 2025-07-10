@@ -1,4 +1,4 @@
-import parseDndId from './parse-dnd-id';
+import parseDndId from '../src/utils/parse-dnd-id';
 
 describe('parseDndId', () => {
   test('extracts id from prefixed string', () => {

@@ -1,4 +1,4 @@
-import { createStopwatch, startStopwatch, stopStopwatch, formatStopwatch } from './stopwatch';
+import { createStopwatch, startStopwatch, stopStopwatch, formatStopwatch } from '../src/utils/stopwatch';
 
 describe('stopwatch utilities', () => {
   test('createStopwatch calculates total seconds', () => {

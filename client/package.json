@@ -76,7 +76,10 @@
   "jest": {
     "transform": {
       "^.+\\.(js|jsx)$": "babel-jest"
-    }
+    },
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.js"
+    ]
   },
   "dependencies": {
     "@ballerina/highlightjs-ballerina": "^1.0.1",
