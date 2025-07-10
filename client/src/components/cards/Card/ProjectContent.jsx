@@ -56,6 +56,7 @@ const ProjectContent = React.memo(({ cardId }) => {
   const card = useSelector((state) => selectCardById(state, cardId));
   const list = useSelector((state) => selectListById(state, card.listId));
   const project = useSelector(selectors.selectCurrentProject);
+  const isTeamProject = !project.ownerProjectManagerId;
   const cardType = useSelector((state) => {
     if (!card.cardTypeId) {
       return null;
@@ -178,6 +179,11 @@ const ProjectContent = React.memo(({ cardId }) => {
           <StoryPointsChip value={card.storyPoints} size="tiny" className={styles.storyPoints} />
         )}
       </div>
+      {isTeamProject && (
+        <div className={styles.cardKey}>
+          {project.code}-{card.number}
+        </div>
+      )}
       {coverUrl && (
         <div className={styles.coverWrapper}>
           <img src={coverUrl} alt="" className={styles.cover} />
