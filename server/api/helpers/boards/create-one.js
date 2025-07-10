@@ -33,6 +33,22 @@ module.exports = {
 
     const boards = await Board.qm.getByProjectId(values.project.id);
 
+    const makeSlug = (name) =>
+      name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '') || 'board';
+
+    const baseSlug = makeSlug(values.name);
+    let slug = baseSlug;
+    let counter = 1;
+    while (await Board.qm.getOneByProjectIdAndSlug(values.project.id, slug)) {
+      slug = `${baseSlug}-${counter}`;
+      counter += 1;
+    }
+    values.slug = slug;
+
     const { position, repositions } = sails.helpers.utils.insertToPositionables(
       values.position,
       boards,

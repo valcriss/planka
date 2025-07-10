@@ -39,6 +39,10 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    slug: {
+      type: 'string',
+      required: true,
+    },
     defaultView: {
       type: 'string',
       isIn: Object.values(Views),

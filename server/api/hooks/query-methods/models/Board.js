@@ -72,6 +72,12 @@ const getByProjectIds = (projectIds, { sort = ['position', 'id'] } = {}) =>
 
 const getOneById = (id) => Board.findOne(id);
 
+const getOneByProjectIdAndSlug = (projectId, slug) =>
+  Board.findOne({
+    projectId,
+    slug,
+  });
+
 const updateOne = (criteria, values) => Board.updateOne(criteria).set({ ...values });
 
 // eslint-disable-next-line no-underscore-dangle
@@ -85,6 +91,7 @@ module.exports = {
   getByProjectId,
   getByProjectIds,
   getOneById,
+  getOneByProjectIdAndSlug,
   updateOne,
   deleteOne,
   delete: delete_,

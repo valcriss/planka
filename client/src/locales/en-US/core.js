@@ -162,6 +162,7 @@ export default {
       deleteUser_title: 'Delete User',
       deletedUser_title: 'Deleted User',
       deleteWebhook_title: 'Delete Webhook',
+      code: 'Code',
       description: 'Description',
       detectAutomatically: 'Detect automatically',
       display: 'Display',

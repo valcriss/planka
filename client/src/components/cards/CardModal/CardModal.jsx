@@ -30,6 +30,12 @@ const CardModal = React.memo(() => {
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
 
   const card = useSelector(selectors.selectCurrentCard);
+  const board = useSelector((state) =>
+    selectors.selectBoardById(state, card.boardId),
+  );
+  const project = useSelector((state) =>
+    board ? selectors.selectProjectById(state, board.projectId) : null,
+  );
 
   const canEdit = useSelector((state) => {
     const list = selectListById(state, card.listId);
@@ -45,8 +51,10 @@ const CardModal = React.memo(() => {
   const dispatch = useDispatch();
 
   const handleClose = useCallback(() => {
-    dispatch(push(Paths.BOARDS.replace(':id', card.boardId)));
-  }, [card.boardId, dispatch]);
+    const code = project ? project.code : card.boardId;
+    const slug = board ? board.slug : card.boardId;
+    dispatch(push(Paths.BOARDS.replace(':code', code).replace(':slug', slug)));
+  }, [dispatch, project, board, card.boardId]);
 
   const [ClosableModal, isClosableActiveRef] = useClosableModal();
 

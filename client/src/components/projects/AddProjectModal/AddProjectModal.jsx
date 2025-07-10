@@ -3,13 +3,14 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Button, Form, Header, Icon, TextArea, Dropdown } from 'semantic-ui-react';
 import { usePopup } from '../../../lib/popup';
 import { Input } from '../../../lib/custom-ui';
+import api from '../../../api';
 
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
@@ -33,6 +34,7 @@ const AddProjectModal = React.memo(() => {
 
   const [data, handleFieldChange, setData] = useForm(() => ({
     name: '',
+    code: '',
     description: '',
     type: ProjectTypes.PRIVATE,
     template: ProjectTemplates.NONE,
@@ -44,11 +46,14 @@ const AddProjectModal = React.memo(() => {
   }));
 
   const [nameFieldRef, handleNameFieldRef] = useNestedRef('inputRef');
+  const accessToken = useSelector(selectors.selectAccessToken);
+  const [isCodeEdited, setIsCodeEdited] = useState(false);
 
   const submit = useCallback(() => {
     const cleanData = {
       ...data,
       name: data.name.trim(),
+      code: data.code.trim(),
       description: data.description.trim() || null,
     };
 
@@ -98,6 +103,64 @@ const AddProjectModal = React.memo(() => {
     nameFieldRef.current.focus();
   }, [nameFieldRef]);
 
+  useEffect(() => {
+    if (!isCodeEdited) {
+      let isActive = true;
+
+      const generateBaseCode = (name) => {
+        const words = name
+          .trim()
+          .split(/\s+/)
+          .filter(Boolean)
+          .map((w) => w[0])
+          .join('');
+        let code = words.toUpperCase();
+        if (code.length < 2) {
+          code = name.replace(/[^a-zA-Z0-9]/g, '').slice(0, 2).toUpperCase();
+        }
+        return code;
+      };
+
+      const checkAvailability = async (code) => {
+        try {
+          await api.getProjectByCode(code, {
+            Authorization: `Bearer ${accessToken}`,
+          });
+          return false;
+        } catch {
+          return true;
+        }
+      };
+
+      const suggest = async () => {
+        const name = data.name.trim();
+        if (!name) {
+          setData((prev) => ({ ...prev, code: '' }));
+          return;
+        }
+
+        const base = generateBaseCode(name);
+        let candidate = base;
+        let counter = 1;
+
+        while (isActive && !(await checkAvailability(candidate))) {
+          candidate = `${base}${counter}`;
+          counter += 1;
+        }
+
+        if (isActive) {
+          setData((prev) => ({ ...prev, code: candidate }));
+        }
+      };
+
+      suggest();
+
+      return () => {
+        isActive = false;
+      };
+    }
+  }, [data.name, isCodeEdited, accessToken, setData]);
+
   const SelectTypePopup = usePopup(SelectTypeStep, {
     onOpen: activateClosable,
     onClose: handleSelectTypeClose,
@@ -123,6 +186,20 @@ const AddProjectModal = React.memo(() => {
             readOnly={isSubmitting}
             className={styles.field}
             onChange={handleFieldChange}
+          />
+          <div className={styles.text}>{t('common.code')}</div>
+          <Input
+            fluid
+            inverted
+            name="code"
+            value={data.code}
+            maxLength={64}
+            readOnly={isSubmitting}
+            className={styles.field}
+            onChange={(e, props) => {
+              setIsCodeEdited(true);
+              handleFieldChange(e, props);
+            }}
           />
           <div className={styles.text}>{t('common.description')}</div>
           <TextArea

@@ -45,6 +45,9 @@ const ProjectCard = React.memo(
 
     const project = useSelector((state) => selectProjectById(state, id));
     const firstBoardId = useSelector((state) => selectFirstBoardIdByProjectId(state, id));
+    const firstBoard = useSelector((state) =>
+      firstBoardId ? selectors.selectBoardById(state, firstBoardId) : null,
+    );
 
     const notificationsTotal = useSelector((state) =>
       selectNotificationsTotalByProjectId(state, id),
@@ -94,8 +97,10 @@ const ProjectCard = React.memo(
         <Link
           to={
             firstBoardId
-              ? Paths.BOARDS.replace(':id', firstBoardId)
-              : Paths.PROJECTS.replace(':id', id)
+              ? Paths.BOARDS.replace(':code', project.code).replace(
+                  ':slug', firstBoard.slug,
+                )
+              : Paths.PROJECTS.replace(':code', project.code)
           }
           className={styles.content}
         >

@@ -295,6 +295,29 @@ export const makeSelectListIdBySlugForCurrentBoard = () =>
 
 export const selectListIdBySlugForCurrentBoard = makeSelectListIdBySlugForCurrentBoard();
 
+export const makeSelectBoardIdByProjectIdAndSlug = () =>
+  createSelector(
+    orm,
+    (_, projectId, slug) => ({ projectId, slug }),
+    (state) => selectCurrentUserId(state),
+    ({ Project, User }, { projectId, slug }, currentUserId) => {
+      const projectModel = Project.withId(projectId);
+
+      if (!projectModel) {
+        return projectModel;
+      }
+
+      const currentUserModel = User.withId(currentUserId);
+      const boardsModels = projectModel.getBoardsModelArrayAvailableForUser(currentUserModel);
+
+      const boardModel = boardsModels.find((b) => b.slug === slug);
+
+      return boardModel && boardModel.id;
+    },
+  );
+
+export const selectBoardIdByProjectIdAndSlug = makeSelectBoardIdByProjectIdAndSlug();
+
 export const selectFiniteListIdsForCurrentBoard = createSelector(
   orm,
   (state) => selectPath(state).boardId,
@@ -535,6 +558,8 @@ export default {
   selectFilteredCardIdsForCurrentBoard,
   makeSelectListIdBySlugForCurrentBoard,
   selectListIdBySlugForCurrentBoard,
+  makeSelectBoardIdByProjectIdAndSlug,
+  selectBoardIdByProjectIdAndSlug,
   selectCustomFieldGroupIdsForCurrentBoard,
   selectCustomFieldGroupsForCurrentBoard,
   selectActivityIdsForCurrentBoard,

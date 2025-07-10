@@ -43,7 +43,18 @@ export function* fetchBoardByCurrentPath() {
   if (pathsMatch) {
     let boardId;
     if (pathsMatch.pattern.path === Paths.BOARDS) {
-      boardId = pathsMatch.params.id;
+      const project = yield select(
+        selectors.selectProjectByCode,
+        pathsMatch.params.code,
+      );
+
+      if (project) {
+        boardId = yield select(
+          selectors.selectBoardIdByProjectIdAndSlug,
+          project.id,
+          pathsMatch.params.slug,
+        );
+      }
     } else if (pathsMatch.pattern.path === Paths.CARDS) {
       ({
         item: card,
@@ -59,7 +70,12 @@ export function* fetchBoardByCurrentPath() {
           customFields: customFields1,
           customFieldValues: customFieldValues1,
         },
-      } = yield call(request, api.getCard, pathsMatch.params.id));
+      } = yield call(
+        request,
+        api.getCardByProjectCodeAndNumber,
+        pathsMatch.params.projectCode,
+        pathsMatch.params.number,
+      ));
     }
 
     if (boardId) {

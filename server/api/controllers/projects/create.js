@@ -17,6 +17,10 @@ module.exports = {
       maxLength: 128,
       required: true,
     },
+    code: {
+      type: 'string',
+      required: true,
+    },
     description: {
       type: 'string',
       isNotEmptyString: true,
@@ -40,7 +44,13 @@ module.exports = {
 
     const t = sails.helpers.utils.makeTranslator(currentUser.language || this.req.getLocale());
 
-    const values = _.pick(inputs, ['type', 'name', 'description', 'sprintDuration']);
+    const values = _.pick(inputs, [
+      'type',
+      'name',
+      'code',
+      'description',
+      'sprintDuration',
+    ]);
     if (!values.sprintDuration) {
       values.sprintDuration = 2;
     }

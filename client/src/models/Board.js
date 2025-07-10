@@ -27,6 +27,7 @@ export default class extends BaseModel {
     id: attr(),
     position: attr(),
     name: attr(),
+    slug: attr(),
     defaultView: attr(),
     defaultCardType: attr(),
     defaultCardTypeId: attr(),

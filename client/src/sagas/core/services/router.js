@@ -27,15 +27,35 @@ export function* goToRoot() {
 }
 
 export function* goToProject(projectId) {
-  yield call(goTo, Paths.PROJECTS.replace(':id', projectId));
+  const project = yield select(selectors.selectProjectById, projectId);
+  const code = project ? project.code : projectId;
+  yield call(goTo, Paths.PROJECTS.replace(':code', code));
 }
 
 export function* goToBoard(boardId) {
-  yield call(goTo, Paths.BOARDS.replace(':id', boardId));
+  const board = yield select(selectors.selectBoardById, boardId);
+  const project = board ? yield select(selectors.selectProjectById, board.projectId) : null;
+  const code = project ? project.code : boardId;
+  const slug = board ? board.slug : boardId;
+  yield call(
+    goTo,
+    Paths.BOARDS.replace(':code', code).replace(':slug', slug),
+  );
 }
 
 export function* goToCard(cardId) {
-  yield call(goTo, Paths.CARDS.replace(':id', cardId));
+  const card = yield select(selectors.selectCardById, cardId);
+  const board = card ? yield select(selectors.selectBoardById, card.boardId) : null;
+  const project = board ? yield select(selectors.selectProjectById, board.projectId) : null;
+
+  if (card && project) {
+    yield call(
+      goTo,
+      Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number),
+    );
+  } else {
+    yield call(goTo, `/cards/${cardId}`);
+  }
 }
 
 export function* handleLocationChange() {
@@ -167,7 +187,12 @@ export function* handleLocationChange() {
               customFields: customFields1,
               customFieldValues: customFieldValues1,
             },
-          } = yield call(request, api.getCard, pathsMatch.params.id));
+          } = yield call(
+            request,
+            api.getCardByProjectCodeAndNumber,
+            pathsMatch.params.projectCode,
+            pathsMatch.params.number,
+          ));
         } catch {
           /* empty */
         }

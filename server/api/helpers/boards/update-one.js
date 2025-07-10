@@ -84,6 +84,29 @@ module.exports = {
         }
       }
 
+      if (!_.isUndefined(values.name)) {
+        const makeSlug = (name) =>
+          name
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '') || 'board';
+
+        const baseSlug = makeSlug(values.name);
+        let slug = baseSlug;
+        let counter = 1;
+        while (
+          await Board.qm.getOneByProjectIdAndSlug(inputs.record.projectId, slug)
+        ) {
+          if (inputs.record.slug === slug) {
+            break;
+          }
+          slug = `${baseSlug}-${counter}`;
+          counter += 1;
+        }
+        values.slug = slug;
+      }
+
       board = await Board.qm.updateOne(inputs.record.id, values);
 
       if (!board) {
