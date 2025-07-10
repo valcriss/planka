@@ -50,8 +50,9 @@ export function* fetchBoardByCurrentPath() {
 
       if (project) {
         boardId = yield select(
-          selectors.selectFirstBoardIdByProjectId,
+          selectors.selectBoardIdByProjectIdAndSlug,
           project.id,
+          pathsMatch.params.slug,
         );
       }
     } else if (pathsMatch.pattern.path === Paths.CARDS) {

@@ -52,8 +52,9 @@ const CardModal = React.memo(() => {
 
   const handleClose = useCallback(() => {
     const code = project ? project.code : card.boardId;
-    dispatch(push(Paths.BOARDS.replace(':code', code)));
-  }, [dispatch, project, card.boardId]);
+    const slug = board ? board.slug : card.boardId;
+    dispatch(push(Paths.BOARDS.replace(':code', code).replace(':slug', slug)));
+  }, [dispatch, project, board, card.boardId]);
 
   const [ClosableModal, isClosableActiveRef] = useClosableModal();
 
