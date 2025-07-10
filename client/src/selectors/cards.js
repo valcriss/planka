@@ -36,7 +36,7 @@ export const makeSelectCardByProjectCodeAndNumber = () =>
   createSelector(
     orm,
     (_, projectCode, number) => ({ projectCode, number: Number(number) }),
-    ({ Card, Project }, { projectCode, number }) => {
+    ({ Card, Project, Board }, { projectCode, number }) => {
       const projectModel = Project.all()
         .toModelArray()
         .find((p) => p.code === projectCode);
@@ -47,10 +47,14 @@ export const makeSelectCardByProjectCodeAndNumber = () =>
 
       const cardModel = Card.all()
         .toModelArray()
-        .find(
-          (c) =>
-            c.number === number && c.board.projectId === projectModel.id,
-        );
+        .find((c) => {
+          if (c.number !== number) {
+            return false;
+          }
+
+          const boardModel = Board.withId(c.boardId);
+          return boardModel && boardModel.projectId === projectModel.id;
+        });
 
       if (!cardModel) {
         return null;
