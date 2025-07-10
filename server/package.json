@@ -15,7 +15,7 @@
     "setup-python": "python3 -m venv .venv && .venv/bin/pip3 install -r requirements.txt",
     "start": "nodemon",
     "start:prod": "cross-env NODE_ENV=production node app.js --prod",
-    "test": "mocha test/lifecycle.test.js test/integration/**/*.test.js test/utils/**/*.test.js"
+    "test": "jest --coverage"
   },
   "eslintConfig": {
     "plugins": [
@@ -75,13 +75,13 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "chai": "^4.5.0",
+    "@jest/globals": "^30.0.4",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.1",
-    "mocha": "^10.8.2",
+    "jest": "^30.0.4",
     "nodemon": "^3.1.10",
     "prettier": "3.3.3",
     "supertest": "^7.1.1"
