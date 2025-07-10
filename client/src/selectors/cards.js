@@ -32,6 +32,39 @@ export const makeSelectCardById = () =>
 
 export const selectCardById = makeSelectCardById();
 
+export const makeSelectCardByProjectCodeAndNumber = () =>
+  createSelector(
+    orm,
+    (_, projectCode, number) => ({ projectCode, number: Number(number) }),
+    ({ Card, Project }, { projectCode, number }) => {
+      const projectModel = Project.all()
+        .toModelArray()
+        .find((p) => p.code === projectCode);
+
+      if (!projectModel) {
+        return null;
+      }
+
+      const cardModel = Card.all()
+        .toModelArray()
+        .find(
+          (c) =>
+            c.number === number && c.board.projectId === projectModel.id,
+        );
+
+      if (!cardModel) {
+        return null;
+      }
+
+      return {
+        ...cardModel.ref,
+        isPersisted: !isLocalId(cardModel.id),
+      };
+    },
+  );
+
+export const selectCardByProjectCodeAndNumber = makeSelectCardByProjectCodeAndNumber();
+
 export const selectCardNamesById = createSelector(orm, ({ Card }) =>
   Card.all()
     .toModelArray()
@@ -477,6 +510,8 @@ export const selectIsCurrentUserInCurrentCard = createSelector(
 export default {
   makeSelectCardById,
   selectCardById,
+  makeSelectCardByProjectCodeAndNumber,
+  selectCardByProjectCodeAndNumber,
   makeSelectCardIndexById,
   selectCardIndexById,
   selectCardNamesById,

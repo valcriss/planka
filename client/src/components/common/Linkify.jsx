@@ -17,6 +17,10 @@ import selectors from '../../selectors';
 const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
   const cardNamesById = useSelector(selectors.selectCardNamesById);
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
+  const selectCardByProjectCodeAndNumber = useMemo(
+    () => selectors.makeSelectCardByProjectCodeAndNumber(),
+    [],
+  );
 
   const handleLinkClick = useCallback(
     (event) => {
@@ -33,8 +37,13 @@ const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
   );
 
   // eslint-disable-next-line react/no-unstable-nested-components,react/prop-types
-  const CardLink = React.memo(({ id, href, content, ...linkProps }) => {
-    const card = useSelector((state) => selectCardById(state, id));
+  const CardLink = React.memo(
+    ({ id, projectCode, number, href, content, ...linkProps }) => {
+      const card = useSelector((state) =>
+        id
+          ? selectCardById(state, id)
+          : selectCardByProjectCodeAndNumber(state, projectCode, number),
+      );
     const cardType = useSelector((state) => {
       if (!card || !card.cardTypeId) {
         return null;
@@ -64,10 +73,11 @@ const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
             }
           />
         )}
-        {content}
+        {card ? card.name : content}
       </a>
     );
-  });
+    },
+  );
 
   const linkRenderer = useCallback(
     ({ attributes: { href, ...linkProps }, content }) => {
@@ -81,14 +91,27 @@ const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
       const isSameSite = !!url && url.origin === window.location.origin;
       if (isSameSite) {
         const { pathname } = url;
-        const match = pathname.match(/^\/cards\/([^/]+)$/);
-        if (match) {
+        const matchId = pathname.match(/^\/cards\/([^/]+)$/);
+        if (matchId) {
           return (
             <CardLink
               {...linkProps} // eslint-disable-line react/jsx-props-no-spreading
-              id={match[1]}
+              id={matchId[1]}
               href={href}
-              content={cardNamesById[match[1]] || pathname}
+              content={pathname}
+            />
+          );
+        }
+
+        const matchNumber = pathname.match(/^\/cards\/([^/]+)\/([^/]+)$/);
+        if (matchNumber) {
+          return (
+            <CardLink
+              {...linkProps} // eslint-disable-line react/jsx-props-no-spreading
+              projectCode={matchNumber[1]}
+              number={Number(matchNumber[2])}
+              href={href}
+              content={pathname}
             />
           );
         }
@@ -99,7 +122,7 @@ const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
             href={href}
             onClick={handleLinkClick}
           >
-            {cardNamesById[match?.[1]] || pathname}
+            {pathname}
           </a>
         );
       }
