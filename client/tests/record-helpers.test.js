@@ -1,5 +1,5 @@
-import { isUserAdminOrProjectOwner, isListArchiveOrTrash, isListFinite } from './record-helpers';
-import { UserRoles, ListTypes } from '../constants/Enums';
+import { isUserAdminOrProjectOwner, isListArchiveOrTrash, isListFinite } from '../src/utils/record-helpers';
+import { UserRoles, ListTypes } from '../src/constants/Enums';
 
 describe('record helpers', () => {
   test('isUserAdminOrProjectOwner', () => {

@@ -1,4 +1,4 @@
-import buildSearchParts from './build-search-parts';
+import buildSearchParts from '../src/utils/build-search-parts';
 
 describe('buildSearchParts', () => {
   test('splits and lowercases search parts', () => {

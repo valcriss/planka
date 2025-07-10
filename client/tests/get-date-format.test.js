@@ -1,4 +1,4 @@
-import getDateFormat from './get-date-format';
+import getDateFormat from '../src/utils/get-date-format';
 
 describe('getDateFormat', () => {
   test('returns longDateFormat for current year', () => {

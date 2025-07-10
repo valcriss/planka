@@ -1,4 +1,4 @@
-import { isLocalId } from './local-id';
+import { isLocalId } from '../src/utils/local-id';
 
 describe('isLocalId', () => {
   test('is valid', () => {

@@ -1,4 +1,4 @@
-import matchPaths from './match-paths';
+import matchPaths from '../src/utils/match-paths';
 
 describe('matchPaths', () => {
   test('returns match for existing path', () => {
