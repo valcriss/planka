@@ -30,4 +30,11 @@ const handleEpicDelete = (epic) => ({
   payload: { epic },
 });
 
-export default { createEpicInCurrentProject, handleEpicCreate, updateEpic, handleEpicUpdate, deleteEpic, handleEpicDelete };
+export default {
+  createEpicInCurrentProject,
+  handleEpicCreate,
+  updateEpic,
+  handleEpicUpdate,
+  deleteEpic,
+  handleEpicDelete,
+};

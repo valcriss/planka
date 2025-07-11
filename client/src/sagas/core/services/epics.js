@@ -59,4 +59,12 @@ export function* handleEpicDelete(epic) {
   yield put(actions.handleEpicDelete(epic));
 }
 
-export default { createEpic, createEpicInCurrentProject, handleEpicCreate, updateEpic, handleEpicUpdate, deleteEpic, handleEpicDelete };
+export default {
+  createEpic,
+  createEpicInCurrentProject,
+  handleEpicCreate,
+  updateEpic,
+  handleEpicUpdate,
+  deleteEpic,
+  handleEpicDelete,
+};

@@ -10,14 +10,28 @@ const AddEpicModal = React.memo(() => {
   const dispatch = useDispatch();
   const [t] = useTranslation();
 
-  const [data, handleFieldChange] = useForm({ name: '', description: '', color: '#000000', startDate: null, endDate: null });
+  const [data, handleFieldChange] = useForm({
+    name: '',
+    description: '',
+    color: '#000000',
+    startDate: null,
+    endDate: null,
+  });
   const [ClosableModal] = useClosableModal();
 
-  const handleClose = useCallback(() => { dispatch(entryActions.closeModal()); }, [dispatch]);
+  const handleClose = useCallback(() => {
+    dispatch(entryActions.closeModal());
+  }, [dispatch]);
 
   const handleSubmit = useCallback(() => {
-    const clean = { ...data, name: data.name.trim(), description: data.description.trim() || null };
-    if (!clean.name) { return; }
+    const clean = {
+      ...data,
+      name: data.name.trim(),
+      description: data.description.trim() || null,
+    };
+    if (!clean.name) {
+      return;
+    }
     dispatch(entryActions.createEpicInCurrentProject(clean));
     handleClose();
   }, [dispatch, data, handleClose]);

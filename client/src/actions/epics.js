@@ -54,4 +54,11 @@ const handleEpicDelete = (epic) => ({
   payload: { epic },
 });
 
-export default { createEpic, handleEpicCreate, updateEpic, handleEpicUpdate, deleteEpic, handleEpicDelete };
+export default {
+  createEpic,
+  handleEpicCreate,
+  updateEpic,
+  handleEpicUpdate,
+  deleteEpic,
+  handleEpicDelete,
+};
