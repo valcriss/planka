@@ -63,6 +63,17 @@ export const selectNextLabelPosition = createSelector(
   },
 );
 
+export const selectNextEpicPosition = createSelector(
+  orm,
+  (_, projectId) => projectId,
+  (_, __, index) => index,
+  (_, __, ___, excludedId) => excludedId,
+  ({ Epic }, projectId, index, excludedId) => {
+    const qs = Epic.filter({ projectId }).orderBy(['position', 'id.length', 'id']);
+    return nextPosition(qs.toRefArray(), index, excludedId);
+  },
+);
+
 export const selectNextListPosition = createSelector(
   orm,
   (_, boardId) => boardId,
@@ -202,6 +213,7 @@ export const selectNextCustomFieldPositionInGroup = createSelector(
 export default {
   selectNextBoardPosition,
   selectNextLabelPosition,
+  selectNextEpicPosition,
   selectNextListPosition,
   selectNextCardPosition,
   selectNextTaskListPosition,
