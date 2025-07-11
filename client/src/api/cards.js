@@ -17,6 +17,12 @@ export const transformCard = (card) => ({
   ...(card.dueDate && {
     dueDate: new Date(card.dueDate),
   }),
+  ...(card.ganttStartDate && {
+    ganttStartDate: new Date(card.ganttStartDate),
+  }),
+  ...(card.ganttEndDate && {
+    ganttEndDate: new Date(card.ganttEndDate),
+  }),
   ...(card.stopwatch && {
     stopwatch: {
       ...card.stopwatch,
@@ -37,6 +43,12 @@ export const transformCardData = (data) => ({
   ...data,
   ...(data.dueDate && {
     dueDate: data.dueDate.toISOString(),
+  }),
+  ...(data.ganttStartDate && {
+    ganttStartDate: data.ganttStartDate.toISOString(),
+  }),
+  ...(data.ganttEndDate && {
+    ganttEndDate: data.ganttEndDate.toISOString(),
   }),
   ...(data.stopwatch && {
     stopwatch: {

@@ -52,6 +52,14 @@ module.exports = {
       type: 'ref',
       columnName: 'due_date',
     },
+    ganttStartDate: {
+      type: 'ref',
+      columnName: 'gantt_start_date',
+    },
+    ganttEndDate: {
+      type: 'ref',
+      columnName: 'gantt_end_date',
+    },
     stopwatch: {
       type: 'json',
     },

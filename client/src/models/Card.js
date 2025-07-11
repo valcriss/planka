@@ -20,6 +20,8 @@ export default class extends BaseModel {
     name: attr(),
     description: attr(),
     dueDate: attr(),
+    ganttStartDate: attr(),
+    ganttEndDate: attr(),
     stopwatch: attr(),
     storyPoints: attr({
       getDefault: () => 0,
@@ -557,6 +559,8 @@ export default class extends BaseModel {
       name: this.name,
       description: this.description,
       dueDate: this.dueDate,
+      ganttStartDate: this.ganttStartDate,
+      ganttEndDate: this.ganttEndDate,
       stopwatch: this.stopwatch,
       storyPoints: this.storyPoints,
       ...data,

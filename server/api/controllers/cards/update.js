@@ -77,6 +77,16 @@ module.exports = {
       custom: isDueDate,
       allowNull: true,
     },
+    ganttStartDate: {
+      type: 'string',
+      custom: isDueDate,
+      allowNull: true,
+    },
+    ganttEndDate: {
+      type: 'string',
+      custom: isDueDate,
+      allowNull: true,
+    },
     stopwatch: {
       type: 'json',
       custom: isStopwatch,
@@ -152,6 +162,8 @@ module.exports = {
         'name',
         'description',
         'dueDate',
+        'ganttStartDate',
+        'ganttEndDate',
         'stopwatch',
         'storyPoints',
       );
@@ -213,6 +225,8 @@ module.exports = {
       'name',
       'description',
       'dueDate',
+      'ganttStartDate',
+      'ganttEndDate',
       'stopwatch',
       'storyPoints',
       'isSubscribed',

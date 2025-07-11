@@ -100,6 +100,8 @@ module.exports = {
         'name',
         'description',
         'dueDate',
+        'ganttStartDate',
+        'ganttEndDate',
         'stopwatch',
         'storyPoints',
       ]),

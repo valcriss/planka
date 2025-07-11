@@ -55,6 +55,16 @@ module.exports = {
       type: 'string',
       custom: isDueDate,
     },
+    ganttStartDate: {
+      type: 'string',
+      custom: isDueDate,
+      allowNull: true,
+    },
+    ganttEndDate: {
+      type: 'string',
+      custom: isDueDate,
+      allowNull: true,
+    },
     stopwatch: {
       type: 'json',
       custom: isStopwatch,
@@ -107,6 +117,8 @@ module.exports = {
       'name',
       'description',
       'dueDate',
+      'ganttStartDate',
+      'ganttEndDate',
       'stopwatch',
       'cardTypeId',
       'storyPoints',
