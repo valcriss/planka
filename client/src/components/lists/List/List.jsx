@@ -50,6 +50,9 @@ const List = React.memo(({ id, index }) => {
   const cardIds = useSelector((state) => selectFilteredCardIdsByListId(state, id));
   const storyPointsTotal = useSelector((state) => selectStoryPointsTotalByListId(state, id));
   const project = useSelector(selectors.selectCurrentProject);
+  const isProjectManager = useSelector(
+    selectors.selectIsCurrentUserManagerForCurrentProject,
+  );
 
   const { canEdit, canArchiveCards, canAddCard, canDropCard } = useSelector((state) => {
     const isEditModeEnabled = selectors.selectIsEditModeEnabled(state); // TODO: move out?
@@ -229,7 +232,7 @@ const List = React.memo(({ id, index }) => {
                     </ArchiveCardsPopup>
                   )
                 ))}
-              {list.isPersisted && list.slug === 'ready-for-sprint' && (
+              {list.isPersisted && list.slug === 'ready-for-sprint' && isProjectManager && (
                 <StartSprintPopup>
                   <Button className={styles.headerButton} title={t('action.startSprint_title')}>
                     <Icon fitted name="play" size="small" />
