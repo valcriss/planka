@@ -33,11 +33,7 @@ const Task = React.memo(({ id }) => {
     for (const match of matches) {
       let card;
       if (match[2]) {
-        card = selectCardByProjectCodeAndNumber(
-          state,
-          match[1],
-          Number(match[2]),
-        );
+        card = selectCardByProjectCodeAndNumber(state, match[1], Number(match[2]));
       } else {
         card = selectCardById(state, match[1]);
       }

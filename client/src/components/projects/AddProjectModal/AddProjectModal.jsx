@@ -103,6 +103,7 @@ const AddProjectModal = React.memo(() => {
     nameFieldRef.current.focus();
   }, [nameFieldRef]);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (!isCodeEdited) {
       let isActive = true;
@@ -116,7 +117,10 @@ const AddProjectModal = React.memo(() => {
           .join('');
         let code = words.toUpperCase();
         if (code.length < 2) {
-          code = name.replace(/[^a-zA-Z0-9]/g, '').slice(0, 2).toUpperCase();
+          code = name
+            .replace(/[^a-zA-Z0-9]/g, '')
+            .slice(0, 2)
+            .toUpperCase();
         }
         return code;
       };
@@ -143,6 +147,7 @@ const AddProjectModal = React.memo(() => {
         let candidate = base;
         let counter = 1;
 
+        // eslint-disable-next-line no-await-in-loop
         while (isActive && !(await checkAvailability(candidate))) {
           candidate = `${base}${counter}`;
           counter += 1;

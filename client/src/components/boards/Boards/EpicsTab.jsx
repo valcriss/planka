@@ -10,10 +10,7 @@ import itemStyles from './Item.module.scss';
 const EpicsTab = React.memo(({ name, code, isActive }) => (
   <div className={itemStyles.wrapper}>
     <div className={classNames(itemStyles.tab, isActive && itemStyles.tabActive)}>
-      <Link
-        to={Paths.PROJECT_EPICS.replace(':code', code)}
-        className={itemStyles.link}
-      >
+      <Link to={Paths.PROJECT_EPICS.replace(':code', code)} className={itemStyles.link}>
         <span className={itemStyles.name}>{name}</span>
       </Link>
     </div>

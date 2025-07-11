@@ -83,8 +83,7 @@ module.exports = {
       listId: values.list.id,
       creatorUserId: values.creatorUser.id,
       listChangedAt: new Date().toISOString(),
-      closedAt:
-        values.list.type === List.Types.CLOSED ? new Date().toISOString() : null,
+      closedAt: values.list.type === List.Types.CLOSED ? new Date().toISOString() : null,
     });
 
     sails.sockets.broadcast(

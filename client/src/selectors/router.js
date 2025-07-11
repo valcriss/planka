@@ -72,12 +72,8 @@ export const selectPath = createReduxOrmSelector(
             };
           }
 
-          const boardsModels = projectModel.getBoardsModelArrayAvailableForUser(
-            currentUserModel,
-          );
-          const boardModel = boardsModels.find(
-            (b) => b.slug === pathsMatch.params.slug,
-          );
+          const boardsModels = projectModel.getBoardsModelArrayAvailableForUser(currentUserModel);
+          const boardModel = boardsModels.find((b) => b.slug === pathsMatch.params.slug);
 
           if (!boardModel) {
             return {

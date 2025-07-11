@@ -95,9 +95,8 @@ module.exports = {
         const baseSlug = makeSlug(values.name);
         let slug = baseSlug;
         let counter = 1;
-        while (
-          await Board.qm.getOneByProjectIdAndSlug(inputs.record.projectId, slug)
-        ) {
+        // eslint-disable-next-line no-await-in-loop
+        while (await Board.qm.getOneByProjectIdAndSlug(inputs.record.projectId, slug)) {
           if (inputs.record.slug === slug) {
             break;
           }

@@ -43,6 +43,7 @@ module.exports = {
     const baseSlug = makeSlug(values.name);
     let slug = baseSlug;
     let counter = 1;
+    // eslint-disable-next-line no-await-in-loop
     while (await Board.qm.getOneByProjectIdAndSlug(values.project.id, slug)) {
       slug = `${baseSlug}-${counter}`;
       counter += 1;

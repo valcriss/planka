@@ -180,7 +180,7 @@ export default {
       useStoryPointsInProject: 'Utiliser les story points dans le projet',
       useScrum: 'Utiliser Scrum',
       useEpics: 'Utiliser les epics',
-      epics: 'Epics',
+      epics: 'Épiques',
       sprintDuration: 'Durée du sprint',
       oneWeek: '1 semaine',
       twoWeeks: '2 semaines',

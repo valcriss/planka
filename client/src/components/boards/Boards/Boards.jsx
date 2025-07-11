@@ -77,11 +77,7 @@ const Boards = React.memo(() => {
               // eslint-disable-next-line react/jsx-props-no-spreading
               <div {...droppableProps} ref={innerRef} className={styles.tabs}>
                 {project && project.useEpics && (
-                  <EpicsTab
-                    name={t('common.epics')}
-                    code={project.code}
-                    isActive={isEpicsActive}
-                  />
+                  <EpicsTab name={t('common.epics')} code={project.code} isActive={isEpicsActive} />
                 )}
                 {boardIds.map((boardId, index) => (
                   <Item key={boardId} id={boardId} index={index} />

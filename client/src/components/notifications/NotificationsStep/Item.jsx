@@ -36,16 +36,15 @@ const Item = React.memo(({ id, onClose }) => {
   );
 
   const card = useSelector((state) => selectCardById(state, notification.cardId));
-  const board = useSelector((state) =>
-    card ? selectBoardById(state, card.boardId) : null,
-  );
+  const board = useSelector((state) => (card ? selectBoardById(state, card.boardId) : null));
   const project = useSelector((state) =>
     board ? selectProjectById(state, board.projectId) : null,
   );
 
-  const cardPath = project && card
-    ? Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number)
-    : `/cards/${notification.cardId}`;
+  const cardPath =
+    project && card
+      ? Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number)
+      : `/cards/${notification.cardId}`;
 
   const dispatch = useDispatch();
   const [t] = useTranslation();

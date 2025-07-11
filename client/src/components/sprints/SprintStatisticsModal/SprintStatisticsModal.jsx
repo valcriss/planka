@@ -66,6 +66,7 @@ const SprintStatisticsModal = React.memo(() => {
         /* ignore */
       });
 
+    // eslint-disable-next-line consistent-return
     return () => {
       isMounted = false;
     };
@@ -77,7 +78,10 @@ const SprintStatisticsModal = React.memo(() => {
 
   const [ClosableModal] = useClosableModal();
 
-  const formatDate = useCallback((iso) => new Date(iso).toLocaleDateString(i18n.language), [i18n.language]);
+  const formatDate = useCallback(
+    (iso) => new Date(iso).toLocaleDateString(i18n.language),
+    [i18n.language],
+  );
 
   const totalPoints = useMemo(
     () =>
@@ -140,9 +144,7 @@ const SprintStatisticsModal = React.memo(() => {
       className={styles.wrapper}
       onClose={handleClose}
     >
-      <ClosableModal.Header>
-        {t('common.sprintStatistics_title')}
-      </ClosableModal.Header>
+      <ClosableModal.Header>{t('common.sprintStatistics_title')}</ClosableModal.Header>
       <ClosableModal.Content>
         <div className={styles.content}>
           <div className={styles.sidebar}>
@@ -151,9 +153,7 @@ const SprintStatisticsModal = React.memo(() => {
                 key={s.id}
                 role="button"
                 tabIndex={0}
-                className={
-                  s.id === selectedId ? styles.activeItem : styles.item
-                }
+                className={s.id === selectedId ? styles.activeItem : styles.item}
                 onClick={() => setSelectedId(s.id)}
                 onKeyPress={() => setSelectedId(s.id)}
               >
@@ -165,17 +165,19 @@ const SprintStatisticsModal = React.memo(() => {
             {detail && (
               <>
                 <div className={styles.field}>{`Sprint ${detail.sprint.number}`}</div>
-                <div className={styles.field}>{`${t('common.startDate')}: ${formatDate(detail.sprint.startDate)}`}</div>
-                <div className={styles.field}>{`${t('common.endDate')}: ${formatDate(detail.sprint.endDate)}`}</div>
+                <div
+                  className={styles.field}
+                >{`${t('common.startDate')}: ${formatDate(detail.sprint.startDate)}`}</div>
+                <div
+                  className={styles.field}
+                >{`${t('common.endDate')}: ${formatDate(detail.sprint.endDate)}`}</div>
                 {project.useStoryPoints && (
                   <>
-                    <div className={styles.field}>{`${t('common.totalSprintPoints')}: ${totalPoints}`}</div>
+                    <div
+                      className={styles.field}
+                    >{`${t('common.totalSprintPoints')}: ${totalPoints}`}</div>
                     {chart && (
-                      <svg
-                        className={styles.chart}
-                        width={chart.width}
-                        height={chart.height}
-                      >
+                      <svg className={styles.chart} width={chart.width} height={chart.height}>
                         <polyline
                           points={chart.points}
                           fill="none"
