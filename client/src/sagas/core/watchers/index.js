@@ -18,6 +18,7 @@ import cardTypes from './card-types';
 import boards from './boards';
 import boardMemberships from './board-memberships';
 import labels from './labels';
+import epics from './epics';
 import lists from './lists';
 import cards from './cards';
 import taskLists from './task-lists';
@@ -47,6 +48,7 @@ export default [
   boards,
   boardMemberships,
   labels,
+  epics,
   lists,
   cards,
   taskLists,

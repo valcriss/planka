@@ -14,6 +14,7 @@ import Board from './Board';
 import BoardMembership from './BoardMembership';
 import CardType from './CardType';
 import Label from './Label';
+import Epic from './Epic';
 import List from './List';
 import Card from './Card';
 import TaskList from './TaskList';
@@ -39,6 +40,7 @@ export {
   BoardMembership,
   CardType,
   Label,
+  Epic,
   List,
   Card,
   TaskList,

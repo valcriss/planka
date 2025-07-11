@@ -30,6 +30,13 @@ const openAddProjectModal = (defaultProjectType) => ({
   },
 });
 
+const openAddEpicModal = () => ({
+  type: EntryActionTypes.MODAL_OPEN,
+  payload: {
+    type: ModalTypes.ADD_EPIC,
+  },
+});
+
 const openProjectSettingsModal = () => ({
   type: EntryActionTypes.MODAL_OPEN,
   payload: {
@@ -74,5 +81,6 @@ export default {
   openBoardSettingsModal,
   openBoardActivitiesModal,
   openSprintStatisticsModal,
+  openAddEpicModal,
   closeModal,
 };

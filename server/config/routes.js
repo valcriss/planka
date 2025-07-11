@@ -115,6 +115,11 @@ module.exports.routes = {
   'PATCH /api/card-types/:id': 'card-types/update',
   'DELETE /api/card-types/:id': 'card-types/delete',
 
+  'GET /api/projects/:projectId/epics': 'epics/index',
+  'POST /api/projects/:projectId/epics': 'epics/create',
+  'PATCH /api/epics/:id': 'epics/update',
+  'DELETE /api/epics/:id': 'epics/delete',
+
   'POST /api/projects/:projectId/boards': 'boards/create',
   'GET /api/boards/:id': 'boards/show',
   'GET /api/boards/:projectCode/:slug': 'boards/show-by-slug',
