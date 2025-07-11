@@ -5,6 +5,7 @@
 
 import React, { useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Button } from 'semantic-ui-react';
 import { closePopup, usePopup } from '../../../lib/popup';
@@ -13,12 +14,15 @@ import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 import DroppableTypes from '../../../constants/DroppableTypes';
 import Item from './Item';
+import EpicsTab from './EpicsTab';
 import AddStep from './AddStep';
 
 import styles from './Boards.module.scss';
 import globalStyles from '../../../styles.module.scss';
 
 const Boards = React.memo(() => {
+  const [t] = useTranslation();
+  const project = useSelector(selectors.selectCurrentProject);
   const boardIds = useSelector(selectors.selectBoardIdsForCurrentProject);
 
   const canAdd = useSelector((state) => {
@@ -69,6 +73,7 @@ const Boards = React.memo(() => {
             {({ innerRef, droppableProps, placeholder }) => (
               // eslint-disable-next-line react/jsx-props-no-spreading
               <div {...droppableProps} ref={innerRef} className={styles.tabs}>
+                {project && project.useEpics && <EpicsTab name={t('common.epics')} />}
                 {boardIds.map((boardId, index) => (
                   <Item key={boardId} id={boardId} index={index} />
                 ))}
