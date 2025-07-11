@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import { TextArea } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Input } from '../../../lib/custom-ui';
+import styles from './EpicEditor.module.scss';
 import { useNestedRef } from '../../../hooks';
 
 const EpicEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
@@ -40,7 +41,13 @@ const EpicEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
         onChange={onFieldChange}
       />
       <div>{t('common.color')}</div>
-      <Input type="color" name="color" value={data.color || '#000000'} onChange={onFieldChange} />
+      <input
+        type="color"
+        name="color"
+        value={data.color || '#000000'}
+        className={styles.colorInput}
+        onChange={(e) => onFieldChange(undefined, { name: 'color', value: e.target.value })}
+      />
       <div>{t('common.startDate')}</div>
       <DatePicker
         selected={data.startDate ? new Date(data.startDate) : null}

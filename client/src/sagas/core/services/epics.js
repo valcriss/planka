@@ -7,14 +7,22 @@ import { createLocalId } from '../../../utils/local-id';
 
 export function* createEpic(projectId, data) {
   const localId = yield call(createLocalId);
-  yield put(actions.createEpic(projectId, { ...data, id: localId }));
+
+  const nextData = {
+    ...data,
+    position: yield select(selectors.selectNextEpicPosition, projectId),
+  };
+
+  yield put(actions.createEpic(projectId, { ...nextData, id: localId }));
+
   let epic;
   try {
-    ({ item: epic } = yield call(request, api.createEpic, projectId, data));
+    ({ item: epic } = yield call(request, api.createEpic, projectId, nextData));
   } catch (error) {
     yield put(actions.createEpic.failure(localId, error));
     return;
   }
+
   yield put(actions.createEpic.success(localId, epic));
 }
 

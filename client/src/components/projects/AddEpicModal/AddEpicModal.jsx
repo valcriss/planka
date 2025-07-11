@@ -29,22 +29,31 @@ const AddEpicModal = React.memo(() => {
       name: data.name.trim(),
       description: data.description.trim() || null,
     };
+
     if (!clean.name) {
       return;
     }
+
     dispatch(entryActions.createEpicInCurrentProject(clean));
     handleClose();
   }, [dispatch, data, handleClose]);
 
   return (
     <ClosableModal closeIcon onClose={handleClose}>
-      <ClosableModal.Header>{t('action.addEpic_title')}</ClosableModal.Header>
+      <ClosableModal.Header>
+        {t('common.addEpic', {
+          context: 'title',
+        })}
+      </ClosableModal.Header>
       <ClosableModal.Content>
         <Form onSubmit={handleSubmit}>
           <EpicEditor data={data} onFieldChange={handleFieldChange} />
-          <Button positive content={t('action.createEpic')} />
         </Form>
       </ClosableModal.Content>
+      <ClosableModal.Actions>
+        <Button onClick={handleClose} content={t('action.cancel')} />
+        <Button positive onClick={handleSubmit} content={t('action.createEpic')} />
+      </ClosableModal.Actions>
     </ClosableModal>
   );
 });
