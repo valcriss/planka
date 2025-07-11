@@ -103,6 +103,11 @@ module.exports = {
       defaultsTo: 2,
       columnName: 'sprint_duration',
     },
+    useEpics: {
+      type: 'boolean',
+      defaultsTo: false,
+      columnName: 'use_epics',
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗

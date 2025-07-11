@@ -74,6 +74,9 @@ module.exports = {
       type: 'number',
       isIn: [1, 2, 3, 4],
     },
+    useEpics: {
+      type: 'boolean',
+    },
     useStoryPoints: {
       type: 'boolean',
     },
@@ -141,6 +144,7 @@ module.exports = {
           'useStoryPoints',
           'useScrum',
           'sprintDuration',
+          'useEpics',
         );
       }
     } else if (currentUser.role === User.Roles.ADMIN) {
@@ -150,9 +154,16 @@ module.exports = {
         'useStoryPoints',
         'useScrum',
         'sprintDuration',
+        'useEpics',
       );
     } else if (projectManager) {
-      availableInputKeys.push('isHidden', 'useStoryPoints', 'useScrum', 'sprintDuration');
+      availableInputKeys.push(
+        'isHidden',
+        'useStoryPoints',
+        'useScrum',
+        'sprintDuration',
+        'useEpics',
+      );
     }
 
     if (projectManager) {
@@ -165,6 +176,7 @@ module.exports = {
         'useStoryPoints',
         'useScrum',
         'sprintDuration',
+        'useEpics',
       );
     }
 
@@ -225,6 +237,7 @@ module.exports = {
       'useStoryPoints',
       'useScrum',
       'sprintDuration',
+      'useEpics',
       'isFavorite',
     ]);
 

@@ -179,6 +179,7 @@ export default {
       configuration: 'Configuration',
       useStoryPointsInProject: 'Utiliser les story points dans le projet',
       useScrum: 'Utiliser Scrum',
+      useEpics: 'Utiliser les epics',
       sprintDuration: 'Durée du sprint',
       oneWeek: '1 semaine',
       twoWeeks: '2 semaines',
