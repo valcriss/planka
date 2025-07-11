@@ -7,10 +7,10 @@ module.exports = {
   inputs: {
     id: { ...idInput, required: true },
     name: { type: "string" },
-    description: { type: "string" },
-    color: { type: "string" },
-    startDate: { type: "string" },
-    endDate: { type: "string" },
+    description: { type: "string", allowNull: true },
+    color: { type: "string", allowNull: true },
+    startDate: { type: "string", allowNull: true },
+    endDate: { type: "string", allowNull: true },
     position: { type: "number", min: 0 },
   },
 

@@ -5,7 +5,7 @@ exports.up = async (knex) => {
     table.integer('position').notNullable();
     table.text('name').notNullable();
     table.text('description');
-    table.text('color');
+    table.text('color').notNullable().defaultTo('#000000');
     table.timestamp('start_date', true);
     table.timestamp('end_date', true);
     table.timestamp('created_at', true);

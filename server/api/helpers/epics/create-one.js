@@ -7,6 +7,7 @@ module.exports = {
   async fn({ values, request }) {
     const epic = await Epic.qm.createOne({
       ...values,
+      color: values.color || '#000000',
       projectId: values.project.id,
     });
     sails.sockets.broadcast(
