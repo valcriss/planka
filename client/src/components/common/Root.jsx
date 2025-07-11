@@ -35,6 +35,7 @@ function Root({ store, history }) {
               <Route path={Paths.OIDC_CALLBACK} element={<Login />} />
               <Route path={Paths.ROOT} element={<Core />} />
               <Route path={Paths.PROJECTS} element={<Core />} />
+              <Route path={Paths.PROJECT_EPICS} element={<Core />} />
               <Route path={Paths.BOARDS} element={<Core />} />
               <Route path={Paths.CARDS} element={<Core />} />
               <Route path="*" element={<NotFound />} />

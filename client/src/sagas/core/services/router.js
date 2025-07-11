@@ -32,6 +32,12 @@ export function* goToProject(projectId) {
   yield call(goTo, Paths.PROJECTS.replace(':code', code));
 }
 
+export function* goToProjectEpics(projectId) {
+  const project = yield select(selectors.selectProjectById, projectId);
+  const code = project ? project.code : projectId;
+  yield call(goTo, Paths.PROJECT_EPICS.replace(':code', code));
+}
+
 export function* goToBoard(boardId) {
   const board = yield select(selectors.selectBoardById, boardId);
   const project = board ? yield select(selectors.selectProjectById, board.projectId) : null;
@@ -133,6 +139,8 @@ export function* handleLocationChange() {
 
       break;
     }
+    case Paths.PROJECT_EPICS:
+      break;
     case Paths.BOARDS:
       if (currentBoard) {
         ({ id: currentBoardId } = currentBoard);
@@ -293,6 +301,7 @@ export default {
   goTo,
   goToRoot,
   goToProject,
+  goToProjectEpics,
   goToBoard,
   goToCard,
   handleLocationChange,

@@ -15,6 +15,7 @@ import entryActions from '../../../entry-actions';
 import DroppableTypes from '../../../constants/DroppableTypes';
 import Item from './Item';
 import EpicsTab from './EpicsTab';
+import Paths from '../../../constants/Paths';
 import AddStep from './AddStep';
 
 import styles from './Boards.module.scss';
@@ -24,6 +25,8 @@ const Boards = React.memo(() => {
   const [t] = useTranslation();
   const project = useSelector(selectors.selectCurrentProject);
   const boardIds = useSelector(selectors.selectBoardIdsForCurrentProject);
+  const pathsMatch = useSelector(selectors.selectPathsMatch);
+  const isEpicsActive = pathsMatch && pathsMatch.pattern.path === Paths.PROJECT_EPICS;
 
   const canAdd = useSelector((state) => {
     const isEditModeEnabled = selectors.selectIsEditModeEnabled(state); // TODO: move out?
@@ -73,7 +76,13 @@ const Boards = React.memo(() => {
             {({ innerRef, droppableProps, placeholder }) => (
               // eslint-disable-next-line react/jsx-props-no-spreading
               <div {...droppableProps} ref={innerRef} className={styles.tabs}>
-                {project && project.useEpics && <EpicsTab name={t('common.epics')} />}
+                {project && project.useEpics && (
+                  <EpicsTab
+                    name={t('common.epics')}
+                    code={project.code}
+                    isActive={isEpicsActive}
+                  />
+                )}
                 {boardIds.map((boardId, index) => (
                   <Item key={boardId} id={boardId} index={index} />
                 ))}
