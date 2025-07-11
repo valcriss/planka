@@ -50,9 +50,7 @@ const List = React.memo(({ id, index }) => {
   const cardIds = useSelector((state) => selectFilteredCardIdsByListId(state, id));
   const storyPointsTotal = useSelector((state) => selectStoryPointsTotalByListId(state, id));
   const project = useSelector(selectors.selectCurrentProject);
-  const isProjectManager = useSelector(
-    selectors.selectIsCurrentUserManagerForCurrentProject,
-  );
+  const isProjectManager = useSelector(selectors.selectIsCurrentUserManagerForCurrentProject);
 
   const { canEdit, canArchiveCards, canAddCard, canDropCard } = useSelector((state) => {
     const isEditModeEnabled = selectors.selectIsEditModeEnabled(state); // TODO: move out?

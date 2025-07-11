@@ -1,13 +1,11 @@
-const defaultFind = (criteria, { sort = 'number' } = {}) =>
-  Sprint.find(criteria).sort(sort);
+const defaultFind = (criteria, { sort = 'number' } = {}) => Sprint.find(criteria).sort(sort);
 
 const createOne = (values) => Sprint.create({ ...values }).fetch();
 
 const getByProjectId = (projectId, { sort = 'number' } = {}) =>
   defaultFind({ projectId }, { sort });
 
-const getOneCurrentByProjectId = (projectId) =>
-  Sprint.findOne({ projectId, closeDate: null });
+const getOneCurrentByProjectId = (projectId) => Sprint.findOne({ projectId, closeDate: null });
 
 const getOneById = (id, { projectId } = {}) => {
   const criteria = { id };

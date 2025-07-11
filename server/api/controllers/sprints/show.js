@@ -24,10 +24,7 @@ module.exports = {
 
     const project = await Project.qm.getOneById(sprint.projectId);
 
-    const isProjectManager = await sails.helpers.users.isProjectManager(
-      currentUser.id,
-      project.id,
-    );
+    const isProjectManager = await sails.helpers.users.isProjectManager(currentUser.id, project.id);
 
     if (!isProjectManager) {
       const boardMemberships = await BoardMembership.qm.getByProjectIdAndUserId(

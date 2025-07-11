@@ -15,7 +15,6 @@ import history from '../../history';
 import selectors from '../../selectors';
 
 const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
-  const cardNamesById = useSelector(selectors.selectCardNamesById);
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
   const selectCardByProjectCodeAndNumber = useMemo(
     () => selectors.makeSelectCardByProjectCodeAndNumber(),
@@ -37,13 +36,10 @@ const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
   );
 
   // eslint-disable-next-line react/no-unstable-nested-components,react/prop-types
-  const CardLink = React.memo(
-    ({ id, projectCode, number, href, content, ...linkProps }) => {
-      const card = useSelector((state) =>
-        id
-          ? selectCardById(state, id)
-          : selectCardByProjectCodeAndNumber(state, projectCode, number),
-      );
+  const CardLink = React.memo(({ id, projectCode, number, href, content, ...linkProps }) => {
+    const card = useSelector((state) =>
+      id ? selectCardById(state, id) : selectCardByProjectCodeAndNumber(state, projectCode, number),
+    );
     const cardType = useSelector((state) => {
       if (!card || !card.cardTypeId) {
         return null;
@@ -76,8 +72,7 @@ const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
         {card ? card.name : content}
       </a>
     );
-    },
-  );
+  });
 
   const linkRenderer = useCallback(
     ({ attributes: { href, ...linkProps }, content }) => {
@@ -139,7 +134,7 @@ const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
         </a>
       );
     },
-    [handleLinkClick, cardNamesById],
+    [handleLinkClick],
   );
 
   return (

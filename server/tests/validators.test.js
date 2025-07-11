@@ -13,6 +13,7 @@ describe('validators.isPassword', () => {
     expect(isPassword('weak')).toBe(false);
   });
 });
+// eslint-disable-next-line import/order
 const _ = require('lodash');
 // expose lodash as global for validators that rely on it
 global._ = _;

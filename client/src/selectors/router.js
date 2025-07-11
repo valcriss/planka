@@ -45,6 +45,21 @@ export const selectPath = createReduxOrmSelector(
             projectId: projectModel.id,
           };
         }
+        case Paths.PROJECT_EPICS: {
+          const projectModel = Project.all()
+            .toModelArray()
+            .find((p) => p.code === pathsMatch.params.code);
+
+          if (!projectModel || !projectModel.isAvailableForUser(currentUserModel)) {
+            return {
+              projectId: null,
+            };
+          }
+
+          return {
+            projectId: projectModel.id,
+          };
+        }
         case Paths.BOARDS: {
           const projectModel = Project.all()
             .toModelArray()
@@ -57,12 +72,8 @@ export const selectPath = createReduxOrmSelector(
             };
           }
 
-          const boardsModels = projectModel.getBoardsModelArrayAvailableForUser(
-            currentUserModel,
-          );
-          const boardModel = boardsModels.find(
-            (b) => b.slug === pathsMatch.params.slug,
-          );
+          const boardsModels = projectModel.getBoardsModelArrayAvailableForUser(currentUserModel);
+          const boardModel = boardsModels.find((b) => b.slug === pathsMatch.params.slug);
 
           if (!boardModel) {
             return {

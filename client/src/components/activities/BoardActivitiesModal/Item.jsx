@@ -29,16 +29,15 @@ const Item = React.memo(({ id }) => {
   const activity = useSelector((state) => selectActivityById(state, id));
   const user = useSelector((state) => selectUserById(state, activity.userId));
   const card = useSelector((state) => selectCardById(state, activity.cardId));
-  const board = useSelector((state) =>
-    card ? selectBoardById(state, card.boardId) : null,
-  );
+  const board = useSelector((state) => (card ? selectBoardById(state, card.boardId) : null));
   const project = useSelector((state) =>
     board ? selectProjectById(state, board.projectId) : null,
   );
 
-  const cardPath = project && card
-    ? Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number)
-    : `/cards/${activity.cardId}`;
+  const cardPath =
+    project && card
+      ? Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number)
+      : `/cards/${activity.cardId}`;
 
   const [t] = useTranslation();
 

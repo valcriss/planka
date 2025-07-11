@@ -8,4 +8,3 @@ exports.down = (knex) =>
   knex.schema.table('card', (table) => {
     table.dropColumn('closed_at');
   });
-

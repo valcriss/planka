@@ -13,6 +13,7 @@ exports.up = async (knex) => {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '') || 'board';
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const board of boards) {
     const base = makeSlug(board.name);
     let slug = base;
@@ -26,9 +27,8 @@ exports.up = async (knex) => {
 
     slugsByProject[board.project_id].add(slug);
 
-    await knex('board')
-      .where({ id: board.id })
-      .update({ slug });
+    // eslint-disable-next-line no-await-in-loop
+    await knex('board').where({ id: board.id }).update({ slug });
   }
 
   await knex.schema.alterTable('board', (table) => {

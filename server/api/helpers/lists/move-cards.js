@@ -67,10 +67,7 @@ module.exports = {
 
     if (values.list.type === List.Types.CLOSED && inputs.record.type !== List.Types.CLOSED) {
       updateValues.closedAt = new Date().toISOString();
-    } else if (
-      values.list.type !== List.Types.CLOSED &&
-      inputs.record.type === List.Types.CLOSED
-    ) {
+    } else if (values.list.type !== List.Types.CLOSED && inputs.record.type === List.Types.CLOSED) {
       updateValues.closedAt = null;
     }
 

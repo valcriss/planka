@@ -30,9 +30,7 @@ const CardModal = React.memo(() => {
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
 
   const card = useSelector(selectors.selectCurrentCard);
-  const board = useSelector((state) =>
-    selectors.selectBoardById(state, card.boardId),
-  );
+  const board = useSelector((state) => selectors.selectBoardById(state, card.boardId));
   const project = useSelector((state) =>
     board ? selectors.selectProjectById(state, board.projectId) : null,
   );

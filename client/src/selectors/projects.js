@@ -28,17 +28,21 @@ export const makeSelectProjectById = () =>
 export const selectProjectById = makeSelectProjectById();
 
 export const makeSelectProjectByCode = () =>
-  createSelector(orm, (_, code) => code, ({ Project }, code) => {
-    const projectModel = Project.all()
-      .toModelArray()
-      .find((p) => p.code === code);
+  createSelector(
+    orm,
+    (_, code) => code,
+    ({ Project }, code) => {
+      const projectModel = Project.all()
+        .toModelArray()
+        .find((p) => p.code === code);
 
-    if (!projectModel) {
-      return projectModel;
-    }
+      if (!projectModel) {
+        return projectModel;
+      }
 
-    return projectModel.ref;
-  });
+      return projectModel.ref;
+    },
+  );
 
 export const selectProjectByCode = makeSelectProjectByCode();
 
@@ -381,6 +385,4 @@ export default {
   selectBaseCustomFieldGroupsForCurrentProject,
   selectBoardIdsForCurrentProject,
   selectIsCurrentUserManagerForCurrentProject,
-  makeSelectProjectByCode,
-  selectProjectByCode,
 };

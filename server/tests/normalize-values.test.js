@@ -1,4 +1,5 @@
 const _ = require('lodash');
+
 global._ = _;
 const normalizeValues = require('../utils/normalize-values');
 
