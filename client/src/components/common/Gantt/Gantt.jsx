@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import {
@@ -19,6 +19,8 @@ const ROW_HEIGHT = 24; // px height per task row
 
 const Gantt = React.memo(({ tasks }) => {
   const { t } = useTranslation();
+  const headerRef = useRef(null);
+  const bodyRef = useRef(null);
   const range = useMemo(() => {
     const today = startOfDay(new Date());
     let firstStart = null;
@@ -52,6 +54,18 @@ const Gantt = React.memo(({ tasks }) => {
     return result;
   }, [range]);
 
+  const handleHeaderScroll = () => {
+    if (bodyRef.current && headerRef.current) {
+      bodyRef.current.scrollLeft = headerRef.current.scrollLeft;
+    }
+  };
+
+  const handleBodyScroll = () => {
+    if (headerRef.current && bodyRef.current) {
+      headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
+    }
+  };
+
   const getBarStyle = (task) => {
     if (!task.startDate || !task.endDate) {
       return null;
@@ -71,7 +85,11 @@ const Gantt = React.memo(({ tasks }) => {
     <div className={styles.wrapper}>
       <div className={styles.headerRow}>
         <div className={styles.leftHeader}>{t('common.epics')}</div>
-        <div className={styles.rightHeader}>
+        <div
+          className={styles.rightHeader}
+          ref={headerRef}
+          onScroll={handleHeaderScroll}
+        >
           <div
             className={styles.monthRow}
             style={{ width: range.totalDays * DAY_WIDTH }}
@@ -110,7 +128,11 @@ const Gantt = React.memo(({ tasks }) => {
             </div>
           ))}
         </div>
-        <div className={styles.rightColumn}>
+        <div
+          className={styles.rightColumn}
+          ref={bodyRef}
+          onScroll={handleBodyScroll}
+        >
           <div
             className={styles.timeline}
             style={{ width: range.totalDays * DAY_WIDTH }}
