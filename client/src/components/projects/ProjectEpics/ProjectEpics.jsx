@@ -6,6 +6,7 @@ import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 
 import AddEpicModal from '../AddEpicModal';
+import Styles from './ProjectEpics.module.scss';
 
 const ProjectEpics = React.memo(() => {
   const [t] = useTranslation();
@@ -17,9 +18,9 @@ const ProjectEpics = React.memo(() => {
   }, [dispatch]);
 
   return (
-    <div>
-      <div>
-        <Button primary onClick={handleAddClick} content={t('action.addEpic')} />
+    <div className={Styles.actionBarContainer}>
+      <div className={Styles.actionBar}>
+        <Button onClick={handleAddClick} content={t('action.addEpic')} />
       </div>
       {modal && modal.type === 'ADD_EPIC' && <AddEpicModal />}
     </div>
