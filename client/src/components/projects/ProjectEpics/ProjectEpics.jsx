@@ -59,9 +59,7 @@ const ProjectEpics = React.memo(() => {
         </div>
         {modal && modal.type === 'ADD_EPIC' && <AddEpicModal />}
       </div>
-      <div className={Styles.ganttContainer}>
-        <Gantt tasks={tasks} />
-      </div>
+      <div className={Styles.ganttContainer}>{tasks.length > 0 && <Gantt tasks={tasks} />}</div>
     </div>
   );
 });
