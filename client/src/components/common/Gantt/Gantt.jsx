@@ -14,8 +14,8 @@ import {
 
 import styles from './Gantt.module.scss';
 
-const DAY_WIDTH = 24; // px width per day
-const ROW_HEIGHT = 24; // px height per task row
+const DAY_WIDTH = 32; // px width per day
+const ROW_HEIGHT = 32; // px height per task row
 
 const Gantt = React.memo(({ tasks }) => {
   const { t } = useTranslation();
@@ -37,9 +37,10 @@ const Gantt = React.memo(({ tasks }) => {
     return { start, end, totalDays };
   }, [tasks]);
 
-  const days = useMemo(() =>
-    Array.from({ length: range.totalDays }, (_, i) => addDays(range.start, i)),
-  [range]);
+  const days = useMemo(
+    () => Array.from({ length: range.totalDays }, (_, i) => addDays(range.start, i)),
+    [range],
+  );
 
   const months = useMemo(() => {
     const result = [];
@@ -85,15 +86,8 @@ const Gantt = React.memo(({ tasks }) => {
     <div className={styles.wrapper}>
       <div className={styles.headerRow}>
         <div className={styles.leftHeader}>{t('common.epics')}</div>
-        <div
-          className={styles.rightHeader}
-          ref={headerRef}
-          onScroll={handleHeaderScroll}
-        >
-          <div
-            className={styles.monthRow}
-            style={{ width: range.totalDays * DAY_WIDTH }}
-          >
+        <div className={styles.rightHeader} ref={headerRef} onScroll={handleHeaderScroll}>
+          <div className={styles.monthRow} style={{ width: range.totalDays * DAY_WIDTH }}>
             {months.map((month) => (
               <div
                 key={month.start.toISOString()}
@@ -104,16 +98,9 @@ const Gantt = React.memo(({ tasks }) => {
               </div>
             ))}
           </div>
-          <div
-            className={styles.dayRow}
-            style={{ width: range.totalDays * DAY_WIDTH }}
-          >
+          <div className={styles.dayRow} style={{ width: range.totalDays * DAY_WIDTH }}>
             {days.map((day) => (
-              <div
-                key={day.toISOString()}
-                className={styles.dayCell}
-                style={{ width: DAY_WIDTH }}
-              >
+              <div key={day.toISOString()} className={styles.dayCell} style={{ width: DAY_WIDTH }}>
                 {format(day, 'd')}
               </div>
             ))}
@@ -123,20 +110,13 @@ const Gantt = React.memo(({ tasks }) => {
       <div className={styles.body}>
         <div className={styles.leftColumn}>
           {tasks.map((task) => (
-            <div key={task.name} className={styles.row} style={{ height: ROW_HEIGHT }}>
+            <div key={task.name} className={styles.epicRow} style={{ height: ROW_HEIGHT }}>
               {task.name}
             </div>
           ))}
         </div>
-        <div
-          className={styles.rightColumn}
-          ref={bodyRef}
-          onScroll={handleBodyScroll}
-        >
-          <div
-            className={styles.timeline}
-            style={{ width: range.totalDays * DAY_WIDTH }}
-          >
+        <div className={styles.rightColumn} ref={bodyRef} onScroll={handleBodyScroll}>
+          <div className={styles.timeline} style={{ width: range.totalDays * DAY_WIDTH }}>
             {tasks.map((task) => {
               const bar = getBarStyle(task);
               return (
