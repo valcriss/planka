@@ -54,6 +54,19 @@ const handleEpicDelete = (epic) => ({
   payload: { epic },
 });
 
+const fetchEpics = (projectId) => ({
+  type: ActionTypes.EPICS_FETCH,
+  payload: { projectId },
+});
+fetchEpics.success = (projectId, epics) => ({
+  type: ActionTypes.EPICS_FETCH__SUCCESS,
+  payload: { projectId, epics },
+});
+fetchEpics.failure = (projectId, error) => ({
+  type: ActionTypes.EPICS_FETCH__FAILURE,
+  payload: { projectId, error },
+});
+
 export default {
   createEpic,
   handleEpicCreate,
@@ -61,4 +74,5 @@ export default {
   handleEpicUpdate,
   deleteEpic,
   handleEpicDelete,
+  fetchEpics,
 };
