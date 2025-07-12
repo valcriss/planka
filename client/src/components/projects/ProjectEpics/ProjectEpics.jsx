@@ -2,9 +2,10 @@ import React, { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'semantic-ui-react';
+import { Gantt } from 'wx-react-gantt';
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
-
+import 'wx-react-gantt/dist/gantt.css';
 import AddEpicModal from '../AddEpicModal';
 import Styles from './ProjectEpics.module.scss';
 
@@ -34,7 +35,7 @@ const ProjectEpics = React.memo(() => {
 
         return {
           id: String(e.id),
-          name: e.name,
+          text: e.name,
           type: 'task',
           start,
           end,
@@ -66,8 +67,7 @@ const ProjectEpics = React.memo(() => {
       <div className={Styles.ganttContainer}>
         {tasks.length > 0 && (
           <div className={Styles.gantt}>
-            {/* Gantt chart component would go here, using tasks and handleDateChange */}
-            {/* Example: <Gantt tasks={tasks} onDateChange={handleDateChange} /> */}
+            <Gantt tasks={tasks} />
           </div>
         )}
         {tasks.length === 0 && <div className={Styles.noEpicsMessage}>{t('message.noEpics')}</div>}
