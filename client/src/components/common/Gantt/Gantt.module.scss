@@ -3,12 +3,14 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
   }
 
   .headerRow {
     display: flex;
     font-weight: bold;
     font-size: 12px;
+    width: 100%;
   }
 
   .leftHeader {
@@ -20,7 +22,7 @@
 
   .rightHeader {
     overflow-x: auto;
-    flex-grow: 1;
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -53,13 +55,14 @@
   .rightColumn {
     overflow-x: auto;
     position: relative;
-    flex-grow: 1;
+    flex: 1 1 0;
     min-width: 0;
   }
 
   .body {
     display: flex;
     align-items: flex-start;
+    width: 100%;
   }
 
   .timeline {
