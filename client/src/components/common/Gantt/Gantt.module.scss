@@ -29,13 +29,20 @@
   .dayRow {
     display: flex;
     position: relative;
+    background-image: repeating-linear-gradient(
+      to right,
+      #f0f0f0,
+      #f0f0f0 1px,
+      transparent 1px,
+      transparent 24px
+    );
   }
 
   .monthCell,
   .dayCell {
     text-align: center;
     font-size: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f0f0f0;
   }
 
   .leftColumn {
@@ -55,13 +62,20 @@
 
   .timeline {
     position: relative;
+    background-image: repeating-linear-gradient(
+      to right,
+      #f0f0f0,
+      #f0f0f0 1px,
+      transparent 1px,
+      transparent 24px
+    );
   }
 
   .row {
     position: relative;
     height: 24px;
     line-height: 24px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f0f0f0;
     font-size: 12px;
   }
 

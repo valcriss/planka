@@ -24,11 +24,12 @@
 }
 
 
+
 .ganttContainer {
   background-color: white;
 
   .gantt {
-
+    overflow-x: auto;
   }
 
   .noEpicsMessage {
