@@ -55,7 +55,7 @@ const ProjectEpics = React.memo(() => {
 
   const scales = useMemo(
     () => [
-      { unit: 'month', step: 1, format: 'MMMM yyy' },
+      { unit: 'month', step: 1, format: 'MMMM yyyy' },
       { unit: 'day', step: 1, format: 'd' },
     ],
     [],
