@@ -1,0 +1,40 @@
+:global(#app) {
+  .wrapper {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .leftColumn {
+    flex: 0 0 200px;
+  }
+
+  .rightColumn {
+    overflow-x: auto;
+    position: relative;
+    flex-grow: 1;
+  }
+
+  .timeline {
+    position: relative;
+  }
+
+  .row {
+    position: relative;
+    height: 24px;
+    line-height: 24px;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+  }
+
+  .bar {
+    position: absolute;
+    height: 16px;
+    top: 4px;
+    border-radius: 2px;
+  }
+
+  .progress {
+    height: 100%;
+    opacity: 0.3;
+  }
+}

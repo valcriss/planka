@@ -5,6 +5,7 @@ import { Button } from 'semantic-ui-react';
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 import AddEpicModal from '../AddEpicModal';
+import Gantt from '../../common/Gantt';
 import Styles from './ProjectEpics.module.scss';
 
 const ProjectEpics = React.memo(() => {
@@ -26,27 +27,13 @@ const ProjectEpics = React.memo(() => {
 
   const tasks = useMemo(
     () =>
-      epics.map((e) => {
-        const hasDates = e.startDate && e.endDate;
-        const start = hasDates ? new Date(e.startDate) : new Date();
-        const end = hasDates ? new Date(e.endDate) : new Date(Date.now() + 24 * 60 * 60 * 1000);
-
-        return {
-          id: String(e.id),
-          text: e.name,
-          type: 'task',
-          start,
-          end,
-          progress: 0,
-          isDisabled: false,
-          styles: {
-            backgroundColor: hasDates ? e.color : 'transparent',
-            backgroundSelectedColor: hasDates ? e.color : 'transparent',
-            progressColor: hasDates ? e.color : 'transparent',
-            progressSelectedColor: hasDates ? e.color : 'transparent',
-          },
-        };
-      }),
+      epics.map((e) => ({
+        name: e.name,
+        color: e.color,
+        startDate: e.startDate ? new Date(e.startDate) : null,
+        endDate: e.endDate ? new Date(e.endDate) : null,
+        progress: 0,
+      })),
     [epics],
   );
 
@@ -65,10 +52,12 @@ const ProjectEpics = React.memo(() => {
       <div className={Styles.ganttContainer}>
         {tasks.length > 0 && (
           <div className={Styles.gantt}>
-            {/* Assuming a Gantt chart component is used here, replace with actual Gantt chart implementation */}
+            <Gantt tasks={tasks} />
           </div>
         )}
-        {tasks.length === 0 && <div className={Styles.noEpicsMessage}>{t('message.noEpics')}</div>}
+        {tasks.length === 0 && (
+          <div className={Styles.noEpicsMessage}>{t('message.noEpics')}</div>
+        )}
       </div>
     </div>
   );
