@@ -2,8 +2,6 @@ import React, { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'semantic-ui-react';
-import { Gantt, ViewMode } from 'gantt-task-react';
-import 'gantt-task-react/dist/index.css';
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 
@@ -57,21 +55,6 @@ const ProjectEpics = React.memo(() => {
     dispatch(entryActions.openAddEpicModal());
   }, [dispatch]);
 
-  const handleDateChange = useCallback(
-    (task) => {
-      dispatch(
-        entryActions.updateEpic(task.id, {
-          startDate: task.start,
-          endDate: task.end,
-        }),
-      );
-    },
-    [dispatch],
-  );
-
-  const viewMode = ViewMode.Day;
-  const columnWidth = 62;
-
   return (
     <div>
       <div className={Styles.actionBarContainer}>
@@ -82,13 +65,12 @@ const ProjectEpics = React.memo(() => {
       </div>
       <div className={Styles.ganttContainer}>
         {tasks.length > 0 && (
-          <Gantt
-            tasks={tasks}
-            onDateChange={handleDateChange}
-            viewMode={viewMode}
-            columnWidth={columnWidth}
-          />
+          <div className={Styles.gantt}>
+            {/* Gantt chart component would go here, using tasks and handleDateChange */}
+            {/* Example: <Gantt tasks={tasks} onDateChange={handleDateChange} /> */}
+          </div>
         )}
+        {tasks.length === 0 && <div className={Styles.noEpicsMessage}>{t('message.noEpics')}</div>}
       </div>
     </div>
   );
