@@ -7,6 +7,8 @@ import {
   addYears,
   addDays,
   startOfDay,
+  startOfMonth,
+  endOfMonth,
   format,
 } from 'date-fns';
 
@@ -37,6 +39,19 @@ const Gantt = React.memo(({ tasks }) => {
     Array.from({ length: range.totalDays }, (_, i) => addDays(range.start, i)),
   [range]);
 
+  const months = useMemo(() => {
+    const result = [];
+    let cursor = startOfMonth(range.start);
+    while (cursor <= range.end) {
+      const monthStart = cursor < range.start ? range.start : cursor;
+      const monthEnd = endOfMonth(cursor) < range.end ? endOfMonth(cursor) : range.end;
+      const daysInMonth = differenceInCalendarDays(monthEnd, monthStart) + 1;
+      result.push({ start: cursor, days: daysInMonth });
+      cursor = addMonths(cursor, 1);
+    }
+    return result;
+  }, [range]);
+
   const getBarStyle = (task) => {
     if (!task.startDate || !task.endDate) {
       return null;
@@ -58,7 +73,21 @@ const Gantt = React.memo(({ tasks }) => {
         <div className={styles.leftHeader}>{t('common.epics')}</div>
         <div className={styles.rightHeader}>
           <div
-            className={styles.timelineHeader}
+            className={styles.monthRow}
+            style={{ width: range.totalDays * DAY_WIDTH }}
+          >
+            {months.map((month) => (
+              <div
+                key={month.start.toISOString()}
+                className={styles.monthCell}
+                style={{ width: month.days * DAY_WIDTH }}
+              >
+                {format(month.start, 'MMM')}
+              </div>
+            ))}
+          </div>
+          <div
+            className={styles.dayRow}
             style={{ width: range.totalDays * DAY_WIDTH }}
           >
             {days.map((day) => (

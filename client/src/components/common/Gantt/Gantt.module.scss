@@ -13,18 +13,25 @@
 
   .leftHeader {
     flex: 0 0 200px;
+    display: flex;
+    align-items: center;
+    height: 48px;
   }
 
   .rightHeader {
     overflow-x: auto;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
   }
 
-  .timelineHeader {
+  .monthRow,
+  .dayRow {
     display: flex;
     position: relative;
   }
 
+  .monthCell,
   .dayCell {
     text-align: center;
     font-size: 10px;
