@@ -18,11 +18,14 @@ const ProjectEpics = React.memo(() => {
   }, [dispatch]);
 
   return (
-    <div className={Styles.actionBarContainer}>
-      <div className={Styles.actionBar}>
-        <Button onClick={handleAddClick} content={t('action.addEpic')} />
+    <div>
+      <div className={Styles.actionBarContainer}>
+        <div className={Styles.actionBar}>
+          <Button onClick={handleAddClick} content={t('action.addEpic')} />
+        </div>
+        {modal && modal.type === 'ADD_EPIC' && <AddEpicModal />}
       </div>
-      {modal && modal.type === 'ADD_EPIC' && <AddEpicModal />}
+      <div className={Styles.ganttContainer}>Place for Gantt chart or epic list here</div>
     </div>
   );
 });
