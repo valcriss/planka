@@ -30,6 +30,11 @@ const handleEpicDelete = (epic) => ({
   payload: { epic },
 });
 
+const fetchEpics = (projectId) => ({
+  type: EntryActionTypes.EPICS_FETCH,
+  payload: { projectId },
+});
+
 export default {
   createEpicInCurrentProject,
   handleEpicCreate,
@@ -37,4 +42,5 @@ export default {
   handleEpicUpdate,
   deleteEpic,
   handleEpicDelete,
+  fetchEpics,
 };

@@ -67,6 +67,27 @@ export function* handleEpicDelete(epic) {
   yield put(actions.handleEpicDelete(epic));
 }
 
+export function* fetchEpics(projectId) {
+  yield put(actions.fetchEpics(projectId));
+
+  let epics;
+  try {
+    ({ items: epics } = yield call(request, api.getEpics, projectId));
+  } catch (error) {
+    yield put(actions.fetchEpics.failure(projectId, error));
+    return;
+  }
+
+  yield put(actions.fetchEpics.success(projectId, epics));
+}
+
+export function* fetchEpicsInCurrentProject() {
+  const { projectId } = yield select(selectors.selectPath);
+  if (projectId) {
+    yield call(fetchEpics, projectId);
+  }
+}
+
 export default {
   createEpic,
   createEpicInCurrentProject,
@@ -75,4 +96,6 @@ export default {
   handleEpicUpdate,
   deleteEpic,
   handleEpicDelete,
+  fetchEpics,
+  fetchEpicsInCurrentProject,
 };

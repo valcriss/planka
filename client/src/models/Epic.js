@@ -24,6 +24,9 @@ export default class extends BaseModel {
           payload.epics.forEach((e) => Epic.upsert(e));
         }
         break;
+      case ActionTypes.EPICS_FETCH__SUCCESS:
+        payload.epics.forEach((e) => Epic.upsert(e));
+        break;
       case ActionTypes.EPIC_CREATE:
       case ActionTypes.EPIC_UPDATE__SUCCESS:
       case ActionTypes.EPIC_CREATE_HANDLE:

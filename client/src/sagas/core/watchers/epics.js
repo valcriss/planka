@@ -20,5 +20,8 @@ export default function* epicsWatchers() {
     takeEvery(EntryActionTypes.EPIC_DELETE_HANDLE, ({ payload: { epic } }) =>
       services.handleEpicDelete(epic),
     ),
+    takeEvery(EntryActionTypes.EPICS_FETCH, ({ payload: { projectId } }) =>
+      services.fetchEpics(projectId),
+    ),
   ]);
 }
