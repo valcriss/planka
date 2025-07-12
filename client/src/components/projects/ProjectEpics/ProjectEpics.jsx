@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'semantic-ui-react';
-import { Gantt } from 'wx-react-gantt';
+import { Gantt, Willow } from 'wx-react-gantt';
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 import 'wx-react-gantt/dist/gantt.css';
@@ -78,7 +78,9 @@ const ProjectEpics = React.memo(() => {
       <div className={Styles.ganttContainer}>
         {tasks.length > 0 && (
           <div className={Styles.gantt}>
-            <Gantt tasks={tasks} links={links} scales={scales} />
+            <Willow>
+              <Gantt tasks={tasks} links={links} scales={scales} />
+            </Willow>
           </div>
         )}
         {tasks.length === 0 && <div className={Styles.noEpicsMessage}>{t('message.noEpics')}</div>}
