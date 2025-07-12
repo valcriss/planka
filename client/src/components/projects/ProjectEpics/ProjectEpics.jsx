@@ -39,8 +39,9 @@ const ProjectEpics = React.memo(() => {
           type: 'task',
           start,
           end,
+          duration: Math.ceil((end - start) / (1000 * 60 * 60 * 24)),
           progress: 0,
-          isDisabled: false,
+          lazy: false,
           styles: {
             backgroundColor: hasDates ? e.color : 'transparent',
             backgroundSelectedColor: hasDates ? e.color : 'transparent',
@@ -51,6 +52,16 @@ const ProjectEpics = React.memo(() => {
       }),
     [epics],
   );
+
+  const scales = useMemo(
+    () => [
+      { unit: 'month', step: 1, format: 'MMMM yyy' },
+      { unit: 'day', step: 1, format: 'd' },
+    ],
+    [],
+  );
+
+  const links = useMemo(() => [], []);
 
   const handleAddClick = useCallback(() => {
     dispatch(entryActions.openAddEpicModal());
@@ -67,7 +78,7 @@ const ProjectEpics = React.memo(() => {
       <div className={Styles.ganttContainer}>
         {tasks.length > 0 && (
           <div className={Styles.gantt}>
-            <Gantt tasks={tasks} />
+            <Gantt tasks={tasks} links={links} scales={scales} />
           </div>
         )}
         {tasks.length === 0 && <div className={Styles.noEpicsMessage}>{t('message.noEpics')}</div>}
