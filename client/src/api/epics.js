@@ -15,7 +15,7 @@ export const transformEpicData = (data) => ({
 });
 
 const getEpics = (projectId, headers) =>
-  socket.get(`/projects/${projectId}/epics`, headers).then((body) => ({
+  socket.get(`/projects/${projectId}/epics`, undefined, headers).then((body) => ({
     ...body,
     items: body.items.map(transformEpic),
   }));
