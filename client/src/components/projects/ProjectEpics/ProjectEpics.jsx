@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'semantic-ui-react';
-import { Gantt } from 'gantt-task-react';
+import { Gantt, ViewMode } from 'gantt-task-react';
 import 'gantt-task-react/dist/index.css';
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
@@ -32,7 +32,7 @@ const ProjectEpics = React.memo(() => {
       epics.map((e) => {
         const hasDates = e.startDate && e.endDate;
         const start = hasDates ? new Date(e.startDate) : new Date();
-        const end = hasDates ? new Date(e.endDate) : new Date();
+        const end = hasDates ? new Date(e.endDate) : new Date(Date.now() + 24 * 60 * 60 * 1000);
 
         return {
           id: String(e.id),
@@ -69,6 +69,9 @@ const ProjectEpics = React.memo(() => {
     [dispatch],
   );
 
+  const viewMode = ViewMode.Day;
+  const columnWidth = 62;
+
   return (
     <div>
       <div className={Styles.actionBarContainer}>
@@ -78,7 +81,14 @@ const ProjectEpics = React.memo(() => {
         {modal && modal.type === 'ADD_EPIC' && <AddEpicModal />}
       </div>
       <div className={Styles.ganttContainer}>
-        {tasks.length > 0 && <Gantt tasks={tasks} onDateChange={handleDateChange} />}
+        {tasks.length > 0 && (
+          <Gantt
+            tasks={tasks}
+            onDateChange={handleDateChange}
+            viewMode={viewMode}
+            columnWidth={columnWidth}
+          />
+        )}
       </div>
     </div>
   );
