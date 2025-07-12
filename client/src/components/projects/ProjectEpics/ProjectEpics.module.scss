@@ -26,12 +26,12 @@
 
 .ganttContainer {
   background-color: white;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 
-  &::-webkit-scrollbar {
-    display: none;
+  .gantt {
+
+  }
+
+  .noEpicsMessage {
+
   }
 }
