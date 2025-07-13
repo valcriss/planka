@@ -28,6 +28,7 @@ const ProjectEpics = React.memo(() => {
   const tasks = useMemo(
     () =>
       epics.map((e) => ({
+        id: e.id,
         name: e.name,
         color: e.color,
         startDate: e.startDate ? new Date(e.startDate) : null,
@@ -35,6 +36,13 @@ const ProjectEpics = React.memo(() => {
         progress: 0,
       })),
     [epics],
+  );
+
+  const handleTaskChange = useCallback(
+    (id, data) => {
+      dispatch(entryActions.updateEpic(id, data));
+    },
+    [dispatch],
   );
 
   const handleAddClick = useCallback(() => {
@@ -52,7 +60,7 @@ const ProjectEpics = React.memo(() => {
       <div className={Styles.ganttContainer}>
         {tasks.length > 0 && (
           <div className={Styles.gantt}>
-            <Gantt tasks={tasks} />
+            <Gantt tasks={tasks} onChange={handleTaskChange} />
           </div>
         )}
         {tasks.length === 0 && <div className={Styles.noEpicsMessage}>{t('message.noEpics')}</div>}
