@@ -17,6 +17,16 @@ import styles from './Gantt.module.scss';
 const DAY_WIDTH = 32; // px width per day
 const ROW_HEIGHT = 32; // px height per task row
 
+const getTextColor = (hex) => {
+  if (!hex) return '#000';
+  const clean = hex.replace('#', '');
+  const r = parseInt(clean.substring(0, 2), 16);
+  const g = parseInt(clean.substring(2, 4), 16);
+  const b = parseInt(clean.substring(4, 6), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 128 ? '#000' : '#fff';
+};
+
 const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
   const { t } = useTranslation();
   const headerRef = useRef(null);
@@ -275,6 +285,12 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
                       backgroundColor: task.color,
                     }}
                   >
+                    <div
+                      className={styles.label}
+                      style={{ color: getTextColor(task.color) }}
+                    >
+                      {task.name}
+                    </div>
                     {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                     <div className={styles.gripLeft} onMouseDown={startResize(index, 'start')} />
                     {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
