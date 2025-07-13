@@ -60,17 +60,13 @@
 
   .leftColumn {
     flex: 0 0 200px;
-    position: fixed;
-    width: 200px;
     background-color: #fff;
   }
 
   .rightColumn {
     overflow-x: auto;
-    position: relative;
-    flex: 1 1 0;
+    flex: 1 1 auto;
     min-width: 0;
-    margin-left: 200px;
   }
 
   .body {
