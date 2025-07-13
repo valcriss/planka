@@ -127,9 +127,9 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     if (!task.startDate || !task.endDate) {
       return null;
     }
-    const offsetDays = differenceInCalendarDays(startOfDay(task.startDate), range.start);
+    const offsetDays = differenceInCalendarDays(task.startDate, range.start);
     const durationDays =
-      differenceInCalendarDays(startOfDay(task.endDate), startOfDay(task.startDate)) + 1;
+      differenceInCalendarDays(task.endDate, task.startDate) + 1;
     const progressWidth = `${task.progress}%`;
     return {
       offset: offsetDays * DAY_WIDTH,
