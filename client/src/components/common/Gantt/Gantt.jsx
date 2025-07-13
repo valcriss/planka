@@ -188,15 +188,11 @@ const Gantt = React.memo(({ tasks, onChange }) => {
                     >
                       <div
                         className={styles.gripLeft}
-                        onMouseDown={() =>
-                          startResize(index, 'start')
-                        }
+                        onMouseDown={startResize(index, 'start')}
                       />
                       <div
                         className={styles.gripRight}
-                        onMouseDown={() =>
-                          startResize(index, 'end')
-                        }
+                        onMouseDown={startResize(index, 'end')}
                       />
                       <div
                         className={styles.progress}
