@@ -17,7 +17,7 @@ import styles from './Gantt.module.scss';
 const DAY_WIDTH = 32; // px width per day
 const ROW_HEIGHT = 32; // px height per task row
 
-const Gantt = React.memo(({ tasks, onChange }) => {
+const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
   const { t } = useTranslation();
   const headerRef = useRef(null);
   const bodyRef = useRef(null);
@@ -248,7 +248,12 @@ const Gantt = React.memo(({ tasks, onChange }) => {
       </div>
       <div className={styles.leftColumn}>
         {localTasks.map((task) => (
-          <div key={task.id} className={styles.epicRow} style={{ height: ROW_HEIGHT }}>
+          <div
+            key={task.id}
+            className={styles.epicRow}
+            style={{ height: ROW_HEIGHT }}
+            onClick={onEpicClick ? () => onEpicClick(task.id) : undefined}
+          >
             {task.name}
           </div>
         ))}
@@ -305,6 +310,8 @@ Gantt.propTypes = {
   ).isRequired,
   // eslint-disable-next-line react/require-default-props
   onChange: PropTypes.func,
+  // eslint-disable-next-line react/require-default-props
+  onEpicClick: PropTypes.func,
 };
 
 export default Gantt;

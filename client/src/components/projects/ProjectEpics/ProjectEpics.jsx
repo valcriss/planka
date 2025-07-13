@@ -5,6 +5,7 @@ import { Button } from 'semantic-ui-react';
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 import AddEpicModal from '../AddEpicModal';
+import EditEpicModal from '../EditEpicModal';
 import Gantt from '../../common/Gantt';
 import Styles from './ProjectEpics.module.scss';
 
@@ -49,6 +50,13 @@ const ProjectEpics = React.memo(() => {
     dispatch(entryActions.openAddEpicModal());
   }, [dispatch]);
 
+  const handleEpicClick = useCallback(
+    (id) => {
+      dispatch(entryActions.openEditEpicModal(id));
+    },
+    [dispatch],
+  );
+
   return (
     <div>
       <div className={Styles.actionBarContainer}>
@@ -56,11 +64,12 @@ const ProjectEpics = React.memo(() => {
           <Button onClick={handleAddClick} content={t('action.addEpic')} />
         </div>
         {modal && modal.type === 'ADD_EPIC' && <AddEpicModal />}
+        {modal && modal.type === 'EDIT_EPIC' && <EditEpicModal />}
       </div>
       <div className={Styles.ganttContainer}>
         {tasks.length > 0 && (
           <div className={Styles.gantt}>
-            <Gantt tasks={tasks} onChange={handleTaskChange} />
+            <Gantt tasks={tasks} onChange={handleTaskChange} onEpicClick={handleEpicClick} />
           </div>
         )}
         {tasks.length === 0 && <div className={Styles.noEpicsMessage}>{t('message.noEpics')}</div>}
