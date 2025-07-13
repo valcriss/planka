@@ -140,18 +140,8 @@ const Gantt = React.memo(({ tasks, onChange }) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.leftPane}>
-        <div className={styles.leftHeader}>{t('common.epics')}</div>
-        <div className={styles.leftColumn}>
-          {localTasks.map((task) => (
-            <div key={task.id} className={styles.epicRow} style={{ height: ROW_HEIGHT }}>
-              {task.name}
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className={styles.rightPane}>
-        <div className={styles.rightHeader} ref={headerRef} onScroll={handleHeaderScroll}>
+      <div className={styles.leftHeader}>{t('common.epics')}</div>
+      <div className={styles.rightHeader} ref={headerRef} onScroll={handleHeaderScroll}>
           <div className={styles.monthRow} style={{ width: range.totalDays * DAY_WIDTH }}>
             {months.map((month) => (
               <div
@@ -171,42 +161,48 @@ const Gantt = React.memo(({ tasks, onChange }) => {
             ))}
           </div>
         </div>
-        <div className={styles.rightColumn} ref={bodyRef} onScroll={handleBodyScroll}>
-          <div className={styles.timeline} style={{ width: range.totalDays * DAY_WIDTH }}>
-            {localTasks.map((task, index) => {
-              const bar = getBarStyle(task);
-              return (
-                <div key={task.id} className={styles.row} style={{ height: ROW_HEIGHT }}>
-                  {bar && (
+      <div className={styles.leftColumn}>
+        {localTasks.map((task) => (
+          <div key={task.id} className={styles.epicRow} style={{ height: ROW_HEIGHT }}>
+            {task.name}
+          </div>
+        ))}
+      </div>
+      <div className={styles.rightColumn} ref={bodyRef} onScroll={handleBodyScroll}>
+        <div className={styles.timeline} style={{ width: range.totalDays * DAY_WIDTH }}>
+          {localTasks.map((task, index) => {
+            const bar = getBarStyle(task);
+            return (
+              <div key={task.id} className={styles.row} style={{ height: ROW_HEIGHT }}>
+                {bar && (
+                  <div
+                    className={styles.bar}
+                    style={{
+                      left: bar.offset,
+                      width: bar.width,
+                      backgroundColor: task.color,
+                    }}
+                  >
                     <div
-                      className={styles.bar}
+                      className={styles.gripLeft}
+                      onMouseDown={startResize(index, 'start')}
+                    />
+                    <div
+                      className={styles.gripRight}
+                      onMouseDown={startResize(index, 'end')}
+                    />
+                    <div
+                      className={styles.progress}
                       style={{
-                        left: bar.offset,
-                        width: bar.width,
+                        width: bar.progressWidth,
                         backgroundColor: task.color,
                       }}
-                    >
-                      <div
-                        className={styles.gripLeft}
-                        onMouseDown={startResize(index, 'start')}
-                      />
-                      <div
-                        className={styles.gripRight}
-                        onMouseDown={startResize(index, 'end')}
-                      />
-                      <div
-                        className={styles.progress}
-                        style={{
-                          width: bar.progressWidth,
-                          backgroundColor: task.color,
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
