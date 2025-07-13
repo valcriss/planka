@@ -24,6 +24,23 @@ const Gantt = React.memo(({ tasks, onChange }) => {
   const [localTasks, setLocalTasks] = useState(tasks);
   const resizeRef = useRef(null);
   const dragRef = useRef(null);
+  const disableScroll = () => {
+    if (headerRef.current) {
+      headerRef.current.style.overflowX = 'hidden';
+    }
+    if (bodyRef.current) {
+      bodyRef.current.style.overflowX = 'hidden';
+    }
+  };
+
+  const enableScroll = () => {
+    if (headerRef.current) {
+      headerRef.current.style.overflowX = 'auto';
+    }
+    if (bodyRef.current) {
+      bodyRef.current.style.overflowX = 'auto';
+    }
+  };
 
   useEffect(() => {
     setLocalTasks(tasks);
@@ -38,7 +55,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     });
 
     const baseStart = firstStart || today;
-    const start = addMonths(baseStart, -1);
+    const start = addDays(baseStart, -7);
     const end = addYears(today, 1);
     const totalDays = differenceInCalendarDays(end, start) + 1;
     return { start, end, totalDays };
@@ -82,21 +99,21 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     info.deltaDays = deltaDays;
     setLocalTasks((prev) => {
       const newTasks = [...prev];
-      const t = { ...newTasks[info.index] };
+      const ts = { ...newTasks[info.index] };
       if (info.side === 'start') {
         const newStart = addDays(info.initialStart, deltaDays);
-        if (newStart <= t.endDate) {
-          t.startDate = newStart;
+        if (newStart <= ts.endDate) {
+          ts.startDate = newStart;
           info.newStartDate = newStart;
         }
       } else {
         const newEnd = addDays(info.initialEnd, deltaDays);
-        if (newEnd >= t.startDate) {
-          t.endDate = newEnd;
+        if (newEnd >= ts.startDate) {
+          ts.endDate = newEnd;
           info.newEndDate = newEnd;
         }
       }
-      newTasks[info.index] = t;
+      newTasks[info.index] = ts;
       return newTasks;
     });
   };
@@ -107,8 +124,8 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', stopResize);
     const task = localTasks[info.index];
-    let startDate = task.startDate;
-    let endDate = task.endDate;
+    let { startDate } = task;
+    let { endDate } = task;
     if (info.side === 'start' && info.newStartDate) {
       startDate = info.newStartDate;
     }
@@ -118,6 +135,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     if (onChange) {
       onChange(task.id, { startDate, endDate });
     }
+    enableScroll();
     resizeRef.current = null;
   };
 
@@ -135,6 +153,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
       newStartDate: task.startDate,
       newEndDate: task.endDate,
     };
+    disableScroll();
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', stopResize);
   };
@@ -147,14 +166,14 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     info.deltaDays = deltaDays;
     setLocalTasks((prev) => {
       const newTasks = [...prev];
-      const t = { ...newTasks[info.index] };
+      const ts = { ...newTasks[info.index] };
       const newStart = addDays(info.initialStart, deltaDays);
       const newEnd = addDays(info.initialEnd, deltaDays);
-      t.startDate = newStart;
-      t.endDate = newEnd;
+      ts.startDate = newStart;
+      ts.endDate = newEnd;
       info.newStartDate = newStart;
       info.newEndDate = newEnd;
-      newTasks[info.index] = t;
+      newTasks[info.index] = ts;
       return newTasks;
     });
   };
@@ -167,6 +186,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     if (onChange) {
       onChange(info.taskId, { startDate: info.newStartDate, endDate: info.newEndDate });
     }
+    enableScroll();
     dragRef.current = null;
   };
 
@@ -183,6 +203,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
       newStartDate: task.startDate,
       newEndDate: task.endDate,
     };
+    disableScroll();
     document.addEventListener('mousemove', handleDragMove);
     document.addEventListener('mouseup', stopDrag);
   };
@@ -206,25 +227,25 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     <div className={styles.wrapper}>
       <div className={styles.leftHeader}>{t('common.epics')}</div>
       <div className={styles.rightHeader} ref={headerRef} onScroll={handleHeaderScroll}>
-          <div className={styles.monthRow} style={{ width: range.totalDays * DAY_WIDTH }}>
-            {months.map((month) => (
-              <div
-                key={month.start.toISOString()}
-                className={styles.monthCell}
-                style={{ width: month.days * DAY_WIDTH }}
-              >
-                {format(month.start, 'MMM')}
-              </div>
-            ))}
-          </div>
-          <div className={styles.dayRow} style={{ width: range.totalDays * DAY_WIDTH }}>
-            {days.map((day) => (
-              <div key={day.toISOString()} className={styles.dayCell} style={{ width: DAY_WIDTH }}>
-                {format(day, 'd')}
-              </div>
-            ))}
-          </div>
+        <div className={styles.monthRow} style={{ width: range.totalDays * DAY_WIDTH }}>
+          {months.map((month) => (
+            <div
+              key={month.start.toISOString()}
+              className={styles.monthCell}
+              style={{ width: month.days * DAY_WIDTH }}
+            >
+              {format(month.start, 'MMM')}
+            </div>
+          ))}
         </div>
+        <div className={styles.dayRow} style={{ width: range.totalDays * DAY_WIDTH }}>
+          {days.map((day) => (
+            <div key={day.toISOString()} className={styles.dayCell} style={{ width: DAY_WIDTH }}>
+              {format(day, 'd')}
+            </div>
+          ))}
+        </div>
+      </div>
       <div className={styles.leftColumn}>
         {localTasks.map((task) => (
           <div key={task.id} className={styles.epicRow} style={{ height: ROW_HEIGHT }}>
@@ -239,6 +260,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
             return (
               <div key={task.id} className={styles.row} style={{ height: ROW_HEIGHT }}>
                 {bar && (
+                  // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                   <div
                     className={styles.bar}
                     onMouseDown={startDrag(index)}
@@ -248,14 +270,10 @@ const Gantt = React.memo(({ tasks, onChange }) => {
                       backgroundColor: task.color,
                     }}
                   >
-                    <div
-                      className={styles.gripLeft}
-                      onMouseDown={startResize(index, 'start')}
-                    />
-                    <div
-                      className={styles.gripRight}
-                      onMouseDown={startResize(index, 'end')}
-                    />
+                    {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                    <div className={styles.gripLeft} onMouseDown={startResize(index, 'start')} />
+                    {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                    <div className={styles.gripRight} onMouseDown={startResize(index, 'end')} />
                     <div
                       className={styles.progress}
                       style={{
@@ -285,6 +303,7 @@ Gantt.propTypes = {
       progress: PropTypes.number,
     }),
   ).isRequired,
+  // eslint-disable-next-line react/require-default-props
   onChange: PropTypes.func,
 };
 
