@@ -24,6 +24,23 @@ const Gantt = React.memo(({ tasks, onChange }) => {
   const [localTasks, setLocalTasks] = useState(tasks);
   const resizeRef = useRef(null);
   const dragRef = useRef(null);
+  const disableScroll = () => {
+    if (headerRef.current) {
+      headerRef.current.style.overflowX = 'hidden';
+    }
+    if (bodyRef.current) {
+      bodyRef.current.style.overflowX = 'hidden';
+    }
+  };
+
+  const enableScroll = () => {
+    if (headerRef.current) {
+      headerRef.current.style.overflowX = 'auto';
+    }
+    if (bodyRef.current) {
+      bodyRef.current.style.overflowX = 'auto';
+    }
+  };
 
   useEffect(() => {
     setLocalTasks(tasks);
@@ -118,6 +135,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     if (onChange) {
       onChange(task.id, { startDate, endDate });
     }
+    enableScroll();
     resizeRef.current = null;
   };
 
@@ -135,6 +153,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
       newStartDate: task.startDate,
       newEndDate: task.endDate,
     };
+    disableScroll();
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', stopResize);
   };
@@ -167,6 +186,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     if (onChange) {
       onChange(info.taskId, { startDate: info.newStartDate, endDate: info.newEndDate });
     }
+    enableScroll();
     dragRef.current = null;
   };
 
@@ -183,6 +203,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
       newStartDate: task.startDate,
       newEndDate: task.endDate,
     };
+    disableScroll();
     document.addEventListener('mousemove', handleDragMove);
     document.addEventListener('mouseup', stopDrag);
   };
