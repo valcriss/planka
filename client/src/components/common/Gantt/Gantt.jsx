@@ -23,6 +23,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
   const bodyRef = useRef(null);
   const [localTasks, setLocalTasks] = useState(tasks);
   const resizeRef = useRef(null);
+  const dragRef = useRef(null);
 
   useEffect(() => {
     setLocalTasks(tasks);
@@ -78,6 +79,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     if (!info) return;
     const deltaX = e.clientX - info.startX;
     const deltaDays = Math.round(deltaX / DAY_WIDTH);
+    info.deltaDays = deltaDays;
     setLocalTasks((prev) => {
       const newTasks = [...prev];
       const t = { ...newTasks[info.index] };
@@ -85,11 +87,13 @@ const Gantt = React.memo(({ tasks, onChange }) => {
         const newStart = addDays(info.initialStart, deltaDays);
         if (newStart <= t.endDate) {
           t.startDate = newStart;
+          info.newStartDate = newStart;
         }
       } else {
         const newEnd = addDays(info.initialEnd, deltaDays);
         if (newEnd >= t.startDate) {
           t.endDate = newEnd;
+          info.newEndDate = newEnd;
         }
       }
       newTasks[info.index] = t;
@@ -103,13 +107,22 @@ const Gantt = React.memo(({ tasks, onChange }) => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', stopResize);
     const task = localTasks[info.index];
+    let startDate = task.startDate;
+    let endDate = task.endDate;
+    if (info.side === 'start' && info.newStartDate) {
+      startDate = info.newStartDate;
+    }
+    if (info.side === 'end' && info.newEndDate) {
+      endDate = info.newEndDate;
+    }
     if (onChange) {
-      onChange(task.id, { startDate: task.startDate, endDate: task.endDate });
+      onChange(task.id, { startDate, endDate });
     }
     resizeRef.current = null;
   };
 
   const startResize = (index, side) => (e) => {
+    e.stopPropagation();
     const task = localTasks[index];
     if (!task.startDate || !task.endDate) return;
     resizeRef.current = {
@@ -118,9 +131,60 @@ const Gantt = React.memo(({ tasks, onChange }) => {
       startX: e.clientX,
       initialStart: task.startDate,
       initialEnd: task.endDate,
+      deltaDays: 0,
+      newStartDate: task.startDate,
+      newEndDate: task.endDate,
     };
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', stopResize);
+  };
+
+  const handleDragMove = (e) => {
+    const info = dragRef.current;
+    if (!info) return;
+    const deltaX = e.clientX - info.startX;
+    const deltaDays = Math.round(deltaX / DAY_WIDTH);
+    info.deltaDays = deltaDays;
+    setLocalTasks((prev) => {
+      const newTasks = [...prev];
+      const t = { ...newTasks[info.index] };
+      const newStart = addDays(info.initialStart, deltaDays);
+      const newEnd = addDays(info.initialEnd, deltaDays);
+      t.startDate = newStart;
+      t.endDate = newEnd;
+      info.newStartDate = newStart;
+      info.newEndDate = newEnd;
+      newTasks[info.index] = t;
+      return newTasks;
+    });
+  };
+
+  const stopDrag = () => {
+    const info = dragRef.current;
+    if (!info) return;
+    document.removeEventListener('mousemove', handleDragMove);
+    document.removeEventListener('mouseup', stopDrag);
+    if (onChange) {
+      onChange(info.taskId, { startDate: info.newStartDate, endDate: info.newEndDate });
+    }
+    dragRef.current = null;
+  };
+
+  const startDrag = (index) => (e) => {
+    const task = localTasks[index];
+    if (!task.startDate || !task.endDate) return;
+    dragRef.current = {
+      index,
+      taskId: task.id,
+      startX: e.clientX,
+      initialStart: task.startDate,
+      initialEnd: task.endDate,
+      deltaDays: 0,
+      newStartDate: task.startDate,
+      newEndDate: task.endDate,
+    };
+    document.addEventListener('mousemove', handleDragMove);
+    document.addEventListener('mouseup', stopDrag);
   };
 
   const getBarStyle = (task) => {
@@ -177,6 +241,7 @@ const Gantt = React.memo(({ tasks, onChange }) => {
                 {bar && (
                   <div
                     className={styles.bar}
+                    onMouseDown={startDrag(index)}
                     style={{
                       left: bar.offset,
                       width: bar.width,
