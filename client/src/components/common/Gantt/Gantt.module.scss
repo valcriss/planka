@@ -119,6 +119,24 @@
     border-radius: 5px ;
   }
 
+  .gripLeft,
+  .gripRight {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    cursor: ew-resize;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .gripLeft {
+    left: -3px;
+  }
+
+  .gripRight {
+    right: -3px;
+  }
+
   .progress {
     height: 100%;
     opacity: 0.3;

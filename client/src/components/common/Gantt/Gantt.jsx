@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,14 +17,20 @@ import styles from './Gantt.module.scss';
 const DAY_WIDTH = 32; // px width per day
 const ROW_HEIGHT = 32; // px height per task row
 
-const Gantt = React.memo(({ tasks }) => {
+const Gantt = React.memo(({ tasks, onChange }) => {
   const { t } = useTranslation();
   const headerRef = useRef(null);
   const bodyRef = useRef(null);
+  const [localTasks, setLocalTasks] = useState(tasks);
+  const resizeRef = useRef(null);
+
+  useEffect(() => {
+    setLocalTasks(tasks);
+  }, [tasks]);
   const range = useMemo(() => {
     const today = startOfDay(new Date());
     let firstStart = null;
-    tasks.forEach((task) => {
+    localTasks.forEach((task) => {
       if (task.startDate && (!firstStart || task.startDate < firstStart)) {
         firstStart = startOfDay(task.startDate);
       }
@@ -35,7 +41,7 @@ const Gantt = React.memo(({ tasks }) => {
     const end = addYears(today, 1);
     const totalDays = differenceInCalendarDays(end, start) + 1;
     return { start, end, totalDays };
-  }, [tasks]);
+  }, [localTasks]);
 
   const days = useMemo(
     () => Array.from({ length: range.totalDays }, (_, i) => addDays(range.start, i)),
@@ -65,6 +71,56 @@ const Gantt = React.memo(({ tasks }) => {
     if (headerRef.current && bodyRef.current) {
       headerRef.current.scrollLeft = bodyRef.current.scrollLeft;
     }
+  };
+
+  const handleMouseMove = (e) => {
+    const info = resizeRef.current;
+    if (!info) return;
+    const deltaX = e.clientX - info.startX;
+    const deltaDays = Math.round(deltaX / DAY_WIDTH);
+    setLocalTasks((prev) => {
+      const newTasks = [...prev];
+      const t = { ...newTasks[info.index] };
+      if (info.side === 'start') {
+        const newStart = addDays(info.initialStart, deltaDays);
+        if (newStart <= t.endDate) {
+          t.startDate = newStart;
+        }
+      } else {
+        const newEnd = addDays(info.initialEnd, deltaDays);
+        if (newEnd >= t.startDate) {
+          t.endDate = newEnd;
+        }
+      }
+      newTasks[info.index] = t;
+      return newTasks;
+    });
+  };
+
+  const stopResize = () => {
+    const info = resizeRef.current;
+    if (!info) return;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', stopResize);
+    const task = localTasks[info.index];
+    if (onChange) {
+      onChange(task.id, { startDate: task.startDate, endDate: task.endDate });
+    }
+    resizeRef.current = null;
+  };
+
+  const startResize = (index, side) => (e) => {
+    const task = localTasks[index];
+    if (!task.startDate || !task.endDate) return;
+    resizeRef.current = {
+      index,
+      side,
+      startX: e.clientX,
+      initialStart: task.startDate,
+      initialEnd: task.endDate,
+    };
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', stopResize);
   };
 
   const getBarStyle = (task) => {
@@ -109,18 +165,18 @@ const Gantt = React.memo(({ tasks }) => {
       </div>
       <div className={styles.body}>
         <div className={styles.leftColumn}>
-          {tasks.map((task) => (
-            <div key={task.name} className={styles.epicRow} style={{ height: ROW_HEIGHT }}>
+          {localTasks.map((task) => (
+            <div key={task.id} className={styles.epicRow} style={{ height: ROW_HEIGHT }}>
               {task.name}
             </div>
           ))}
         </div>
         <div className={styles.rightColumn} ref={bodyRef} onScroll={handleBodyScroll}>
           <div className={styles.timeline} style={{ width: range.totalDays * DAY_WIDTH }}>
-            {tasks.map((task) => {
+            {localTasks.map((task, index) => {
               const bar = getBarStyle(task);
               return (
-                <div key={task.name} className={styles.row} style={{ height: ROW_HEIGHT }}>
+                <div key={task.id} className={styles.row} style={{ height: ROW_HEIGHT }}>
                   {bar && (
                     <div
                       className={styles.bar}
@@ -130,6 +186,14 @@ const Gantt = React.memo(({ tasks }) => {
                         backgroundColor: task.color,
                       }}
                     >
+                      <div
+                        className={styles.gripLeft}
+                        onMouseDown={startResize(index, 'start')}
+                      />
+                      <div
+                        className={styles.gripRight}
+                        onMouseDown={startResize(index, 'end')}
+                      />
                       <div
                         className={styles.progress}
                         style={{
@@ -152,6 +216,7 @@ const Gantt = React.memo(({ tasks }) => {
 Gantt.propTypes = {
   tasks: PropTypes.arrayOf(
     PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       name: PropTypes.string.isRequired,
       color: PropTypes.string,
       startDate: PropTypes.instanceOf(Date),
@@ -159,6 +224,7 @@ Gantt.propTypes = {
       progress: PropTypes.number,
     }),
   ).isRequired,
+  onChange: PropTypes.func,
 };
 
 export default Gantt;
