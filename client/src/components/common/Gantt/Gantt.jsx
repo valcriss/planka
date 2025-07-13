@@ -258,6 +258,7 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
       </div>
       <div className={styles.leftColumn}>
         {localTasks.map((task) => (
+          // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
           <div
             key={task.id}
             className={styles.epicRow}
@@ -285,10 +286,7 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
                       backgroundColor: task.color,
                     }}
                   >
-                    <div
-                      className={styles.label}
-                      style={{ color: getTextColor(task.color) }}
-                    >
+                    <div className={styles.label} style={{ color: getTextColor(task.color) }}>
                       {task.name}
                     </div>
                     {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
