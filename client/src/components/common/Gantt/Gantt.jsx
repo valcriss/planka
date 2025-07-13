@@ -140,8 +140,17 @@ const Gantt = React.memo(({ tasks, onChange }) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.headerRow}>
+      <div className={styles.leftPane}>
         <div className={styles.leftHeader}>{t('common.epics')}</div>
+        <div className={styles.leftColumn}>
+          {localTasks.map((task) => (
+            <div key={task.id} className={styles.epicRow} style={{ height: ROW_HEIGHT }}>
+              {task.name}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className={styles.rightPane}>
         <div className={styles.rightHeader} ref={headerRef} onScroll={handleHeaderScroll}>
           <div className={styles.monthRow} style={{ width: range.totalDays * DAY_WIDTH }}>
             {months.map((month) => (
@@ -161,15 +170,6 @@ const Gantt = React.memo(({ tasks, onChange }) => {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-      <div className={styles.body}>
-        <div className={styles.leftColumn}>
-          {localTasks.map((task) => (
-            <div key={task.id} className={styles.epicRow} style={{ height: ROW_HEIGHT }}>
-              {task.name}
-            </div>
-          ))}
         </div>
         <div className={styles.rightColumn} ref={bodyRef} onScroll={handleBodyScroll}>
           <div className={styles.timeline} style={{ width: range.totalDays * DAY_WIDTH }}>

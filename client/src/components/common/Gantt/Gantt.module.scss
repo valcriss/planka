@@ -1,21 +1,21 @@
 :global(#app) {
   .wrapper {
+    display: flex;
     width: 100%;
   }
 
-  .column
-  {
+  .leftPane {
+    flex: 0 0 200px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
+    background-color: #fff;
   }
 
-  .headerRow {
+  .rightPane {
+    flex: 1 1 0;
     display: flex;
-    font-weight: bold;
-    font-size: 12px;
-    width: 100%;
+    flex-direction: column;
+    min-width: 0;
   }
 
   .leftHeader {
@@ -59,22 +59,16 @@
   }
 
   .leftColumn {
-    flex: 0 0 200px;
-    background-color: #fff;
+    display: flex;
+    flex-direction: column;
   }
 
   .rightColumn {
     overflow-x: auto;
-    flex: 1 1 0;
+    flex: 1 1 auto;
     min-width: 0;
   }
 
-  .body {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-    margin-top: -8px;
-  }
 
   .timeline {
     position: relative;
