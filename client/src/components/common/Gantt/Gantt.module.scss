@@ -1,0 +1,126 @@
+:global(#app) {
+  .wrapper {
+    width: 100%;
+  }
+
+  .column
+  {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .headerRow {
+    display: flex;
+    font-weight: bold;
+    font-size: 12px;
+    width: 100%;
+  }
+
+  .leftHeader {
+    flex: 0 0 200px;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 8px;
+  }
+
+  .rightHeader {
+    overflow-x: auto;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin-left: 200px;
+  }
+
+  .monthRow {
+    display: flex;
+    position: relative;
+  }
+
+  .dayRow {
+    display: flex;
+    position: relative;
+    background-image: repeating-linear-gradient(
+                    to right,
+                    #f0f0f0,
+                    #f0f0f0 1px,
+                    transparent 1px,
+                    transparent 32px
+    );
+  }
+
+  .monthCell,
+  .dayCell {
+    text-align: center;
+    font-size: 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .leftColumn {
+    flex: 0 0 200px;
+    position: fixed;
+    width: 200px;
+    background-color: #fff;
+  }
+
+  .rightColumn {
+    overflow-x: auto;
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    margin-left: 200px;
+  }
+
+  .body {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: -8px;
+  }
+
+  .timeline {
+    position: relative;
+    background-image: repeating-linear-gradient(
+      to right,
+      #f0f0f0,
+      #f0f0f0 1px,
+      transparent 1px,
+      transparent 32px
+    );
+  }
+
+  .epicRow {
+    position: relative;
+    height: 24px;
+    line-height: 24px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 12px;
+    padding-left: 10px;
+    width: 200px;
+    background-color: #fff;
+    z-index: 100;
+  }
+
+  .row {
+    position: relative;
+    height: 24px;
+    line-height: 24px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 12px;
+  }
+
+  .bar {
+    position: absolute;
+    height: 22px;
+    top: 4px;
+    border-radius: 5px ;
+  }
+
+  .progress {
+    height: 100%;
+    opacity: 0.3;
+  }
+}
