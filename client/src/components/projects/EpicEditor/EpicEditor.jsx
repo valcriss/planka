@@ -50,21 +50,21 @@ const EpicEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
       />
       <div>{t('common.startDate')}</div>
       <DatePicker
-        selected={data.startDate ? new Date(data.startDate) : null}
+        selected={data.startDate || null}
         onChange={(date) =>
           onFieldChange(undefined, {
             name: 'startDate',
-            value: date ? date.toISOString() : null,
+            value: date || null,
           })
         }
       />
       <div>{t('common.endDate')}</div>
       <DatePicker
-        selected={data.endDate ? new Date(data.endDate) : null}
+        selected={data.endDate || null}
         onChange={(date) =>
           onFieldChange(undefined, {
             name: 'endDate',
-            value: date ? date.toISOString() : null,
+            value: date || null,
           })
         }
       />
