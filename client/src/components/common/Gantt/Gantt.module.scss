@@ -85,6 +85,7 @@
     background-color: #fff;
     z-index: 100;
     cursor: pointer;
+    user-select: none;
   }
 
   .row {
@@ -106,6 +107,7 @@
     background-color: #fff;
     z-index: 100;
     cursor: default;
+    user-select: none;
   }
 
   .bar {
@@ -115,7 +117,19 @@
     height: 22px;
     top: 4px;
     border-radius: 5px ;
-    }
+    cursor: pointer;
+  }
+
+  .barTask {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    height: 16px;
+    top: 7px;
+    opacity: 0.75;
+    border-radius: 5px ;
+    cursor: pointer;
+  }
 
   .label {
     flex: 1 1 auto;

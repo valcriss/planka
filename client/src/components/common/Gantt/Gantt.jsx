@@ -258,13 +258,14 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
       </div>
       <div className={styles.leftColumn}>
         {localTasks.map((task) => (
-          // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
           <div
             key={task.id}
             className={task.isChild ? styles.cardRow : styles.epicRow}
             style={{ height: ROW_HEIGHT }}
-            onClick={
-              !task.isChild && onEpicClick ? () => onEpicClick(task.id) : undefined
+            onDoubleClick={
+              !task.isChild && onEpicClick
+                ? () => onEpicClick(task.id.replace('epic-', ''))
+                : undefined
             }
           >
             {task.name}
@@ -284,8 +285,13 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
                 {bar && (
                   // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                   <div
-                    className={styles.bar}
+                    className={task.isChild ? styles.barTask : styles.bar}
                     onMouseDown={startDrag(index)}
+                    onDoubleClick={
+                      !task.isChild && onEpicClick
+                        ? () => onEpicClick(task.id.replace('epic-', ''))
+                        : undefined
+                    }
                     style={{
                       left: bar.offset,
                       width: bar.width,

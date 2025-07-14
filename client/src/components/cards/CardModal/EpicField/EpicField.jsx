@@ -10,16 +10,9 @@ import styles from './EpicField.module.scss';
 
 const EpicField = React.memo(({ projectId, defaultValue, onUpdate }) => {
   const [t] = useTranslation();
-  const epicIds = useSelector((state) =>
-    selectors.selectEpicIdsByProjectId(state, projectId),
-  );
-  const selectEpicById = useCallback(
-    (state, id) => selectors.selectEpicById(state, id),
-    [],
-  );
-  const epics = useSelector((state) =>
-    (epicIds || []).map((id) => selectEpicById(state, id)),
-  );
+  const epicIds = useSelector((state) => selectors.selectEpicIdsByProjectId(state, projectId));
+  const selectEpicById = useCallback((state, id) => selectors.selectEpicById(state, id), []);
+  const epics = useSelector((state) => (epicIds || []).map((id) => selectEpicById(state, id)));
 
   const options = [
     { value: null, text: t('common.noEpic') },
