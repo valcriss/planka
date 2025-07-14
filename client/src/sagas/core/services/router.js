@@ -120,6 +120,7 @@ export function* handleLocationChange() {
   let customFields2;
   let customFieldValues1;
   let customFieldValues2;
+  let epics;
   let notificationsToDelete;
 
   switch (pathsMatch.pattern.path) {
@@ -165,6 +166,15 @@ export function* handleLocationChange() {
                 customFieldValues: customFieldValues1,
               },
             } = yield call(request, api.getBoard, currentBoard.id, true));
+
+            const project = projects && projects[0];
+            if (project && project.useEpics) {
+              try {
+                ({ items: epics } = yield call(request, api.getEpics, project.id));
+              } catch {
+                /* empty */
+              }
+            }
           } catch {
             /* empty */
           }
@@ -231,6 +241,15 @@ export function* handleLocationChange() {
                     customFieldValues: customFieldValues2,
                   },
                 } = yield call(request, api.getBoard, card.boardId, true));
+
+                const project = projects && projects[0];
+                if (project && project.useEpics) {
+                  try {
+                    ({ items: epics } = yield call(request, api.getEpics, project.id));
+                  } catch {
+                    /* empty */
+                  }
+                }
               } catch {
                 /* empty */
               }
@@ -289,6 +308,7 @@ export function* handleLocationChange() {
       mergeRecords(customFieldGroups1, customFieldGroups2),
       mergeRecords(customFields1, customFields2),
       mergeRecords(customFieldValues1, customFieldValues2),
+      epics,
       notificationsToDelete,
     ),
   );
