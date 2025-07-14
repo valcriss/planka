@@ -15,6 +15,7 @@ import { BoardViews, ListTypes } from '../../../constants/Enums';
 import LabelChip from '../../labels/LabelChip';
 import CustomFieldValueChip from '../../custom-field-values/CustomFieldValueChip';
 import StoryPointsChip from '../StoryPointsChip';
+import EpicChip from '../../epics/EpicChip';
 
 import styles from './StoryContent.module.scss';
 
@@ -121,6 +122,11 @@ const StoryContent = React.memo(({ cardId }) => {
         {isTeamProject && (
           <div className={styles.cardKey}>
             {project.code}-{card.number}
+          </div>
+        )}
+        {card.epicId && project.useEpics && (
+          <div className={styles.epic}>
+            <EpicChip id={card.epicId} size="tiny" />
           </div>
         )}
         {card.description && <div className={styles.descriptionText}>{descriptionText}</div>}
