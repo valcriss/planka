@@ -264,7 +264,9 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
             className={task.isChild ? styles.cardRow : styles.epicRow}
             style={{ height: ROW_HEIGHT }}
             onDoubleClick={
-              !task.isChild && onEpicClick ? () => onEpicClick(task.id) : undefined
+              !task.isChild && onEpicClick
+                ? () => onEpicClick(task.id.replace('epic-', ''))
+                : undefined
             }
           >
             {task.name}
@@ -288,7 +290,7 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
                     onMouseDown={startDrag(index)}
                     onDoubleClick={
                       !task.isChild && onEpicClick
-                        ? () => onEpicClick(task.id)
+                        ? () => onEpicClick(task.id.replace('epic-', ''))
                         : undefined
                     }
                     style={{
