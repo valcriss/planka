@@ -74,7 +74,9 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
   };
 
   useEffect(() => {
-    setLocalTasks(tasks);
+    if (!dragRef.current && !resizeRef.current) {
+      setLocalTasks(tasks);
+    }
   }, [tasks]);
 
   const groups = useMemo(() => buildGroups(localTasks), [localTasks]);
