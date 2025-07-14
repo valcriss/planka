@@ -254,6 +254,41 @@ export function* handleLocationChange() {
                 /* empty */
               }
             }
+          } else {
+            try {
+              ({
+                item: board,
+                included: {
+                  projects,
+                  boardMemberships,
+                  labels,
+                  lists,
+                  cards,
+                  users: users2,
+                  cardMemberships: cardMemberships2,
+                  cardLabels: cardLabels2,
+                  taskLists: taskLists2,
+                  tasks: tasks2,
+                  attachments: attachments2,
+                  customFieldGroups: customFieldGroups2,
+                  customFields: customFields2,
+                  customFieldValues: customFieldValues2,
+                },
+              } = yield call(request, api.getBoard, card.boardId, true));
+
+              currentBoardId = card.boardId;
+
+              const project = projects && projects[0];
+              if (project && project.useEpics) {
+                try {
+                  ({ items: epics } = yield call(request, api.getEpics, project.id));
+                } catch {
+                  /* empty */
+                }
+              }
+            } catch {
+              /* empty */
+            }
           }
         }
       }
