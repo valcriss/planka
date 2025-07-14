@@ -23,7 +23,10 @@ const EpicChip = React.memo(({ id, size }) => {
   return (
     <span
       title={epic.name}
-      className={classNames(styles.wrapper, styles[`wrapper${size.charAt(0).toUpperCase() + size.slice(1)}`])}
+      className={classNames(
+        styles.wrapper,
+        styles[`wrapper${size.charAt(0).toUpperCase() + size.slice(1)}`],
+      )}
       style={{ background: epic.color || '#dce0e4', color: getTextColor(epic.color) }}
     >
       {epic.name}

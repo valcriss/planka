@@ -20,12 +20,10 @@ const ProjectEpics = React.memo(() => {
     return ids.map((id) => selectors.selectEpicById(state, id));
   });
 
-  const boardIds = useSelector((state) =>
-    selectors.selectBoardIdsByProjectId(state, projectId) || [],
+  const boardIds = useSelector(
+    (state) => selectors.selectBoardIdsByProjectId(state, projectId) || [],
   );
-  const boards = useSelector((state) =>
-    boardIds.map((id) => selectors.selectBoardById(state, id)),
-  );
+  const boards = useSelector((state) => boardIds.map((id) => selectors.selectBoardById(state, id)));
 
   useEffect(() => {
     if (projectId) {
@@ -41,10 +39,7 @@ const ProjectEpics = React.memo(() => {
     });
   }, [dispatch, boards]);
 
-  const selectCardIdsByEpicId = useMemo(
-    () => selectors.makeSelectCardIdsByEpicId(),
-    [],
-  );
+  const selectCardIdsByEpicId = useMemo(() => selectors.makeSelectCardIdsByEpicId(), []);
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
 
   const { tasks, epicMap } = useSelector((state) => {
@@ -66,16 +61,18 @@ const ProjectEpics = React.memo(() => {
           id: `card-${card.id}`,
           name: card.name,
           color: e.color,
+          // eslint-disable-next-line no-nested-ternary
           startDate: card.ganttStartDate
             ? new Date(card.ganttStartDate)
             : e.startDate
-            ? new Date(e.startDate)
-            : null,
+              ? new Date(e.startDate)
+              : null,
+          // eslint-disable-next-line no-nested-ternary
           endDate: card.ganttEndDate
             ? new Date(card.ganttEndDate)
             : e.endDate
-            ? new Date(e.endDate)
-            : null,
+              ? new Date(e.endDate)
+              : null,
           progress: 0,
           isChild: true,
         });

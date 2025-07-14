@@ -11,7 +11,6 @@ import api from '../../../api';
 import mergeRecords from '../../../utils/merge-records';
 import Paths from '../../../constants/Paths';
 
-
 export function* fetchBoardByCurrentPath() {
   const pathsMatch = yield select(selectors.selectPathsMatch);
 
