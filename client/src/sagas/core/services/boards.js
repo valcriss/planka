@@ -90,6 +90,10 @@ export function* handleBoardCreate(board, boardMemberships, requestId) {
 }
 
 export function* fetchBoard(id) {
+  if (!id) {
+    return;
+  }
+
   yield put(actions.fetchBoard(id));
 
   let board;
