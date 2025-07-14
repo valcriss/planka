@@ -257,11 +257,17 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
     document.removeEventListener('mousemove', handleDragMove);
     document.removeEventListener('mouseup', stopDrag);
     if (onChange) {
-      onChange(info.taskId, { startDate: info.newStartDate, endDate: info.newEndDate });
+      onChange(info.taskId, {
+        startDate: info.newStartDate,
+        endDate: info.newEndDate,
+      });
+
       if (info.children) {
         info.children.forEach((child) => {
-          const task = localTasks[child.index];
-          onChange(task.id, { startDate: task.startDate, endDate: task.endDate });
+          const start =
+            child.initialStart && addDays(child.initialStart, info.deltaDays);
+          const end = child.initialEnd && addDays(child.initialEnd, info.deltaDays);
+          onChange(child.taskId, { startDate: start, endDate: end });
         });
       }
     }
