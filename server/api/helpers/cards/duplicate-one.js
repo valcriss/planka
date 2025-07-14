@@ -104,6 +104,7 @@ module.exports = {
         'ganttEndDate',
         'stopwatch',
         'storyPoints',
+        'epicId',
       ]),
       ...values,
       creatorUserId: values.creatorUser.id,

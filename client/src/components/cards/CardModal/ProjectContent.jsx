@@ -43,6 +43,7 @@ import Attachments from '../../attachments/Attachments';
 import AddAttachmentStep from '../../attachments/AddAttachmentStep';
 import AddCustomFieldGroupStep from '../../custom-field-groups/AddCustomFieldGroupStep';
 import StoryPointsField from './StoryPointsField';
+import EpicField from './EpicField';
 
 import styles from './ProjectContent.module.scss';
 
@@ -196,6 +197,17 @@ const ProjectContent = React.memo(({ onClose }) => {
       dispatch(
         entryActions.updateCurrentCard({
           description,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  const handleEpicUpdate = useCallback(
+    (value) => {
+      dispatch(
+        entryActions.updateCurrentCard({
+          epicId: value,
         }),
       );
     },
@@ -571,6 +583,19 @@ const ProjectContent = React.memo(({ onClose }) => {
                   </>
                 )}
                 {!canEditDescription && <ExpandableMarkdown>{card.description}</ExpandableMarkdown>}
+              </div>
+            </div>
+          )}
+          {project.useEpics && (
+            <div className={styles.contentModule}>
+              <div className={styles.moduleWrapper}>
+                <Icon name="flag outline" className={styles.moduleIcon} />
+                <div className={styles.moduleHeader}>{t('common.epic')}</div>
+                <EpicField
+                  projectId={project.id}
+                  defaultValue={card.epicId}
+                  onUpdate={handleEpicUpdate}
+                />
               </div>
             </div>
           )}

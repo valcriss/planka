@@ -68,6 +68,10 @@ module.exports = {
       defaultsTo: 0,
       columnName: 'story_points',
     },
+    epicId: {
+      model: 'Epic',
+      columnName: 'epic_id',
+    },
     commentsTotal: {
       type: 'number',
       defaultsTo: 0,
