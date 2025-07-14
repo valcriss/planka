@@ -23,6 +23,7 @@ import Thumbnail from './Thumbnail';
 import NameField from '../NameField';
 import CustomFieldGroups from '../CustomFieldGroups';
 import StoryPointsField from '../StoryPointsField';
+import EpicField from '../EpicField';
 import Communication from '../Communication';
 import CreationDetailsStep from '../CreationDetailsStep';
 import SelectCardTypeStep from '../../SelectCardTypeStep';
@@ -80,6 +81,11 @@ const StoryContent = React.memo(({ onClose }) => {
   const coverAttachment = useSelector((state) =>
     selectAttachmentById(state, card.coverAttachmentId),
   );
+
+  const epics = useSelector((state) => {
+    const ids = selectors.selectEpicIdsByProjectId(state, project.id) || [];
+    return ids.map((id) => selectors.selectEpicById(state, id));
+  });
 
   const isInArchiveList = list.type === ListTypes.ARCHIVE;
   const isInTrashList = list.type === ListTypes.TRASH;
@@ -201,6 +207,17 @@ const StoryContent = React.memo(({ onClose }) => {
       dispatch(
         entryActions.updateCurrentCard({
           storyPoints: value,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  const handleEpicUpdate = useCallback(
+    (value) => {
+      dispatch(
+        entryActions.updateCurrentCard({
+          epicId: value,
         }),
       );
     },
@@ -449,6 +466,19 @@ const StoryContent = React.memo(({ onClose }) => {
                     )}
                   </div>
                 )}
+              </div>
+            )}
+            {project.useEpics && epics.length > 0 && (
+              <div className={styles.contentModule}>
+                <div className={styles.moduleWrapper}>
+                  <Icon name="bookmark" className={styles.moduleIcon} />
+                  <div className={styles.moduleHeader}>{t('common.epic')}</div>
+                  <EpicField
+                    projectId={project.id}
+                    value={card.epicId}
+                    onChange={handleEpicUpdate}
+                  />
+                </div>
               </div>
             )}
             {(card.description || canEditDescription) && (

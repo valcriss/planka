@@ -113,6 +113,10 @@ module.exports = {
       model: 'Attachment',
       columnName: 'cover_attachment_id',
     },
+    epicId: {
+      model: 'Epic',
+      columnName: 'epic_id',
+    },
     subscriptionUsers: {
       collection: 'User',
       via: 'cardId',

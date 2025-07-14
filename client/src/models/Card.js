@@ -81,6 +81,7 @@ export default class extends BaseModel {
       as: 'coverAttachment',
       relatedName: 'coveredCard',
     }),
+    epicId: fk({ to: 'Epic', as: 'epic', relatedName: 'cards' }),
     users: many('User', 'cards'),
     labels: many('Label', 'cards'),
   };
@@ -563,6 +564,7 @@ export default class extends BaseModel {
       ganttEndDate: this.ganttEndDate,
       stopwatch: this.stopwatch,
       storyPoints: this.storyPoints,
+      epicId: this.epicId,
       ...data,
     });
 

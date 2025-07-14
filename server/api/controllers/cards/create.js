@@ -74,6 +74,10 @@ module.exports = {
       min: 0,
       allowNull: true,
     },
+    epicId: {
+      ...idInput,
+      allowNull: true,
+    },
   },
 
   exits: {
@@ -122,6 +126,7 @@ module.exports = {
       'stopwatch',
       'cardTypeId',
       'storyPoints',
+      'epicId',
     ]);
 
     if (values.cardTypeId) {
