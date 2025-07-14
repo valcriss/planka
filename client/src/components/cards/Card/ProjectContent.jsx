@@ -22,6 +22,7 @@ import UserAvatar from '../../users/UserAvatar';
 import LabelChip from '../../labels/LabelChip';
 import CustomFieldValueChip from '../../custom-field-values/CustomFieldValueChip';
 import { CardTypeIcons } from '../../../constants/Icons';
+import EpicChip from '../../epics/EpicChip';
 
 import styles from './ProjectContent.module.scss';
 
@@ -182,6 +183,11 @@ const ProjectContent = React.memo(({ cardId }) => {
       {isTeamProject && (
         <div className={styles.cardKey}>
           {project.code}-{card.number}
+        </div>
+      )}
+      {card.epicId && project.useEpics && (
+        <div className={styles.epic}>
+          <EpicChip id={card.epicId} size="tiny" />
         </div>
       )}
       {coverUrl && (
