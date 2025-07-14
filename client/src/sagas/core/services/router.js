@@ -182,10 +182,14 @@ export function* handleLocationChange() {
       }
 
       break;
-    case Paths.CARDS:
+    case Paths.CARDS: {
       ({ cardId: currentCardId, boardId: currentBoardId } = yield select(selectors.selectPath));
 
-      if (!currentCardId) {
+      if (currentCardId) {
+        card = yield select(selectors.selectCardById, currentCardId);
+      }
+
+      if (!card) {
         yield put(actions.handleLocationChange.fetchContent());
 
         try {
@@ -208,87 +212,52 @@ export function* handleLocationChange() {
             pathsMatch.params.projectCode,
             pathsMatch.params.number,
           ));
+          currentCardId = card.id;
         } catch {
           /* empty */
         }
+      }
 
-        if (card) {
-          ({ id: currentCardId } = card);
-
+      if (card) {
+        if (currentBoardId) {
+          currentBoard = yield select(selectors.selectBoardById, currentBoardId);
+        } else {
           currentBoard = yield select(selectors.selectBoardById, card.boardId);
+          currentBoardId = card.boardId;
+        }
 
-          if (currentBoard) {
-            ({ id: currentBoardId } = currentBoard);
+        if (!currentBoard && card.boardId) {
+          try {
+            ({
+              item: board,
+              included: {
+                projects,
+                boardMemberships,
+                labels,
+                lists,
+                cards,
+                users: users2,
+                cardMemberships: cardMemberships2,
+                cardLabels: cardLabels2,
+                taskLists: taskLists2,
+                tasks: tasks2,
+                attachments: attachments2,
+                customFieldGroups: customFieldGroups2,
+                customFields: customFields2,
+                customFieldValues: customFieldValues2,
+              },
+            } = yield call(request, api.getBoard, card.boardId, true));
 
-            if (currentBoard.isFetching === null && card.boardId) {
+            const project = projects && projects[0];
+            if (project && project.useEpics) {
               try {
-                ({
-                  item: board,
-                  included: {
-                    projects,
-                    boardMemberships,
-                    labels,
-                    lists,
-                    cards,
-                    users: users2,
-                    cardMemberships: cardMemberships2,
-                    cardLabels: cardLabels2,
-                    taskLists: taskLists2,
-                    tasks: tasks2,
-                    attachments: attachments2,
-                    customFieldGroups: customFieldGroups2,
-                    customFields: customFields2,
-                    customFieldValues: customFieldValues2,
-                  },
-                } = yield call(request, api.getBoard, card.boardId, true));
-
-                const project = projects && projects[0];
-                if (project && project.useEpics) {
-                  try {
-                    ({ items: epics } = yield call(request, api.getEpics, project.id));
-                  } catch {
-                    /* empty */
-                  }
-                }
+                ({ items: epics } = yield call(request, api.getEpics, project.id));
               } catch {
                 /* empty */
               }
             }
-          } else if (card.boardId) {
-            try {
-              ({
-                item: board,
-                included: {
-                  projects,
-                  boardMemberships,
-                  labels,
-                  lists,
-                  cards,
-                  users: users2,
-                  cardMemberships: cardMemberships2,
-                  cardLabels: cardLabels2,
-                  taskLists: taskLists2,
-                  tasks: tasks2,
-                  attachments: attachments2,
-                  customFieldGroups: customFieldGroups2,
-                  customFields: customFields2,
-                  customFieldValues: customFieldValues2,
-                },
-              } = yield call(request, api.getBoard, card.boardId, true));
-
-              currentBoardId = card.boardId;
-
-              const project = projects && projects[0];
-              if (project && project.useEpics) {
-                try {
-                  ({ items: epics } = yield call(request, api.getEpics, project.id));
-                } catch {
-                  /* empty */
-                }
-              }
-            } catch {
-              /* empty */
-            }
+          } catch {
+            /* empty */
           }
         }
       }
@@ -311,6 +280,8 @@ export function* handleLocationChange() {
       }
 
       break;
+    }
+
     default:
   }
 
