@@ -3,6 +3,8 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
+const _ = require('lodash');
+
 const LIMIT = 50;
 
 const SEARCH_PARTS_REGEX = /[ ,;]+/;
@@ -210,7 +212,8 @@ const getOneByProjectCodeAndNumber = async (projectCode, number) => {
   `;
   const { rows } = await sails.sendNativeQuery(query, [projectCode, number]);
 
-  return rows[0] || null;
+  const card = rows[0];
+  return card ? _.mapKeys(card, (v, k) => _.camelCase(k)) : null;
 };
 
 const update = (criteria, values) => Card.update(criteria).set(values).fetch();
