@@ -20,11 +20,26 @@ const ProjectEpics = React.memo(() => {
     return ids.map((id) => selectors.selectEpicById(state, id));
   });
 
+  const boardIds = useSelector((state) =>
+    selectors.selectBoardIdsByProjectId(state, projectId) || [],
+  );
+  const boards = useSelector((state) =>
+    boardIds.map((id) => selectors.selectBoardById(state, id)),
+  );
+
   useEffect(() => {
     if (projectId) {
       dispatch(entryActions.fetchEpics(projectId));
     }
   }, [dispatch, projectId]);
+
+  useEffect(() => {
+    boards.forEach((board) => {
+      if (board && board.isFetching === null) {
+        dispatch(entryActions.fetchBoard(board.id));
+      }
+    });
+  }, [dispatch, boards]);
 
   const selectCardIdsByEpicId = useMemo(
     () => selectors.makeSelectCardIdsByEpicId(),
