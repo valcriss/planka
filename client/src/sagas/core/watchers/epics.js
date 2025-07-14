@@ -16,6 +16,9 @@ export default function* epicsWatchers() {
     takeEvery(EntryActionTypes.EPIC_UPDATE_HANDLE, ({ payload: { epic } }) =>
       services.handleEpicUpdate(epic),
     ),
+    takeEvery(EntryActionTypes.EPIC_MOVE, ({ payload: { id, index } }) =>
+      services.moveEpic(id, index),
+    ),
     takeEvery(EntryActionTypes.EPIC_DELETE, ({ payload: { id } }) => services.deleteEpic(id)),
     takeEvery(EntryActionTypes.EPIC_DELETE_HANDLE, ({ payload: { epic } }) =>
       services.handleEpicDelete(epic),
