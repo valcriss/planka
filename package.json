@@ -13,7 +13,6 @@
     "postinstall": "npm i --prefix server && npm i --prefix client",
     "lint": "npm run server:lint && npm run client:lint",
     "format": "npm run server:format && npm run client:format",
-    "prepare": "husky",
     "server:console": "npm run console --prefix server",
     "server:db:create-admin-user": "npm run db:create-admin-user --prefix server",
     "server:db:init": "npm run db:init --prefix server",
@@ -27,14 +26,6 @@
     "server:test": "npm test --prefix server",
     "start": "concurrently -n server,client \"npm run server:start\" \"npm run client:start\"",
     "test": "npm run server:test && npm run client:test"
-  },
-  "lint-staged": {
-    "client/src/**/*.{js,jsx}": [
-      "npm run client:lint"
-    ],
-    "server/**/*.js": [
-      "npm run server:lint"
-    ]
   },
   "dependencies": {
     "concurrently": "^8.2.2",

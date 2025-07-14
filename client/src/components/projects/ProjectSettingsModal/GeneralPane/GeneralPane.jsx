@@ -137,16 +137,14 @@ const GeneralPane = React.memo(() => {
               onChange={handleSprintDurationChange}
             />
           )}
-          {project.useScrum && (
-            <Radio
-              toggle
-              name="useEpics"
-              checked={project.useEpics}
-              label={t('common.useEpics')}
-              className={styles.radio}
-              onChange={handleToggleChange}
-            />
-          )}
+          <Radio
+            toggle
+            name="useEpics"
+            checked={project.useEpics}
+            label={t('common.useEpics')}
+            className={styles.radio}
+            onChange={handleToggleChange}
+          />
         </>
       )}
       {canEdit && (

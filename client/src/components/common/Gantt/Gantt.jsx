@@ -45,8 +45,7 @@ const buildGroups = (tasks) => {
   return groups;
 };
 
-const flattenGroups = (groups) =>
-  groups.reduce((acc, g) => acc.concat(g.epic, ...g.children), []);
+const flattenGroups = (groups) => groups.reduce((acc, g) => acc.concat(g.epic, ...g.children), []);
 
 const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
   const { t } = useTranslation();
@@ -104,7 +103,7 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
         onReorder(draggableId, destination.index);
       }
     },
-    [onChange],
+    [onReorder],
   );
   const range = useMemo(() => {
     const today = startOfDay(new Date());
@@ -264,8 +263,7 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
 
       if (info.children) {
         info.children.forEach((child) => {
-          const start =
-            child.initialStart && addDays(child.initialStart, info.deltaDays);
+          const start = child.initialStart && addDays(child.initialStart, info.deltaDays);
           const end = child.initialEnd && addDays(child.initialEnd, info.deltaDays);
           onChange(child.taskId, { startDate: start, endDate: end });
         });
@@ -348,23 +346,31 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
         <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <Droppable droppableId="epics" type={DroppableTypes.EPIC} direction="vertical">
             {({ innerRef, droppableProps, placeholder }) => (
+              // eslint-disable-next-line react/jsx-props-no-spreading
               <div {...droppableProps} ref={innerRef}>
                 {groups.map((group, gIndex) => (
                   <Draggable key={group.epic.id} draggableId={group.epic.id} index={gIndex}>
                     {({ innerRef: drRef, draggableProps, dragHandleProps }) => (
+                      // eslint-disable-next-line react/jsx-props-no-spreading
                       <div ref={drRef} {...draggableProps}>
                         <div
                           {...dragHandleProps}
                           className={styles.epicRow}
                           style={{ height: ROW_HEIGHT }}
                           onDoubleClick={
-                            onEpicClick ? () => onEpicClick(group.epic.id.replace('epic-', '')) : undefined
+                            onEpicClick
+                              ? () => onEpicClick(group.epic.id.replace('epic-', ''))
+                              : undefined
                           }
                         >
                           {group.epic.name}
                         </div>
                         {group.children.map((task) => (
-                          <div key={task.id} className={styles.cardRow} style={{ height: ROW_HEIGHT }}>
+                          <div
+                            key={task.id}
+                            className={styles.cardRow}
+                            style={{ height: ROW_HEIGHT }}
+                          >
                             {task.name}
                           </div>
                         ))}

@@ -20,10 +20,7 @@ const ProjectEpics = React.memo(() => {
     return ids.map((id) => selectors.selectEpicById(state, id));
   });
 
-  const sortedEpics = useMemo(
-    () => [...epics].sort((a, b) => a.position - b.position),
-    [epics],
-  );
+  const sortedEpics = useMemo(() => [...epics].sort((a, b) => a.position - b.position), [epics]);
 
   const boardIds = useSelector(
     (state) => selectors.selectBoardIdsByProjectId(state, projectId) || [],
