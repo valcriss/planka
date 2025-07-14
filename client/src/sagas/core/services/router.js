@@ -220,7 +220,7 @@ export function* handleLocationChange() {
           if (currentBoard) {
             ({ id: currentBoardId } = currentBoard);
 
-            if (currentBoard.isFetching === null) {
+            if (currentBoard.isFetching === null && card.boardId) {
               try {
                 ({
                   item: board,
@@ -254,7 +254,7 @@ export function* handleLocationChange() {
                 /* empty */
               }
             }
-          } else {
+          } else if (card.boardId) {
             try {
               ({
                 item: board,
