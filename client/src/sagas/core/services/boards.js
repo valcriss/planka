@@ -10,6 +10,7 @@ import { openModal } from './modals';
 import request from '../request';
 import selectors from '../../../selectors';
 import actions from '../../../actions';
+import entryActions from '../../../entry-actions';
 import { fetchBaseCardTypes } from './base-card-types';
 import { fetchCardTypes } from './card-types';
 import api from '../../../api';
@@ -156,6 +157,14 @@ export function* fetchBoard(id) {
   yield call(fetchBaseCardTypes);
   if (board.projectId) {
     yield call(fetchCardTypes, board.projectId);
+  }
+
+  const project = yield select(selectors.selectProjectById, board.projectId);
+  if (project && project.useEpics) {
+    const epicIds = yield select(selectors.selectEpicIdsByProjectId, project.id);
+    if (!epicIds || epicIds.length === 0) {
+      yield put(entryActions.fetchEpics(project.id));
+    }
   }
 }
 

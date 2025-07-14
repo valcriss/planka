@@ -11,6 +11,7 @@ import api from '../../../api';
 import mergeRecords from '../../../utils/merge-records';
 import Paths from '../../../constants/Paths';
 
+
 export function* fetchBoardByCurrentPath() {
   const pathsMatch = yield select(selectors.selectPathsMatch);
 
@@ -39,6 +40,7 @@ export function* fetchBoardByCurrentPath() {
   let customFields2;
   let customFieldValues1;
   let customFieldValues2;
+  let epics;
 
   if (pathsMatch) {
     let boardId;
@@ -95,6 +97,15 @@ export function* fetchBoardByCurrentPath() {
           customFieldValues: customFieldValues2,
         },
       } = yield call(request, api.getBoard, boardId, true));
+
+      const project = projects && projects[0];
+      if (project && project.useEpics) {
+        try {
+          ({ items: epics } = yield call(request, api.getEpics, project.id));
+        } catch {
+          /* empty */
+        }
+      }
     }
   }
 
@@ -115,6 +126,7 @@ export function* fetchBoardByCurrentPath() {
     customFieldGroups: mergeRecords(customFieldGroups1, customFieldGroups2),
     customFields: mergeRecords(customFields1, customFields2),
     customFieldValues: mergeRecords(customFieldValues1, customFieldValues2),
+    epics,
   };
 }
 
