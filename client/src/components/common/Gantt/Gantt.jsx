@@ -233,6 +233,18 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
       info.newStartDate = newStart;
       info.newEndDate = newEnd;
       newTasks[info.index] = ts;
+      if (info.children) {
+        info.children.forEach((child) => {
+          const ct = { ...newTasks[child.index] };
+          if (ct.startDate) {
+            ct.startDate = addDays(child.initialStart, deltaDays);
+          }
+          if (ct.endDate) {
+            ct.endDate = addDays(child.initialEnd, deltaDays);
+          }
+          newTasks[child.index] = ct;
+        });
+      }
       return newTasks;
     });
   };
@@ -244,6 +256,12 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
     document.removeEventListener('mouseup', stopDrag);
     if (onChange) {
       onChange(info.taskId, { startDate: info.newStartDate, endDate: info.newEndDate });
+      if (info.children) {
+        info.children.forEach((child) => {
+          const task = localTasks[child.index];
+          onChange(task.id, { startDate: task.startDate, endDate: task.endDate });
+        });
+      }
     }
     enableScroll();
     dragRef.current = null;
@@ -252,6 +270,18 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
   const startDrag = (index) => (e) => {
     const task = localTasks[index];
     if (!task.startDate || !task.endDate) return;
+    let children = null;
+    if (!task.isChild) {
+      const group = groups.find((g) => g.epicIndex === index);
+      if (group && group.childIndices.length > 0) {
+        children = group.childIndices.map((i) => ({
+          index: i,
+          taskId: localTasks[i].id,
+          initialStart: localTasks[i].startDate,
+          initialEnd: localTasks[i].endDate,
+        }));
+      }
+    }
     dragRef.current = {
       index,
       taskId: task.id,
@@ -261,6 +291,7 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
       deltaDays: 0,
       newStartDate: task.startDate,
       newEndDate: task.endDate,
+      children,
     };
     disableScroll();
     document.addEventListener('mousemove', handleDragMove);
