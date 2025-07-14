@@ -14,7 +14,7 @@ import {
 } from 'date-fns';
 
 import DroppableTypes from '../../../constants/DroppableTypes';
-import globalStyles from '../../styles.module.scss';
+import globalStyles from '../../../styles.module.scss';
 import styles from './Gantt.module.scss';
 
 const DAY_WIDTH = 32; // px width per day
