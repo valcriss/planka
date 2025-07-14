@@ -23,6 +23,7 @@ export const makeSelectEpicIdsByProjectId = () =>
       if (!projectId) return projectId;
       return Epic.filter({ projectId })
         .toRefArray()
+        .sort((a, b) => a.position - b.position)
         .map((e) => e.id);
     },
   );

@@ -20,6 +20,11 @@ const ProjectEpics = React.memo(() => {
     return ids.map((id) => selectors.selectEpicById(state, id));
   });
 
+  const sortedEpics = useMemo(
+    () => [...epics].sort((a, b) => a.position - b.position),
+    [epics],
+  );
+
   const boardIds = useSelector(
     (state) => selectors.selectBoardIdsByProjectId(state, projectId) || [],
   );
@@ -45,7 +50,7 @@ const ProjectEpics = React.memo(() => {
   const { tasks, epicMap } = useSelector((state) => {
     const result = [];
     const map = {};
-    epics.forEach((e) => {
+    sortedEpics.forEach((e) => {
       result.push({
         id: `epic-${e.id}`,
         name: e.name,
@@ -127,6 +132,13 @@ const ProjectEpics = React.memo(() => {
     [dispatch],
   );
 
+  const handleEpicReorder = useCallback(
+    (id, index) => {
+      dispatch(entryActions.moveEpic(id.replace('epic-', ''), index));
+    },
+    [dispatch],
+  );
+
   return (
     <div>
       <div className={Styles.actionBarContainer}>
@@ -139,7 +151,12 @@ const ProjectEpics = React.memo(() => {
       <div className={Styles.ganttContainer}>
         {tasks.length > 0 && (
           <div className={Styles.gantt}>
-            <Gantt tasks={tasks} onChange={handleTaskChange} onEpicClick={handleEpicClick} />
+            <Gantt
+              tasks={tasks}
+              onChange={handleTaskChange}
+              onEpicClick={handleEpicClick}
+              onReorder={handleEpicReorder}
+            />
           </div>
         )}
         {tasks.length === 0 && <div className={Styles.noEpicsMessage}>{t('common.noEpics')}</div>}

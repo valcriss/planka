@@ -1,6 +1,7 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {
   differenceInCalendarDays,
   addMonths,
@@ -12,6 +13,8 @@ import {
   format,
 } from 'date-fns';
 
+import DroppableTypes from '../../../constants/DroppableTypes';
+import globalStyles from '../../styles.module.scss';
 import styles from './Gantt.module.scss';
 
 const DAY_WIDTH = 32; // px width per day
@@ -27,7 +30,25 @@ const getTextColor = (hex) => {
   return brightness > 128 ? '#000' : '#fff';
 };
 
-const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
+const buildGroups = (tasks) => {
+  const groups = [];
+  let current = null;
+  tasks.forEach((task, index) => {
+    if (!task.isChild) {
+      current = { epicIndex: index, epic: task, childIndices: [], children: [] };
+      groups.push(current);
+    } else if (current) {
+      current.childIndices.push(index);
+      current.children.push(task);
+    }
+  });
+  return groups;
+};
+
+const flattenGroups = (groups) =>
+  groups.reduce((acc, g) => acc.concat(g.epic, ...g.children), []);
+
+const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
   const { t } = useTranslation();
   const headerRef = useRef(null);
   const bodyRef = useRef(null);
@@ -55,6 +76,34 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
   useEffect(() => {
     setLocalTasks(tasks);
   }, [tasks]);
+
+  const groups = useMemo(() => buildGroups(localTasks), [localTasks]);
+
+  const handleDragStart = useCallback(() => {
+    document.body.classList.add(globalStyles.dragging);
+  }, []);
+
+  const handleDragEnd = useCallback(
+    ({ draggableId, source, destination }) => {
+      document.body.classList.remove(globalStyles.dragging);
+
+      if (!destination || source.index === destination.index) {
+        return;
+      }
+
+      setLocalTasks((prev) => {
+        const gs = buildGroups(prev);
+        const [removed] = gs.splice(source.index, 1);
+        gs.splice(destination.index, 0, removed);
+        return flattenGroups(gs);
+      });
+
+      if (onReorder) {
+        onReorder(draggableId, destination.index);
+      }
+    },
+    [onChange],
+  );
   const range = useMemo(() => {
     const today = startOfDay(new Date());
     let firstStart = null;
@@ -257,20 +306,38 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
         </div>
       </div>
       <div className={styles.leftColumn}>
-        {localTasks.map((task) => (
-          <div
-            key={task.id}
-            className={task.isChild ? styles.cardRow : styles.epicRow}
-            style={{ height: ROW_HEIGHT }}
-            onDoubleClick={
-              !task.isChild && onEpicClick
-                ? () => onEpicClick(task.id.replace('epic-', ''))
-                : undefined
-            }
-          >
-            {task.name}
-          </div>
-        ))}
+        <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          <Droppable droppableId="epics" type={DroppableTypes.EPIC} direction="vertical">
+            {({ innerRef, droppableProps, placeholder }) => (
+              <div {...droppableProps} ref={innerRef}>
+                {groups.map((group, gIndex) => (
+                  <Draggable key={group.epic.id} draggableId={group.epic.id} index={gIndex}>
+                    {({ innerRef: drRef, draggableProps, dragHandleProps }) => (
+                      <div ref={drRef} {...draggableProps}>
+                        <div
+                          {...dragHandleProps}
+                          className={styles.epicRow}
+                          style={{ height: ROW_HEIGHT }}
+                          onDoubleClick={
+                            onEpicClick ? () => onEpicClick(group.epic.id.replace('epic-', '')) : undefined
+                          }
+                        >
+                          {group.epic.name}
+                        </div>
+                        {group.children.map((task) => (
+                          <div key={task.id} className={styles.cardRow} style={{ height: ROW_HEIGHT }}>
+                            {task.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
       <div className={styles.rightColumn} ref={bodyRef} onScroll={handleBodyScroll}>
         <div className={styles.timeline} style={{ width: range.totalDays * DAY_WIDTH }}>
@@ -339,6 +406,8 @@ Gantt.propTypes = {
   onChange: PropTypes.func,
   // eslint-disable-next-line react/require-default-props
   onEpicClick: PropTypes.func,
+  // eslint-disable-next-line react/require-default-props
+  onReorder: PropTypes.func,
 };
 
 export default Gantt;

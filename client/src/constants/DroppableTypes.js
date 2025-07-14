@@ -11,6 +11,7 @@ const TASK_LIST = 'TASK_LIST';
 const TASK = 'TASK';
 const CUSTOM_FIELD_GROUP = 'CUSTOM_FIELD_GROUP';
 const CUSTOM_FIELD = 'CUSTOM_FIELD';
+const EPIC = 'EPIC';
 
 export default {
   BOARD,
@@ -21,4 +22,5 @@ export default {
   TASK,
   CUSTOM_FIELD_GROUP,
   CUSTOM_FIELD,
+  EPIC,
 };

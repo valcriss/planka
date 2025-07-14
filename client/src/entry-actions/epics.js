@@ -20,6 +20,11 @@ const handleEpicUpdate = (epic) => ({
   payload: { epic },
 });
 
+const moveEpic = (id, index) => ({
+  type: EntryActionTypes.EPIC_MOVE,
+  payload: { id, index },
+});
+
 const deleteEpic = (id) => ({
   type: EntryActionTypes.EPIC_DELETE,
   payload: { id },
@@ -40,6 +45,7 @@ export default {
   handleEpicCreate,
   updateEpic,
   handleEpicUpdate,
+  moveEpic,
   deleteEpic,
   handleEpicDelete,
   fetchEpics,

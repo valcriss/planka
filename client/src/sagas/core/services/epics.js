@@ -51,6 +51,15 @@ export function* handleEpicUpdate(epic) {
   yield put(actions.handleEpicUpdate(epic));
 }
 
+export function* moveEpic(id, index) {
+  const { projectId } = yield select(selectors.selectEpicById, id);
+  const position = yield select(selectors.selectNextEpicPosition, projectId, index, id);
+
+  yield call(updateEpic, id, {
+    position,
+  });
+}
+
 export function* deleteEpic(id) {
   yield put(actions.deleteEpic(id));
   let epic;
@@ -96,6 +105,7 @@ export default {
   handleEpicUpdate,
   deleteEpic,
   handleEpicDelete,
+  moveEpic,
   fetchEpics,
   fetchEpicsInCurrentProject,
 };
