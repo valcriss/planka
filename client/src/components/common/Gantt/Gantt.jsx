@@ -261,9 +261,11 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
           // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
           <div
             key={task.id}
-            className={styles.epicRow}
+            className={task.isChild ? styles.cardRow : styles.epicRow}
             style={{ height: ROW_HEIGHT }}
-            onClick={onEpicClick ? () => onEpicClick(task.id) : undefined}
+            onClick={
+              !task.isChild && onEpicClick ? () => onEpicClick(task.id) : undefined
+            }
           >
             {task.name}
           </div>
@@ -274,7 +276,11 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick }) => {
           {localTasks.map((task, index) => {
             const bar = getBarStyle(task);
             return (
-              <div key={task.id} className={styles.row} style={{ height: ROW_HEIGHT }}>
+              <div
+                key={task.id}
+                className={task.isChild ? styles.cardRow : styles.row}
+                style={{ height: ROW_HEIGHT }}
+              >
                 {bar && (
                   // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                   <div
@@ -320,6 +326,7 @@ Gantt.propTypes = {
       startDate: PropTypes.instanceOf(Date),
       endDate: PropTypes.instanceOf(Date),
       progress: PropTypes.number,
+      isChild: PropTypes.bool,
     }),
   ).isRequired,
   // eslint-disable-next-line react/require-default-props

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'semantic-ui-react';
@@ -26,24 +26,82 @@ const ProjectEpics = React.memo(() => {
     }
   }, [dispatch, projectId]);
 
-  const tasks = useMemo(
-    () =>
-      epics.map((e) => ({
-        id: e.id,
+  const selectCardIdsByEpicId = useMemo(
+    () => selectors.makeSelectCardIdsByEpicId(),
+    [],
+  );
+  const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
+
+  const { tasks, epicMap } = useSelector((state) => {
+    const result = [];
+    const map = {};
+    epics.forEach((e) => {
+      result.push({
+        id: `epic-${e.id}`,
         name: e.name,
         color: e.color,
         startDate: e.startDate ? new Date(e.startDate) : null,
         endDate: e.endDate ? new Date(e.endDate) : null,
         progress: 0,
-      })),
-    [epics],
-  );
+      });
+      const cardIds = selectCardIdsByEpicId(state, e.id) || [];
+      cardIds.forEach((cardId) => {
+        const card = selectCardById(state, cardId);
+        result.push({
+          id: `card-${card.id}`,
+          name: card.name,
+          color: e.color,
+          startDate: card.ganttStartDate
+            ? new Date(card.ganttStartDate)
+            : e.startDate
+            ? new Date(e.startDate)
+            : null,
+          endDate: card.ganttEndDate
+            ? new Date(card.ganttEndDate)
+            : e.endDate
+            ? new Date(e.endDate)
+            : null,
+          progress: 0,
+          isChild: true,
+        });
+        map[`card-${card.id}`] = e.id;
+      });
+    });
+    return { tasks: result, epicMap: map };
+  });
 
   const handleTaskChange = useCallback(
-    (id, data) => {
-      dispatch(entryActions.updateEpic(id, data));
+    (taskId, data) => {
+      if (taskId.startsWith('epic-')) {
+        const id = taskId.replace('epic-', '');
+        dispatch(entryActions.updateEpic(id, data));
+      } else if (taskId.startsWith('card-')) {
+        const id = taskId.replace('card-', '');
+        dispatch(
+          entryActions.updateCard(id, {
+            ganttStartDate: data.startDate,
+            ganttEndDate: data.endDate,
+          }),
+        );
+        const epicId = epicMap[taskId];
+        if (epicId) {
+          const epic = epics.find((e) => e.id === epicId);
+          if (epic) {
+            const update = {};
+            if (!epic.startDate || data.startDate < new Date(epic.startDate)) {
+              update.startDate = data.startDate;
+            }
+            if (!epic.endDate || data.endDate > new Date(epic.endDate)) {
+              update.endDate = data.endDate;
+            }
+            if (Object.keys(update).length > 0) {
+              dispatch(entryActions.updateEpic(epicId, update));
+            }
+          }
+        }
+      }
     },
-    [dispatch],
+    [dispatch, epicMap, epics],
   );
 
   const handleAddClick = useCallback(() => {

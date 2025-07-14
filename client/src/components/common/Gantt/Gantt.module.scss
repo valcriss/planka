@@ -95,6 +95,12 @@
     font-size: 12px;
   }
 
+  .cardRow {
+    composes: epicRow;
+    padding-left: 26px;
+    cursor: default;
+  }
+
   .bar {
     position: absolute;
     display: flex;

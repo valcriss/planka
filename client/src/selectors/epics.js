@@ -29,9 +29,24 @@ export const makeSelectEpicIdsByProjectId = () =>
 
 export const selectEpicIdsByProjectId = makeSelectEpicIdsByProjectId();
 
+export const makeSelectCardIdsByEpicId = () =>
+  createSelector(
+    orm,
+    (_, epicId) => epicId,
+    ({ Epic }, epicId) => {
+      const model = Epic.withId(epicId);
+      if (!model) return [];
+      return model.cards.toRefArray().map((card) => card.id);
+    },
+  );
+
+export const selectCardIdsByEpicId = makeSelectCardIdsByEpicId();
+
 export default {
   makeSelectEpicById,
   selectEpicById,
   makeSelectEpicIdsByProjectId,
   selectEpicIdsByProjectId,
+  makeSelectCardIdsByEpicId,
+  selectCardIdsByEpicId,
 };
