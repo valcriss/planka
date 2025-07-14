@@ -72,7 +72,7 @@ const ProjectEpics = React.memo(() => {
             <Gantt tasks={tasks} onChange={handleTaskChange} onEpicClick={handleEpicClick} />
           </div>
         )}
-        {tasks.length === 0 && <div className={Styles.noEpicsMessage}>{t('message.noEpics')}</div>}
+        {tasks.length === 0 && <div className={Styles.noEpicsMessage}>{t('common.noEpics')}</div>}
       </div>
     </div>
   );

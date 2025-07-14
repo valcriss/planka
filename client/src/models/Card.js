@@ -26,6 +26,7 @@ export default class extends BaseModel {
     storyPoints: attr({
       getDefault: () => 0,
     }),
+    epicId: fk({ to: 'Epic', as: 'epic', relatedName: 'cards' }),
     commentsTotal: attr({
       getDefault: () => 0,
     }),
@@ -563,6 +564,7 @@ export default class extends BaseModel {
       ganttEndDate: this.ganttEndDate,
       stopwatch: this.stopwatch,
       storyPoints: this.storyPoints,
+      epicId: this.epicId,
       ...data,
     });
 

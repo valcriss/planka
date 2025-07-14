@@ -96,6 +96,10 @@ module.exports = {
       min: 0,
       allowNull: true,
     },
+    epicId: {
+      type: 'string',
+      allowNull: true,
+    },
     isSubscribed: {
       type: 'boolean',
     },
@@ -166,6 +170,7 @@ module.exports = {
         'ganttEndDate',
         'stopwatch',
         'storyPoints',
+        'epicId',
       );
     }
 
@@ -229,6 +234,7 @@ module.exports = {
       'ganttEndDate',
       'stopwatch',
       'storyPoints',
+      'epicId',
       'isSubscribed',
     ]);
 
