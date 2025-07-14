@@ -12,6 +12,7 @@ import selectors from '../../../selectors';
 import actions from '../../../actions';
 import { fetchBaseCardTypes } from './base-card-types';
 import { fetchCardTypes } from './card-types';
+import { fetchEpics } from './epics';
 import api from '../../../api';
 import { createLocalId } from '../../../utils/local-id';
 import ActionTypes from '../../../constants/ActionTypes';
@@ -156,6 +157,10 @@ export function* fetchBoard(id) {
   yield call(fetchBaseCardTypes);
   if (board.projectId) {
     yield call(fetchCardTypes, board.projectId);
+    const project = projects.find((p) => p.id === board.projectId);
+    if (project?.useEpics) {
+      yield call(fetchEpics, board.projectId);
+    }
   }
 }
 

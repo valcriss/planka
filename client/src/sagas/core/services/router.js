@@ -15,6 +15,7 @@ import { getAccessToken } from '../../../utils/access-token-storage';
 import mergeRecords from '../../../utils/merge-records';
 import { fetchBaseCardTypes } from './base-card-types';
 import { fetchCardTypes } from './card-types';
+import { fetchEpics } from './epics';
 import ActionTypes from '../../../constants/ActionTypes';
 import Paths from '../../../constants/Paths';
 
@@ -265,6 +266,10 @@ export function* handleLocationChange() {
     yield call(fetchBaseCardTypes);
     if (boardForTypes.projectId) {
       yield call(fetchCardTypes, boardForTypes.projectId);
+      const project = yield select(selectors.selectProjectById, boardForTypes.projectId);
+      if (project?.useEpics) {
+        yield call(fetchEpics, boardForTypes.projectId);
+      }
     }
   }
 
