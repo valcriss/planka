@@ -1,4 +1,10 @@
-import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
+import React, {
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -53,6 +59,7 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
   const headerRef = useRef(null);
   const bodyRef = useRef(null);
   const [localTasks, setLocalTasks] = useState(tasks);
+  const [collapsedEpics, setCollapsedEpics] = useState({});
   const resizeRef = useRef(null);
   const dragRef = useRef(null);
   const disableScroll = () => {
@@ -80,6 +87,40 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
   }, [tasks]);
 
   const groups = useMemo(() => buildGroups(localTasks), [localTasks]);
+
+  useEffect(() => {
+    setCollapsedEpics((prev) => {
+      const next = { ...prev };
+      let changed = false;
+      groups.forEach((g) => {
+        if (next[g.epic.id] === undefined) {
+          next[g.epic.id] = true;
+          changed = true;
+        }
+      });
+      return changed ? next : prev;
+    });
+  }, [groups]);
+
+  const toggleEpic = useCallback((id) => {
+    setCollapsedEpics((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  }, []);
+
+  const visibleItems = useMemo(() => {
+    const result = [];
+    groups.forEach((group) => {
+      result.push({ task: group.epic, index: group.epicIndex });
+      if (!collapsedEpics[group.epic.id]) {
+        group.children.forEach((child, i) => {
+          result.push({ task: child, index: group.childIndices[i] });
+        });
+      }
+    });
+    return result;
+  }, [groups, collapsedEpics]);
 
   const handleDragStart = useCallback(() => {
     document.body.classList.add(globalStyles.dragging);
@@ -364,20 +405,29 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
                               : undefined
                           }
                         >
+                          <Icon
+                            name={collapsedEpics[group.epic.id] ? 'chevron right' : 'chevron down'}
+                            className={styles.toggleIcon}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleEpic(group.epic.id);
+                            }}
+                          />
                           {group.epic.icon && (
                             <Icon name={group.epic.icon} className={styles.icon} />
                           )}
                           {group.epic.name}
                         </div>
-                        {group.children.map((task) => (
-                          <div
-                            key={task.id}
-                            className={styles.cardRow}
-                            style={{ height: ROW_HEIGHT }}
-                          >
-                            {task.name}
-                          </div>
-                        ))}
+                        {!collapsedEpics[group.epic.id] &&
+                          group.children.map((task) => (
+                            <div
+                              key={task.id}
+                              className={styles.cardRow}
+                              style={{ height: ROW_HEIGHT }}
+                            >
+                              {task.name}
+                            </div>
+                          ))}
                       </div>
                     )}
                   </Draggable>
@@ -390,7 +440,7 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
       </div>
       <div className={styles.rightColumn} ref={bodyRef} onScroll={handleBodyScroll}>
         <div className={styles.timeline} style={{ width: range.totalDays * DAY_WIDTH }}>
-          {localTasks.map((task, index) => {
+          {visibleItems.map(({ task, index }) => {
             const bar = getBarStyle(task);
             return (
               <div
