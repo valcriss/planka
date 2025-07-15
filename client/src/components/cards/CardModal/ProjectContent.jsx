@@ -538,6 +538,19 @@ const ProjectContent = React.memo(({ onClose }) => {
               )}
             </div>
           )}
+          {project.useEpics && (
+            <div className={styles.contentModule}>
+              <div className={styles.moduleWrapper}>
+                <Icon name="flag outline" className={styles.moduleIcon} />
+                <div className={styles.moduleHeader}>{t('common.epic')}</div>
+                <EpicField
+                  projectId={project.id}
+                  defaultValue={card.epicId}
+                  onUpdate={handleEpicUpdate}
+                />
+              </div>
+            </div>
+          )}
           {(card.description || canEditDescription) && (
             <div className={classNames(styles.contentModule, styles.contentModuleDescription)}>
               <div className={styles.moduleWrapper}>
@@ -583,19 +596,6 @@ const ProjectContent = React.memo(({ onClose }) => {
                   </>
                 )}
                 {!canEditDescription && <ExpandableMarkdown>{card.description}</ExpandableMarkdown>}
-              </div>
-            </div>
-          )}
-          {project.useEpics && (
-            <div className={styles.contentModule}>
-              <div className={styles.moduleWrapper}>
-                <Icon name="flag outline" className={styles.moduleIcon} />
-                <div className={styles.moduleHeader}>{t('common.epic')}</div>
-                <EpicField
-                  projectId={project.id}
-                  defaultValue={card.epicId}
-                  onUpdate={handleEpicUpdate}
-                />
               </div>
             </div>
           )}
