@@ -79,7 +79,7 @@ const ProjectSettingsModal = React.memo(() => {
   return (
     <ClosableModal
       closeIcon
-      size="small"
+      size="large"
       centered={false}
       dimmer={isBackgroundPaneActive && { className: styles.dimmerTransparent }}
       onClose={handleClose}
