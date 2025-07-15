@@ -8,6 +8,7 @@ module.exports = {
     id: { ...idInput, required: true },
     name: { type: "string" },
     description: { type: "string", allowNull: true },
+    icon: { type: "string", allowNull: true },
     color: { type: "string", allowNull: true },
     startDate: { type: "string", allowNull: true },
     endDate: { type: "string", allowNull: true },
@@ -34,6 +35,7 @@ module.exports = {
     const values = _.pick(inputs, [
       "name",
       "description",
+      "icon",
       "color",
       "startDate",
       "endDate",

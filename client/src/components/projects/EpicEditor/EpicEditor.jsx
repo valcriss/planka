@@ -2,9 +2,10 @@ import React, { useEffect, useImperativeHandle, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePicker from 'react-datepicker';
-import { TextArea } from 'semantic-ui-react';
+import { TextArea, Dropdown, Icon } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Input } from '../../../lib/custom-ui';
+import ICON_OPTIONS from '../../../constants/CardTypeIconOptions';
 import styles from './EpicEditor.module.scss';
 import { useNestedRef } from '../../../hooks';
 
@@ -39,6 +40,28 @@ const EpicEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
         name="description"
         value={data.description || ''}
         onChange={onFieldChange}
+      />
+      <div>{t('common.icon')}</div>
+      <Dropdown
+        fluid
+        selection
+        search
+        name="icon"
+        value={data.icon}
+        options={ICON_OPTIONS.map((icon) => ({
+          key: icon,
+          text: icon,
+          value: icon,
+          content: (
+            <span>
+              <Icon name={icon} /> {icon}
+            </span>
+          ),
+        }))}
+        className={styles.field}
+        onChange={(_, { value }) =>
+          onFieldChange(undefined, { name: 'icon', value })
+        }
       />
       <div>{t('common.color')}</div>
       <input

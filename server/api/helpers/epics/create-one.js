@@ -7,6 +7,7 @@ module.exports = {
   async fn({ values, request }) {
     const epic = await Epic.qm.createOne({
       ...values,
+      icon: values.icon || null,
       color: values.color || '#000000',
       projectId: values.project.id,
     });

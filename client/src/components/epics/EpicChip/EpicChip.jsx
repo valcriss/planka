@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
+import { Icon } from 'semantic-ui-react';
 
 import selectors from '../../../selectors';
 import getTextColor from '../../../utils/get-text-color';
@@ -29,6 +30,7 @@ const EpicChip = React.memo(({ id, size }) => {
       )}
       style={{ background: epic.color || '#dce0e4', color: getTextColor(epic.color) }}
     >
+      {epic.icon && <Icon name={epic.icon} className={styles.icon} />}
       {epic.name}
     </span>
   );
