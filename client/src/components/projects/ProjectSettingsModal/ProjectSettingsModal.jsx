@@ -16,6 +16,7 @@ import ManagersPane from './ManagersPane';
 import BackgroundPane from './BackgroundPane';
 import BaseCustomFieldGroupsPane from './BaseCustomFieldGroupsPane';
 import CardTypesPane from './CardTypesPane';
+import RepositoriesPane from './RepositoriesPane';
 
 import styles from './ProjectSettingsModal.module.scss';
 
@@ -70,6 +71,12 @@ const ProjectSettingsModal = React.memo(() => {
           context: 'title',
         }),
         render: () => <CardTypesPane />,
+      },
+      {
+        menuItem: t('common.repositories', {
+          context: 'title',
+        }),
+        render: () => <RepositoriesPane />,
       },
     );
   }

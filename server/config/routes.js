@@ -120,6 +120,11 @@ module.exports.routes = {
   'PATCH /api/epics/:id': 'epics/update',
   'DELETE /api/epics/:id': 'epics/delete',
 
+  'GET /api/projects/:projectId/repositories': 'repositories/index',
+  'POST /api/projects/:projectId/repositories': 'repositories/create',
+  'PATCH /api/repositories/:id': 'repositories/update',
+  'DELETE /api/repositories/:id': 'repositories/delete',
+
   'POST /api/projects/:projectId/boards': 'boards/create',
   'GET /api/boards/:id': 'boards/show',
   'GET /api/boards/:projectCode/:slug': 'boards/show-by-slug',

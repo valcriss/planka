@@ -1,0 +1,49 @@
+:global(#app) {
+  .wrapper {
+    border: none;
+    box-shadow: none;
+  }
+
+  .actions {
+    text-align: right;
+    margin-bottom: 1rem;
+    display:  flex;
+  }
+
+  .addButton {
+    margin-right: 0;
+  }
+
+  .tableWrapper {
+    margin-right: -2.5rem;
+    overflow: auto;
+    padding-right: 2.5rem;
+
+    @supports (-moz-appearance: none) {
+      scrollbar-color: rgba(0, 0, 0, 0.32) transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+    }
+  }
+
+  .editor {
+    margin-top: 1rem;
+  }
+
+  .field {
+    margin-bottom: 0.5rem;
+    margin: 3px;
+    width: 250px;
+  }
+
+  .button {
+    margin: 4px;
+    display: block;
+  }
+}
