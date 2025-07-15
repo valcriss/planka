@@ -2,11 +2,12 @@ import React, { useEffect, useImperativeHandle, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePicker from 'react-datepicker';
-import { TextArea, Dropdown, Icon } from 'semantic-ui-react';
+import { TextArea, Dropdown, Icon, Button } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Input } from '../../../lib/custom-ui';
 import ICON_OPTIONS from '../../../constants/CardTypeIconOptions';
 import styles from './EpicEditor.module.scss';
+import classNames from 'classnames';
 import { useNestedRef } from '../../../hooks';
 
 const EpicEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
@@ -42,27 +43,39 @@ const EpicEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
         onChange={onFieldChange}
       />
       <div>{t('common.icon')}</div>
-      <Dropdown
-        fluid
-        selection
-        search
-        name="icon"
-        value={data.icon}
-        options={ICON_OPTIONS.map((icon) => ({
-          key: icon,
-          text: icon,
-          value: icon,
-          content: (
-            <span>
-              <Icon name={icon} /> {icon}
-            </span>
-          ),
-        }))}
-        className={styles.field}
-        onChange={(_, { value }) =>
-          onFieldChange(undefined, { name: 'icon', value })
-        }
-      />
+      <div className={styles.iconWrapper}>
+        <Button
+          type="button"
+          icon="close"
+          title={t('action.remove')}
+          disabled={!data.icon}
+          className={styles.clearIconButton}
+          onClick={() =>
+            onFieldChange(undefined, { name: 'icon', value: '' })
+          }
+        />
+        <Dropdown
+          fluid
+          selection
+          search
+          name="icon"
+          value={data.icon}
+          options={ICON_OPTIONS.map((icon) => ({
+            key: icon,
+            text: icon,
+            value: icon,
+            content: (
+              <span>
+                <Icon name={icon} /> {icon}
+              </span>
+            ),
+          }))}
+          className={classNames(styles.field, styles.iconDropdown)}
+          onChange={(_, { value }) =>
+            onFieldChange(undefined, { name: 'icon', value })
+          }
+        />
+      </div>
       <div>{t('common.color')}</div>
       <input
         type="color"
