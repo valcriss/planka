@@ -10,6 +10,7 @@ export default class extends BaseModel {
     position: attr(),
     name: attr(),
     description: attr(),
+    icon: attr(),
     color: attr(),
     startDate: attr(),
     endDate: attr(),

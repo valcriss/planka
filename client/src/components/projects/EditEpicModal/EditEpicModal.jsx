@@ -18,6 +18,7 @@ const EditEpicModal = React.memo(() => {
   const [data, handleFieldChange, setData] = useForm(() => ({
     name: '',
     description: '',
+    icon: '',
     color: '#000000',
     startDate: null,
     endDate: null,
@@ -28,6 +29,7 @@ const EditEpicModal = React.memo(() => {
       setData({
         name: epic.name,
         description: epic.description || '',
+        icon: epic.icon || '',
         color: epic.color || '#000000',
         startDate: epic.startDate ? new Date(epic.startDate) : null,
         endDate: epic.endDate ? new Date(epic.endDate) : null,
@@ -46,6 +48,7 @@ const EditEpicModal = React.memo(() => {
       ...data,
       name: data.name.trim(),
       description: data.description.trim() || null,
+      icon: data.icon.trim() || null,
     };
 
     if (!clean.name) {

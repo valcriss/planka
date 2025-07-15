@@ -13,6 +13,7 @@ const AddEpicModal = React.memo(() => {
   const [data, handleFieldChange] = useForm({
     name: '',
     description: '',
+    icon: '',
     color: '#000000',
     startDate: null,
     endDate: null,
@@ -28,6 +29,7 @@ const AddEpicModal = React.memo(() => {
       ...data,
       name: data.name.trim(),
       description: data.description.trim() || null,
+      icon: data.icon.trim() || null,
     };
 
     if (!clean.name) {
