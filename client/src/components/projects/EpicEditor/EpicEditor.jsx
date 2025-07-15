@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import DatePicker from 'react-datepicker';
 import { TextArea, Dropdown, Icon, Button } from 'semantic-ui-react';
 import TextareaAutosize from 'react-textarea-autosize';
+import classNames from 'classnames';
 import { Input } from '../../../lib/custom-ui';
 import ICON_OPTIONS from '../../../constants/CardTypeIconOptions';
 import styles from './EpicEditor.module.scss';
-import classNames from 'classnames';
 import { useNestedRef } from '../../../hooks';
 
 const EpicEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
@@ -44,16 +44,6 @@ const EpicEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
       />
       <div>{t('common.icon')}</div>
       <div className={styles.iconWrapper}>
-        <Button
-          type="button"
-          icon="close"
-          title={t('action.remove')}
-          disabled={!data.icon}
-          className={styles.clearIconButton}
-          onClick={() =>
-            onFieldChange(undefined, { name: 'icon', value: '' })
-          }
-        />
         <Dropdown
           fluid
           selection
@@ -71,9 +61,15 @@ const EpicEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
             ),
           }))}
           className={classNames(styles.field, styles.iconDropdown)}
-          onChange={(_, { value }) =>
-            onFieldChange(undefined, { name: 'icon', value })
-          }
+          onChange={(_, { value }) => onFieldChange(undefined, { name: 'icon', value })}
+        />
+        <Button
+          type="button"
+          icon="close"
+          title={t('action.remove')}
+          disabled={!data.icon}
+          className={styles.clearIconButton}
+          onClick={() => onFieldChange(undefined, { name: 'icon', value: '' })}
         />
       </div>
       <div>{t('common.color')}</div>
