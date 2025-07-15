@@ -108,20 +108,14 @@ const RepositoriesPane = React.memo(() => {
 
   return (
     <Tab.Pane attached={false} className={styles.wrapper}>
-      <div className={styles.actions}>
-        <Button positive onClick={handleAddClick} className={styles.addButton}>
-          {t('action.addRepository')}
-        </Button>
-      </div>
       {repositories.length > 0 && (
         <div className={styles.tableWrapper}>
           <Table unstackable basic="very">
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>{t('common.name')}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.url')}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.accessToken')}</Table.HeaderCell>
-                <Table.HeaderCell width={1} />
+                <Table.HeaderCell width={20}>{t('common.name')}</Table.HeaderCell>
+                <Table.HeaderCell width={20}>{t('common.url')}</Table.HeaderCell>
+                <Table.HeaderCell width={20}>{t('common.accessToken')}</Table.HeaderCell>
                 <Table.HeaderCell width={1} />
               </Table.Row>
             </Table.Header>
@@ -132,11 +126,10 @@ const RepositoriesPane = React.memo(() => {
                   <Table.Cell>{repo.url}</Table.Cell>
                   <Table.Cell>{repo.accessToken}</Table.Cell>
                   <Table.Cell textAlign="right">
-                    <Button className={styles.button} onClick={() => handleEdit(index)}>
-                      <Icon fitted name="pencil" />
-                    </Button>
-                  </Table.Cell>
-                  <Table.Cell textAlign="right">
+                      <div className={styles.actions}>
+                      <Button className={styles.button} onClick={() => handleEdit(index)}>
+                          <Icon fitted name="pencil" />
+                      </Button>
                     <Button
                       type="button"
                       className={styles.button}
@@ -144,6 +137,7 @@ const RepositoriesPane = React.memo(() => {
                     >
                       <Icon fitted name="trash alternate outline" />
                     </Button>
+                      </div>
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -174,7 +168,7 @@ const RepositoriesPane = React.memo(() => {
           onChange={handleFieldChange}
         />
         <Button positive onClick={handleSave} className={styles.saveButton}>
-          {editingIndex === null ? t('action.add') : t('action.save')}
+          {editingIndex === null ? t('action.addRepository') : t('action.save')}
         </Button>
       </div>
     </Tab.Pane>
