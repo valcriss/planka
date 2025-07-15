@@ -94,11 +94,11 @@ const Header = React.memo(() => {
 
   return (
     <div className={styles.wrapper}>
-      {!project && (
-        <Link to={Paths.ROOT} className={classNames(styles.logo, styles.title)}>
-          PLANKA
-        </Link>
-      )}
+        {!project && (
+          <Link to={Paths.ROOT} className={classNames(styles.logo, styles.title)}>
+            Kanav
+          </Link>
+        )}
       <Menu inverted size="large" className={styles.menu}>
         {project && (
           <Menu.Menu position="left">
