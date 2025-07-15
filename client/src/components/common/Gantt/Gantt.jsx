@@ -88,6 +88,20 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
 
   const groups = useMemo(() => buildGroups(localTasks), [localTasks]);
 
+  useEffect(() => {
+    setCollapsedEpics((prev) => {
+      const next = { ...prev };
+      let changed = false;
+      groups.forEach((g) => {
+        if (next[g.epic.id] === undefined) {
+          next[g.epic.id] = true;
+          changed = true;
+        }
+      });
+      return changed ? next : prev;
+    });
+  }, [groups]);
+
   const toggleEpic = useCallback((id) => {
     setCollapsedEpics((prev) => ({
       ...prev,
