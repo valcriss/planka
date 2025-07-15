@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Icon } from 'semantic-ui-react';
 import {
   differenceInCalendarDays,
   addMonths,
@@ -363,6 +364,9 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
                               : undefined
                           }
                         >
+                          {group.epic.icon && (
+                            <Icon name={group.epic.icon} className={styles.icon} />
+                          )}
                           {group.epic.name}
                         </div>
                         {group.children.map((task) => (
@@ -411,6 +415,9 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
                     }}
                   >
                     <div className={styles.label} style={{ color: getTextColor(task.color) }}>
+                      {!task.isChild && task.icon && (
+                        <Icon name={task.icon} className={styles.icon} />
+                      )}
                       {task.name}
                     </div>
                     {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
@@ -441,6 +448,7 @@ Gantt.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       name: PropTypes.string.isRequired,
       color: PropTypes.string,
+      icon: PropTypes.string,
       startDate: PropTypes.instanceOf(Date),
       endDate: PropTypes.instanceOf(Date),
       progress: PropTypes.number,
