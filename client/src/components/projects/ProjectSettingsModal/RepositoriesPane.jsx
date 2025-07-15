@@ -1,16 +1,35 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Button, Table, Input, Icon, Tab } from 'semantic-ui-react';
+
+import selectors from '../../../selectors';
+import api from '../../../api';
 
 import styles from './RepositoriesPane.module.scss';
 
-const EMPTY_REPOSITORY = { name: '', url: '', token: '' };
+const EMPTY_REPOSITORY = { name: '', url: '', accessToken: '' };
 
 const RepositoriesPane = React.memo(() => {
   const [repositories, setRepositories] = useState([]);
   const [form, setForm] = useState(EMPTY_REPOSITORY);
   const [editingIndex, setEditingIndex] = useState(null);
   const [t] = useTranslation();
+  const accessToken = useSelector(selectors.selectAccessToken);
+  const projectId = useSelector((state) => selectors.selectPath(state).projectId);
+
+  useEffect(() => {
+    if (!projectId) {
+      return;
+    }
+
+    api
+      .getRepositories(projectId, { Authorization: `Bearer ${accessToken}` })
+      .then(({ items }) => setRepositories(items))
+      .catch(() => {
+        /* ignore */
+      });
+  }, [projectId, accessToken]);
 
   const handleFieldChange = useCallback((e, { name, value }) => {
     setForm((state) => ({ ...state, [name]: value }));
@@ -22,20 +41,47 @@ const RepositoriesPane = React.memo(() => {
   }, []);
 
   const handleSave = useCallback(() => {
-    if (editingIndex === null) {
-      setRepositories((items) => [...items, form]);
-    } else {
-      setRepositories((items) =>
-        items.map((item, idx) => (idx === editingIndex ? form : item)),
-      );
+    if (!projectId) {
+      return;
     }
-    setForm(EMPTY_REPOSITORY);
-    setEditingIndex(null);
-  }, [form, editingIndex]);
+
+    const data = {
+      name: form.name,
+      url: form.url,
+      accessToken: form.accessToken || null,
+    };
+
+    if (editingIndex === null) {
+      api
+        .createRepository(projectId, data, { Authorization: `Bearer ${accessToken}` })
+        .then(({ item }) => {
+          setRepositories((items) => [...items, item]);
+          setForm(EMPTY_REPOSITORY);
+        })
+        .catch(() => {});
+    } else {
+      const repo = repositories[editingIndex];
+      api
+        .updateRepository(repo.id, data, { Authorization: `Bearer ${accessToken}` })
+        .then(({ item }) => {
+          setRepositories((items) =>
+            items.map((r, idx) => (idx === editingIndex ? item : r)),
+          );
+          setForm(EMPTY_REPOSITORY);
+          setEditingIndex(null);
+        })
+        .catch(() => {});
+    }
+  }, [form, editingIndex, projectId, accessToken, repositories]);
 
   const handleEdit = useCallback(
     (index) => {
-      setForm(repositories[index]);
+      const repo = repositories[index];
+      setForm({
+        name: repo.name,
+        url: repo.url,
+        accessToken: repo.accessToken || '',
+      });
       setEditingIndex(index);
     },
     [repositories],
@@ -43,11 +89,21 @@ const RepositoriesPane = React.memo(() => {
 
   const handleDelete = useCallback(
     (index) => {
+      if (!projectId) {
+        return;
+      }
+
+      const repo = repositories[index];
       if (window.confirm(t('common.areYouSureYouWantToDeleteThisRepository'))) {
-        setRepositories((items) => items.filter((_, idx) => idx !== index));
+        api
+          .deleteRepository(repo.id, { Authorization: `Bearer ${accessToken}` })
+          .then(() => {
+            setRepositories((items) => items.filter((_, idx) => idx !== index));
+          })
+          .catch(() => {});
       }
     },
-    [t],
+    [t, projectId, accessToken, repositories],
   );
 
   return (
@@ -74,7 +130,7 @@ const RepositoriesPane = React.memo(() => {
                 <Table.Row key={index}>
                   <Table.Cell>{repo.name}</Table.Cell>
                   <Table.Cell>{repo.url}</Table.Cell>
-                  <Table.Cell>{repo.token}</Table.Cell>
+                  <Table.Cell>{repo.accessToken}</Table.Cell>
                   <Table.Cell textAlign="right">
                     <Button className={styles.button} onClick={() => handleEdit(index)}>
                       <Icon fitted name="pencil" />
@@ -111,9 +167,9 @@ const RepositoriesPane = React.memo(() => {
           onChange={handleFieldChange}
         />
         <Input
-          name="token"
+          name="accessToken"
           placeholder={t('common.accessToken')}
-          value={form.token}
+          value={form.accessToken}
           className={styles.field}
           onChange={handleFieldChange}
         />
