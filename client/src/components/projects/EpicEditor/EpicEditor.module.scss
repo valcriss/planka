@@ -11,4 +11,28 @@
     padding: 0;
     border: none;
   }
+
+  .iconWrapper {
+    display: flex;
+    margin-bottom: 8px;
+  }
+
+  .clearIconButton {
+    background: transparent;
+    box-shadow: none;
+    margin: 0;
+    width: 36px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    &:hover {
+      background: #e9e9e9;
+    }
+  }
+
+  .iconDropdown {
+    flex: 1 1 auto;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }
