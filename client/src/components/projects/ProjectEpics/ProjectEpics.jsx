@@ -51,6 +51,7 @@ const ProjectEpics = React.memo(() => {
       result.push({
         id: `epic-${e.id}`,
         name: e.name,
+        icon: e.icon,
         color: e.color,
         startDate: e.startDate ? new Date(e.startDate) : null,
         endDate: e.endDate ? new Date(e.endDate) : null,
