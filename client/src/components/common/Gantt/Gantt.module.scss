@@ -88,11 +88,24 @@
     user-select: none;
     display: flex;
     align-items: center;
+    gap: 4px;
   }
 
   .toggleIcon {
-    margin-right: 4px;
+    display: flex;
+    align-items: center;
+    margin-right: 0;
     cursor: pointer;
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+    margin-right: 4px;
+  }
+
+  .epicIcon {
+    margin-right: 0;
   }
 
   .row {

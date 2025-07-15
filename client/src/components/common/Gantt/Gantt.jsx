@@ -414,7 +414,10 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
                             }}
                           />
                           {group.epic.icon && (
-                            <Icon name={group.epic.icon} className={styles.icon} />
+                            <Icon
+                              name={group.epic.icon}
+                              className={`${styles.icon} ${styles.epicIcon}`}
+                            />
                           )}
                           {group.epic.name}
                         </div>
