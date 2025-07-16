@@ -7,6 +7,7 @@ import entryActions from '../../../entry-actions';
 import AddEpicModal from '../AddEpicModal';
 import EditEpicModal from '../EditEpicModal';
 import Gantt from '../../common/Gantt';
+import { ListTypes } from '../../../constants/Enums';
 import Styles from './ProjectEpics.module.scss';
 
 const ProjectEpics = React.memo(() => {
@@ -43,6 +44,7 @@ const ProjectEpics = React.memo(() => {
 
   const selectCardIdsByEpicId = useMemo(() => selectors.makeSelectCardIdsByEpicId(), []);
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
+  const selectListById = useMemo(() => selectors.makeSelectListById(), []);
 
   const { tasks, epicMap } = useSelector((state) => {
     const result = [];
@@ -60,6 +62,8 @@ const ProjectEpics = React.memo(() => {
       const cardIds = selectCardIdsByEpicId(state, e.id) || [];
       cardIds.forEach((cardId) => {
         const card = selectCardById(state, cardId);
+        const list = selectListById(state, card.listId);
+        const isDone = list && list.type === ListTypes.CLOSED;
         result.push({
           id: `card-${card.id}`,
           name: card.name,
@@ -78,6 +82,7 @@ const ProjectEpics = React.memo(() => {
               : null,
           progress: 0,
           isChild: true,
+          isDone,
         });
         map[`card-${card.id}`] = e.id;
       });
