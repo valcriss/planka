@@ -130,6 +130,11 @@
     user-select: none;
   }
 
+  .taskDone {
+    color: #aaa;
+    text-decoration: line-through;
+  }
+
   .bar {
     position: absolute;
     display: flex;
@@ -149,6 +154,10 @@
     opacity: 0.75;
     border-radius: 5px ;
     cursor: pointer;
+  }
+
+  .barDone {
+    background-color: #ccc !important;
   }
 
   .label {

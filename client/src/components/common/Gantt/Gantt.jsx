@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -425,7 +426,10 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
                           group.children.map((task) => (
                             <div
                               key={task.id}
-                              className={styles.cardRow}
+                              className={classNames(
+                                styles.cardRow,
+                                task.isDone && styles.taskDone,
+                              )}
                               style={{ height: ROW_HEIGHT }}
                             >
                               {task.name}
@@ -448,13 +452,19 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
             return (
               <div
                 key={task.id}
-                className={task.isChild ? styles.cardRow : styles.row}
+                className={classNames(
+                  task.isChild ? styles.cardRow : styles.row,
+                  task.isDone && styles.taskDone,
+                )}
                 style={{ height: ROW_HEIGHT }}
               >
                 {bar && (
                   // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                   <div
-                    className={task.isChild ? styles.barTask : styles.bar}
+                    className={classNames(
+                      task.isChild ? styles.barTask : styles.bar,
+                      task.isDone && styles.barDone,
+                    )}
                     onMouseDown={startDrag(index)}
                     onDoubleClick={
                       !task.isChild && onEpicClick
@@ -464,10 +474,13 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
                     style={{
                       left: bar.offset,
                       width: bar.width,
-                      backgroundColor: task.color,
+                      backgroundColor: task.isDone ? '#ccc' : task.color,
                     }}
                   >
-                    <div className={styles.label} style={{ color: getTextColor(task.color) }}>
+                    <div
+                      className={styles.label}
+                      style={{ color: getTextColor(task.isDone ? '#ccc' : task.color) }}
+                    >
                       {!task.isChild && task.icon && (
                         <Icon name={task.icon} className={styles.icon} />
                       )}
