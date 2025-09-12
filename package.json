@@ -12,6 +12,7 @@
     "gv": "npm i --package-lock-only --ignore-scripts && genversion --source . --template server/version-template.ejs server/version.js && genversion --source . --template client/version-template.ejs client/src/version.js",
     "postinstall": "npm i --prefix server && npm i --prefix client",
     "lint": "npm run server:lint && npm run client:lint",
+    "ci": "npm ci --prefix server && npm ci --prefix client",
     "format": "npm run server:format && npm run client:format",
     "server:console": "npm run console --prefix server",
     "server:db:create-admin-user": "npm run db:create-admin-user --prefix server",

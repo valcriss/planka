@@ -1,0 +1,32 @@
+name: CI
+permissions:
+  contents: write
+  pull-requests: write
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧾 Checkout du code
+        uses: actions/checkout@v3
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 23
+          cache: "npm"
+
+      - name: 📦 Installation des dépendances
+        run: npm run ci
+
+      - name: 🔍 Lint
+        run: npm run lint
+
+      - name: 🧪 Tests + Coverage
+        run: npm run test
