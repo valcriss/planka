@@ -10,11 +10,7 @@ const buildData = (email) => {
     role: 'admin',
     isSsoUser: false,
     isDeactivated: false,
-    name:
-      process.env.DEFAULT_ADMIN_NAME ||
-      process.env.DEFAULT_ADMIN_USERNAME ||
-      email ||
-      'Admin',
+    name: process.env.DEFAULT_ADMIN_NAME || process.env.DEFAULT_ADMIN_USERNAME || email || 'Admin',
   };
 
   if (process.env.DEFAULT_ADMIN_PASSWORD) {
