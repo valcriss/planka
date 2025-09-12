@@ -35,11 +35,6 @@ const RepositoriesPane = React.memo(() => {
     setForm((state) => ({ ...state, [name]: value }));
   }, []);
 
-  const handleAddClick = useCallback(() => {
-    setForm(EMPTY_REPOSITORY);
-    setEditingIndex(null);
-  }, []);
-
   const handleSave = useCallback(() => {
     if (!projectId) {
       return;
@@ -64,9 +59,7 @@ const RepositoriesPane = React.memo(() => {
       api
         .updateRepository(repo.id, data, { Authorization: `Bearer ${accessToken}` })
         .then(({ item }) => {
-          setRepositories((items) =>
-            items.map((r, idx) => (idx === editingIndex ? item : r)),
-          );
+          setRepositories((items) => items.map((r, idx) => (idx === editingIndex ? item : r)));
           setForm(EMPTY_REPOSITORY);
           setEditingIndex(null);
         })
@@ -94,7 +87,10 @@ const RepositoriesPane = React.memo(() => {
       }
 
       const repo = repositories[index];
-      if (window.confirm(t('common.areYouSureYouWantToDeleteThisRepository'))) {
+      if (
+        // eslint-disable-next-line no-alert
+        window.confirm(t('common.areYouSureYouWantToDeleteThisRepository'))
+      ) {
         api
           .deleteRepository(repo.id, { Authorization: `Bearer ${accessToken}` })
           .then(() => {
@@ -121,23 +117,23 @@ const RepositoriesPane = React.memo(() => {
             </Table.Header>
             <Table.Body>
               {repositories.map((repo, index) => (
-                <Table.Row key={index}>
+                <Table.Row key={repo.id}>
                   <Table.Cell>{repo.name}</Table.Cell>
                   <Table.Cell>{repo.url}</Table.Cell>
                   <Table.Cell>{repo.accessToken}</Table.Cell>
                   <Table.Cell textAlign="right">
-                      <div className={styles.actions}>
+                    <div className={styles.actions}>
                       <Button className={styles.button} onClick={() => handleEdit(index)}>
-                          <Icon fitted name="pencil" />
+                        <Icon fitted name="pencil" />
                       </Button>
-                    <Button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => handleDelete(index)}
-                    >
-                      <Icon fitted name="trash alternate outline" />
-                    </Button>
-                      </div>
+                      <Button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => handleDelete(index)}
+                      >
+                        <Icon fitted name="trash alternate outline" />
+                      </Button>
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               ))}

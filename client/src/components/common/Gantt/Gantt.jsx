@@ -1,10 +1,4 @@
-import React, {
-  useMemo,
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -397,6 +391,7 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
                       // eslint-disable-next-line react/jsx-props-no-spreading
                       <div ref={drRef} {...draggableProps}>
                         <div
+                          // eslint-disable-next-line react/jsx-props-no-spreading
                           {...dragHandleProps}
                           className={styles.epicRow}
                           style={{ height: ROW_HEIGHT }}
@@ -426,10 +421,7 @@ const Gantt = React.memo(({ tasks, onChange, onEpicClick, onReorder }) => {
                           group.children.map((task) => (
                             <div
                               key={task.id}
-                              className={classNames(
-                                styles.cardRow,
-                                task.isDone && styles.taskDone,
-                              )}
+                              className={classNames(styles.cardRow, task.isDone && styles.taskDone)}
                               style={{ height: ROW_HEIGHT }}
                             >
                               {task.name}
