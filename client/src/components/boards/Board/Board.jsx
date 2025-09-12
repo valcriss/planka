@@ -14,11 +14,16 @@ import FiniteContent from './FiniteContent';
 import EndlessContent from './EndlessContent';
 import CardModal from '../../cards/CardModal';
 import BoardActivitiesModal from '../../activities/BoardActivitiesModal';
+import SprintStatisticsModal from '../../sprints/SprintStatisticsModal';
+import SprintBanner from '../SprintBanner';
+import styles from './Board.module.scss';
 
 const Board = React.memo(() => {
   const board = useSelector(selectors.selectCurrentBoard);
   const modal = useSelector(selectors.selectCurrentModal);
   const isCardModalOpened = useSelector((state) => !!selectors.selectPath(state).cardId);
+
+  const project = useSelector(selectors.selectCurrentProject);
 
   let Content;
   if (board.view === BoardViews.KANBAN) {
@@ -47,15 +52,20 @@ const Board = React.memo(() => {
         modalNode = <BoardActivitiesModal />;
 
         break;
+      case ModalTypes.SPRINT_STATISTICS:
+        modalNode = <SprintStatisticsModal />;
+
+        break;
       default:
     }
   }
 
   return (
-    <>
+    <div className={styles.wrapper}>
+      {project && project.useScrum && board.name === 'Sprint' && <SprintBanner />}
       <Content />
       {modalNode}
-    </>
+    </div>
   );
 });
 

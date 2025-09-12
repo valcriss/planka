@@ -23,10 +23,21 @@ const Item = React.memo(({ id }) => {
   const selectActivityById = useMemo(() => selectors.makeSelectActivityById(), []);
   const selectUserById = useMemo(() => selectors.makeSelectUserById(), []);
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
+  const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
+  const selectProjectById = useMemo(() => selectors.makeSelectProjectById(), []);
 
   const activity = useSelector((state) => selectActivityById(state, id));
   const user = useSelector((state) => selectUserById(state, activity.userId));
   const card = useSelector((state) => selectCardById(state, activity.cardId));
+  const board = useSelector((state) => (card ? selectBoardById(state, card.boardId) : null));
+  const project = useSelector((state) =>
+    board ? selectProjectById(state, board.projectId) : null,
+  );
+
+  const cardPath =
+    project && card
+      ? Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number)
+      : `/cards/${activity.cardId}`;
 
   const [t] = useTranslation();
 
@@ -56,7 +67,7 @@ const Item = React.memo(({ id }) => {
         >
           <span className={styles.author}>{userName}</span>
           {' added '}
-          <Link to={Paths.CARDS.replace(':id', activity.cardId)}>{cardName}</Link>
+          <Link to={cardPath}>{cardName}</Link>
           {' to '}
           {listName}
         </Trans>
@@ -82,7 +93,7 @@ const Item = React.memo(({ id }) => {
         >
           <span className={styles.author}>{userName}</span>
           {' moved '}
-          <Link to={Paths.CARDS.replace(':id', activity.cardId)}>{cardName}</Link>
+          <Link to={cardPath}>{cardName}</Link>
           {' from '}
           {fromListName}
           {' to '}
@@ -104,7 +115,7 @@ const Item = React.memo(({ id }) => {
           >
             <span className={styles.author}>{userName}</span>
             {' joined '}
-            <Link to={Paths.CARDS.replace(':id', activity.cardId)}>{cardName}</Link>
+            <Link to={cardPath}>{cardName}</Link>
           </Trans>
         ) : (
           <Trans
@@ -119,7 +130,7 @@ const Item = React.memo(({ id }) => {
             {' added '}
             {activity.data.user.name}
             {' to '}
-            <Link to={Paths.CARDS.replace(':id', activity.cardId)}>{cardName}</Link>
+            <Link to={cardPath}>{cardName}</Link>
           </Trans>
         );
 
@@ -136,7 +147,7 @@ const Item = React.memo(({ id }) => {
           >
             <span className={styles.author}>{userName}</span>
             {' left '}
-            <Link to={Paths.CARDS.replace(':id', activity.cardId)}>{cardName}</Link>
+            <Link to={cardPath}>{cardName}</Link>
           </Trans>
         ) : (
           <Trans
@@ -151,7 +162,7 @@ const Item = React.memo(({ id }) => {
             {' removed '}
             {activity.data.user.name}
             {' from '}
-            <Link to={Paths.CARDS.replace(':id', activity.cardId)}>{cardName}</Link>
+            <Link to={cardPath}>{cardName}</Link>
           </Trans>
         );
 
@@ -170,7 +181,7 @@ const Item = React.memo(({ id }) => {
           {' completed '}
           {activity.data.task.name}
           {' on '}
-          <Link to={Paths.CARDS.replace(':id', activity.cardId)}>{cardName}</Link>
+          <Link to={cardPath}>{cardName}</Link>
         </Trans>
       );
 
@@ -189,7 +200,7 @@ const Item = React.memo(({ id }) => {
           {' marked '}
           {activity.data.task.name}
           {' incomplete on '}
-          <Link to={Paths.CARDS.replace(':id', activity.cardId)}>{cardName}</Link>
+          <Link to={cardPath}>{cardName}</Link>
         </Trans>
       );
 

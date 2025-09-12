@@ -42,6 +42,12 @@ export const ProjectTypes = {
   SHARED: 'shared',
 };
 
+export const ProjectTemplates = {
+  NONE: 'none',
+  KABAN: 'kaban',
+  SCRUM: 'scrum',
+};
+
 export const ProjectBackgroundTypes = {
   GRADIENT: 'gradient',
   IMAGE: 'image',

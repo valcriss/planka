@@ -9,9 +9,12 @@ import Project from './Project';
 import ProjectManager from './ProjectManager';
 import BackgroundImage from './BackgroundImage';
 import BaseCustomFieldGroup from './BaseCustomFieldGroup';
+import BaseCardType from './BaseCardType';
 import Board from './Board';
 import BoardMembership from './BoardMembership';
+import CardType from './CardType';
 import Label from './Label';
+import Epic from './Epic';
 import List from './List';
 import Card from './Card';
 import TaskList from './TaskList';
@@ -32,9 +35,12 @@ export {
   ProjectManager,
   BackgroundImage,
   BaseCustomFieldGroup,
+  BaseCardType,
   Board,
   BoardMembership,
+  CardType,
   Label,
+  Epic,
   List,
   Card,
   TaskList,

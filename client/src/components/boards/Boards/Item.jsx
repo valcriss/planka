@@ -26,6 +26,9 @@ const Item = React.memo(({ id, index }) => {
   );
 
   const board = useSelector((state) => selectBoardById(state, id));
+  const project = useSelector((state) =>
+    board ? selectors.selectProjectById(state, board.projectId) : null,
+  );
   const notificationsTotal = useSelector((state) => selectNotificationsTotalByBoardId(state, id));
   const isActive = useSelector((state) => id === selectors.selectPath(state).boardId);
 
@@ -54,7 +57,10 @@ const Item = React.memo(({ id, index }) => {
             {board.isPersisted ? (
               <>
                 <Link
-                  to={Paths.BOARDS.replace(':id', id)}
+                  to={Paths.BOARDS.replace(':code', project ? project.code : id).replace(
+                    ':slug',
+                    board.slug,
+                  )}
                   title={board.name}
                   className={styles.link}
                 >

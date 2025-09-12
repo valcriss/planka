@@ -67,6 +67,19 @@ module.exports = {
       isIn: Project.BACKGROUND_GRADIENTS,
       allowNull: true,
     },
+    useScrum: {
+      type: 'boolean',
+    },
+    sprintDuration: {
+      type: 'number',
+      isIn: [1, 2, 3, 4],
+    },
+    useEpics: {
+      type: 'boolean',
+    },
+    useStoryPoints: {
+      type: 'boolean',
+    },
     isHidden: {
       type: 'boolean',
     },
@@ -111,6 +124,8 @@ module.exports = {
       throw Errors.PROJECT_NOT_FOUND;
     }
 
+    const prevUseScrum = project.useScrum;
+
     const projectManager = await ProjectManager.qm.getOneByProjectIdAndUserId(
       project.id,
       currentUser.id,
@@ -123,12 +138,32 @@ module.exports = {
           throw Errors.NOT_ENOUGH_RIGHTS;
         }
 
-        availableInputKeys.push('ownerProjectManagerId', 'isHidden');
+        availableInputKeys.push(
+          'ownerProjectManagerId',
+          'isHidden',
+          'useStoryPoints',
+          'useScrum',
+          'sprintDuration',
+          'useEpics',
+        );
       }
     } else if (currentUser.role === User.Roles.ADMIN) {
-      availableInputKeys.push('ownerProjectManagerId', 'isHidden');
+      availableInputKeys.push(
+        'ownerProjectManagerId',
+        'isHidden',
+        'useStoryPoints',
+        'useScrum',
+        'sprintDuration',
+        'useEpics',
+      );
     } else if (projectManager) {
-      availableInputKeys.push('isHidden');
+      availableInputKeys.push(
+        'isHidden',
+        'useStoryPoints',
+        'useScrum',
+        'sprintDuration',
+        'useEpics',
+      );
     }
 
     if (projectManager) {
@@ -138,6 +173,10 @@ module.exports = {
         'description',
         'backgroundType',
         'backgroundGradient',
+        'useStoryPoints',
+        'useScrum',
+        'sprintDuration',
+        'useEpics',
       );
     }
 
@@ -195,6 +234,10 @@ module.exports = {
       'backgroundType',
       'backgroundGradient',
       'isHidden',
+      'useStoryPoints',
+      'useScrum',
+      'sprintDuration',
+      'useEpics',
       'isFavorite',
     ]);
 
@@ -228,6 +271,26 @@ module.exports = {
 
     if (!project) {
       throw Errors.PROJECT_NOT_FOUND;
+    }
+
+    if (!prevUseScrum && project.useScrum) {
+      await sails.helpers.projects.deleteScrumBoards.with({
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
+
+      await sails.helpers.projects.createScrumBoards.with({
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
+    } else if (prevUseScrum && !project.useScrum) {
+      await sails.helpers.projects.deleteScrumBoards.with({
+        project,
+        actorUser: currentUser,
+        request: this.req,
+      });
     }
 
     return {

@@ -3,7 +3,7 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
@@ -17,24 +17,40 @@ import selectors from '../../../selectors';
 import { useClosable, useForm, useNestedRef } from '../../../hooks';
 import { isModifierKeyPressed } from '../../../utils/event-helpers';
 import { CardTypeIcons } from '../../../constants/Icons';
+import { CardTypes } from '../../../constants/Enums';
 import SelectCardTypeStep from '../SelectCardTypeStep';
 
 import styles from './AddCard.module.scss';
 
 const DEFAULT_DATA = {
   name: '',
+  cardTypeId: null,
 };
 
-const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
-  const { defaultCardType: defaultType, limitCardTypesToDefaultOne: limitTypesToDefaultOne } =
-    useSelector(selectors.selectCurrentBoard);
+const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) => {
+  const {
+    defaultCardType: boardDefaultType,
+    defaultCardTypeId: boardDefaultTypeId,
+    limitCardTypesToDefaultOne: limitTypesToDefaultOne,
+    projectId,
+  } = useSelector(selectors.selectCurrentBoard);
+
+  const selectListById = useMemo(() => selectors.makeSelectListById(), []);
+
+  const list = useSelector((state) => (listId ? selectListById(state, listId) : null));
+
+  const defaultType = list && list.defaultCardTypeId ? list.defaultCardType : boardDefaultType;
+  const defaultTypeId =
+    list && list.defaultCardTypeId ? list.defaultCardTypeId : boardDefaultTypeId;
 
   const [t] = useTranslation();
   const prevDefaultType = usePrevious(defaultType);
+  const prevDefaultTypeId = usePrevious(defaultTypeId);
 
   const [data, handleFieldChange, setData] = useForm(() => ({
     ...DEFAULT_DATA,
     type: defaultType,
+    cardTypeId: defaultTypeId,
   }));
 
   const [focusNameFieldState, focusNameField] = useToggle();
@@ -43,6 +59,14 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
   const [nameFieldRef, handleNameFieldRef] = useNestedRef();
   const [submitButtonRef, handleSubmitButtonRef] = useNestedRef();
   const [selectTypeButtonRef, handleSelectTypeButtonRef] = useNestedRef();
+
+  const selectCardTypeById = useMemo(() => selectors.makeSelectCardTypeById(), []);
+  const selectBaseCardTypeById = useMemo(() => selectors.makeSelectBaseCardTypeById(), []);
+
+  const cardType = useSelector((state) => {
+    const ct = selectCardTypeById(state, data.cardTypeId);
+    return ct || selectBaseCardTypeById(state, data.cardTypeId);
+  });
 
   const submit = useCallback(
     (autoOpen) => {
@@ -61,6 +85,7 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
       setData({
         ...DEFAULT_DATA,
         type: defaultType,
+        cardTypeId: defaultTypeId,
       });
 
       if (autoOpen) {
@@ -69,7 +94,7 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
         focusNameField();
       }
     },
-    [onCreate, onClose, defaultType, data, setData, focusNameField, nameFieldRef],
+    [data, onCreate, setData, defaultType, defaultTypeId, nameFieldRef, onClose, focusNameField],
   );
 
   const handleSubmit = useCallback(() => {
@@ -77,10 +102,10 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
   }, [submit]);
 
   const handleTypeSelect = useCallback(
-    (type) => {
+    (typeId) => {
       setData((prevData) => ({
         ...prevData,
-        type,
+        cardTypeId: typeId,
       }));
     },
     [setData],
@@ -134,13 +159,14 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
   }, [isOpened, nameFieldRef]);
 
   useEffect(() => {
-    if (!isOpened && defaultType !== prevDefaultType) {
+    if (!isOpened && (defaultType !== prevDefaultType || defaultTypeId !== prevDefaultTypeId)) {
       setData((prevData) => ({
         ...prevData,
         type: defaultType,
+        cardTypeId: defaultTypeId,
       }));
     }
-  }, [isOpened, defaultType, prevDefaultType, setData]);
+  }, [isOpened, defaultType, defaultTypeId, prevDefaultType, prevDefaultTypeId, setData]);
 
   useDidUpdate(() => {
     nameFieldRef.current.focus();
@@ -180,7 +206,11 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
           content={t('action.addCard')}
           className={styles.button}
         />
-        <SelectCardTypePopup defaultValue={data.type} onSelect={handleTypeSelect}>
+        <SelectCardTypePopup
+          projectId={projectId}
+          defaultValue={data.cardTypeId}
+          onSelect={handleTypeSelect}
+        >
           <Button
             {...clickAwayProps} // eslint-disable-line react/jsx-props-no-spreading
             ref={handleSelectTypeButtonRef}
@@ -188,8 +218,16 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
             disabled={limitTypesToDefaultOne}
             className={classNames(styles.button, styles.selectTypeButton)}
           >
-            <Icon name={CardTypeIcons[data.type]} className={styles.selectTypeButtonIcon} />
-            {t(`common.${data.type}`)}
+            <Icon
+              name={(cardType && cardType.icon) || CardTypeIcons[data.type]}
+              className={styles.selectTypeButtonIcon}
+            />
+            {(() => {
+              const typeName = (cardType && cardType.name) || data.type;
+              return typeName === CardTypes.PROJECT || typeName === CardTypes.STORY
+                ? t(`common.${typeName}`)
+                : typeName;
+            })()}
           </Button>
         </SelectCardTypePopup>
       </div>
@@ -200,6 +238,7 @@ const AddCard = React.memo(({ isOpened, className, onCreate, onClose }) => {
 AddCard.propTypes = {
   isOpened: PropTypes.bool,
   className: PropTypes.string,
+  listId: PropTypes.string,
   onCreate: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
@@ -207,6 +246,7 @@ AddCard.propTypes = {
 AddCard.defaultProps = {
   isOpened: true,
   className: undefined,
+  listId: undefined,
 };
 
 export default AddCard;

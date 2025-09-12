@@ -12,5 +12,17 @@
   "%s created %s in %s on %s": "%s a créé %s dans %s le %s",
   "%s left a new comment to %s on %s": "%s a laissé un nouveau commentaire sur %s le %s",
   "%s mentioned you in %s on %s": "%s vous a mentionné dans %s le %s",
-  "%s moved %s from %s to %s on %s": "%s a déplacé %s de %s vers %s le %s"
+  "%s moved %s from %s to %s on %s": "%s a déplacé %s de %s vers %s le %s",
+  "Board": "Tableau",
+  "To do": "À faire",
+  "Ongoing": "En cours",
+  "Done": "Terminé",
+  "Raw Ideas": "Idées brutes",
+  "To Refine": "À affiner",
+  "To Estimate": "À estimer",
+  "Ready for Sprint": "Prêt pour le Sprint",
+  "To Do": "À faire",
+  "In Progress": "En cours",
+  "Code Review": "Revue de code",
+  "Testing": "Tests"
 }

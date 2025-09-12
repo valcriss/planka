@@ -6,7 +6,7 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Button, Divider, Header, Radio, Tab } from 'semantic-ui-react';
+import { Button, Divider, Header, Radio, Tab, Dropdown } from 'semantic-ui-react';
 
 import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
@@ -33,6 +33,35 @@ const GeneralPane = React.memo(() => {
       dispatch(
         entryActions.updateCurrentProject({
           [fieldName]: checked,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  const handleScrumToggleChange = useCallback(
+    (_, { checked }) => {
+      if (!checked) {
+        // eslint-disable-next-line no-alert
+        if (!window.confirm(t('common.areYouSureYouWantToDisableScrum'))) {
+          return;
+        }
+      }
+
+      dispatch(
+        entryActions.updateCurrentProject({
+          useScrum: checked,
+        }),
+      );
+    },
+    [dispatch, t],
+  );
+
+  const handleSprintDurationChange = useCallback(
+    (_, { value }) => {
+      dispatch(
+        entryActions.updateCurrentProject({
+          sprintDuration: value,
         }),
       );
     },
@@ -67,6 +96,57 @@ const GeneralPane = React.memo(() => {
         className={styles.radio}
         onChange={handleToggleChange}
       />
+      {canEdit && (
+        <>
+          <Divider horizontal section>
+            <Header as="h4">
+              {t('common.configuration', {
+                context: 'title',
+              })}
+            </Header>
+          </Divider>
+          <Radio
+            toggle
+            name="useStoryPoints"
+            checked={project.useStoryPoints}
+            label={t('common.useStoryPointsInProject')}
+            className={styles.radio}
+            onChange={handleToggleChange}
+          />
+          <Radio
+            toggle
+            name="useScrum"
+            checked={project.useScrum}
+            label={t('common.useScrum')}
+            className={styles.radio}
+            onChange={handleScrumToggleChange}
+          />
+          {project.useScrum && (
+            <Dropdown
+              fluid
+              selection
+              name="sprintDuration"
+              value={project.sprintDuration}
+              options={[
+                { value: 1, text: t('common.oneWeek') },
+                { value: 2, text: t('common.twoWeeks') },
+                { value: 3, text: t('common.threeWeeks') },
+                { value: 4, text: t('common.fourWeeks') },
+              ]}
+              className={styles.field}
+              onChange={handleSprintDurationChange}
+            />
+          )}
+          <Radio
+            toggle
+            name="useEpics"
+            checked={project.useEpics}
+            label={t('common.useEpics')}
+            className={styles.radio}
+            onChange={handleToggleChange}
+          />
+        </>
+      )}
       {canEdit && (
         <>
           <Divider horizontal section>

@@ -12,6 +12,8 @@ const getProjects = (headers) => socket.get('/projects', undefined, headers);
 const createProject = (data, headers) => socket.post('/projects', data, headers);
 
 const getProject = (id, headers) => socket.get(`/projects/${id}`, undefined, headers);
+const getProjectByCode = (code, headers) =>
+  socket.get(`/projects/code/${code}`, undefined, headers);
 
 const updateProject = (id, data, headers) => socket.patch(`/projects/${id}`, data, headers);
 
@@ -21,6 +23,7 @@ export default {
   getProjects,
   createProject,
   getProject,
+  getProjectByCode,
   updateProject,
   deleteProject,
 };

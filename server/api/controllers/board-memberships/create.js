@@ -69,6 +69,10 @@ module.exports = {
       throw Errors.BOARD_NOT_FOUND; // Forbidden
     }
 
+    if (project.ownerProjectManagerId && inputs.userId !== currentUser.id) {
+      throw Errors.NOT_ENOUGH_RIGHTS;
+    }
+
     if (!sails.helpers.users.isAdminOrProjectOwner(currentUser)) {
       if (inputs.userId !== currentUser.id) {
         throw Errors.NOT_ENOUGH_RIGHTS;

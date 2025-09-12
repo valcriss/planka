@@ -18,6 +18,7 @@ import styles from './ProjectManagers.module.scss';
 
 const ProjectManagers = React.memo(() => {
   const projectManagers = useSelector(selectors.selectManagersForCurrentProject);
+  const { ownerProjectManagerId } = useSelector(selectors.selectCurrentProject);
 
   const canAdd = useSelector((state) => {
     const user = selectors.selectCurrentUser(state);
@@ -31,6 +32,10 @@ const ProjectManagers = React.memo(() => {
 
   const AddPopup = usePopupInClosableContext(AddStep);
   const ActionsPopup = usePopupInClosableContext(ActionsStep);
+
+  if (ownerProjectManagerId) {
+    return null;
+  }
 
   return (
     <div className={styles.wrapper}>

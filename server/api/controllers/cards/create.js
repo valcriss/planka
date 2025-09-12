@@ -16,6 +16,9 @@ const Errors = {
   POSITION_MUST_BE_PRESENT: {
     positionMustBePresent: 'Position must be present',
   },
+  CARD_TYPE_NOT_FOUND: {
+    cardTypeNotFound: 'Card type not found',
+  },
 };
 
 module.exports = {
@@ -26,8 +29,11 @@ module.exports = {
     },
     type: {
       type: 'string',
-      isIn: Object.values(Card.Types),
-      required: true,
+      allowNull: true,
+    },
+    cardTypeId: {
+      type: 'string',
+      allowNull: true,
     },
     position: {
       type: 'number',
@@ -49,9 +55,28 @@ module.exports = {
       type: 'string',
       custom: isDueDate,
     },
+    ganttStartDate: {
+      type: 'string',
+      custom: isDueDate,
+      allowNull: true,
+    },
+    ganttEndDate: {
+      type: 'string',
+      custom: isDueDate,
+      allowNull: true,
+    },
     stopwatch: {
       type: 'json',
       custom: isStopwatch,
+    },
+    storyPoints: {
+      type: 'number',
+      min: 0,
+      allowNull: true,
+    },
+    epicId: {
+      type: 'string',
+      allowNull: true,
     },
   },
 
@@ -64,6 +89,9 @@ module.exports = {
     },
     positionMustBePresent: {
       responseType: 'unprocessableEntity',
+    },
+    cardTypeNotFound: {
+      responseType: 'notFound',
     },
   },
 
@@ -93,8 +121,27 @@ module.exports = {
       'name',
       'description',
       'dueDate',
+      'ganttStartDate',
+      'ganttEndDate',
       'stopwatch',
+      'cardTypeId',
+      'storyPoints',
+      'epicId',
     ]);
+
+    if (values.cardTypeId) {
+      const cardType = await sails.helpers.cardTypes.getOrCreateForProject
+        .with({
+          project,
+          id: values.cardTypeId,
+          actorUser: currentUser,
+          request: this.req,
+        })
+        .intercept('notFound', () => Errors.CARD_TYPE_NOT_FOUND);
+
+      values.type = cardType.name;
+      values.cardTypeId = cardType.id;
+    }
 
     const card = await sails.helpers.cards.createOne
       .with({

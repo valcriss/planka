@@ -25,7 +25,9 @@ import ActionsStep from './ActionsStep';
 import DraggableCard from '../../cards/DraggableCard';
 import AddCard from '../../cards/AddCard';
 import ArchiveCardsStep from '../../cards/ArchiveCardsStep';
+import StartSprintStep from './StartSprintStep';
 import PlusMathIcon from '../../../assets/images/plus-math-icon.svg?react';
+import StoryPointsChip from '../../cards/StoryPointsChip';
 
 import styles from './List.module.scss';
 import globalStyles from '../../../styles.module.scss';
@@ -38,9 +40,17 @@ const List = React.memo(({ id, index }) => {
     [],
   );
 
+  const selectStoryPointsTotalByListId = useMemo(
+    () => selectors.makeSelectStoryPointsTotalByListId(),
+    [],
+  );
+
   const isFavoritesActive = useSelector(selectors.selectIsFavoritesActiveForCurrentUser);
   const list = useSelector((state) => selectListById(state, id));
   const cardIds = useSelector((state) => selectFilteredCardIdsByListId(state, id));
+  const storyPointsTotal = useSelector((state) => selectStoryPointsTotalByListId(state, id));
+  const project = useSelector(selectors.selectCurrentProject);
+  const isProjectManager = useSelector(selectors.selectIsCurrentUserManagerForCurrentProject);
 
   const { canEdit, canArchiveCards, canAddCard, canDropCard } = useSelector((state) => {
     const isEditModeEnabled = selectors.selectIsEditModeEnabled(state); // TODO: move out?
@@ -111,6 +121,7 @@ const List = React.memo(({ id, index }) => {
 
   const ActionsPopup = usePopup(ActionsStep);
   const ArchiveCardsPopup = usePopup(ArchiveCardsStep);
+  const StartSprintPopup = usePopup(StartSprintStep);
 
   const cardsNode = (
     <Droppable
@@ -130,6 +141,7 @@ const List = React.memo(({ id, index }) => {
               <AddCard
                 isOpened={isAddCardOpened}
                 className={styles.addCard}
+                listId={id}
                 onCreate={handleCardCreate}
                 onClose={handleAddCardClose}
               />
@@ -177,12 +189,21 @@ const List = React.memo(({ id, index }) => {
                       name="circle"
                       className={classNames(
                         styles.headerNameColor,
-                        globalStyles[`color${upperFirst(camelCase(list.color))}`],
+                        !list.color.startsWith('#') &&
+                          globalStyles[`color${upperFirst(camelCase(list.color))}`],
                       )}
+                      style={list.color.startsWith('#') ? { color: list.color } : null}
                     />
                   )}
                   {list.name}
                 </div>
+              )}
+              {project.useStoryPoints && storyPointsTotal !== 0 && (
+                <StoryPointsChip
+                  value={storyPointsTotal}
+                  size="tiny"
+                  className={styles.storyPoints}
+                />
               )}
               {list.type !== ListTypes.ACTIVE && (
                 <Icon
@@ -209,6 +230,13 @@ const List = React.memo(({ id, index }) => {
                     </ArchiveCardsPopup>
                   )
                 ))}
+              {list.isPersisted && list.slug === 'ready-for-sprint' && isProjectManager && (
+                <StartSprintPopup>
+                  <Button className={styles.headerButton} title={t('action.startSprint_title')}>
+                    <Icon fitted name="play" size="small" />
+                  </Button>
+                </StartSprintPopup>
+              )}
             </div>
             <div ref={cardsWrapperRef} className={styles.cardsInnerWrapper}>
               <div className={styles.cardsOuterWrapper}>{cardsNode}</div>

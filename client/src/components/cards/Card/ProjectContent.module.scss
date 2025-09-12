@@ -76,6 +76,17 @@
     display: block;
   }
 
+  .nameRow {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .storyPoints {
+    flex-shrink: 0;
+    margin-left: 4px;
+  }
+
   .name {
     color: #17394d;
     font-size: 14px;
@@ -84,8 +95,24 @@
     word-wrap: break-word;
   }
 
+  .typeIcon {
+    margin-right: 4px;
+  }
+
   .nameClosed {
     text-decoration: line-through;
+  }
+
+  .cardKey {
+    color: #6b808c;
+    font-size: 10px;
+    margin-top: -2px;
+    margin-bottom: 4px;
+  }
+
+  .epic {
+    margin-top: -2px;
+    margin-bottom: 4px;
   }
 
   .notification {

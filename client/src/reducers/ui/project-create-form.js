@@ -4,13 +4,15 @@
  */
 
 import ActionTypes from '../../constants/ActionTypes';
-import { ProjectTypes } from '../../constants/Enums';
+import { ProjectTypes, ProjectTemplates } from '../../constants/Enums';
 
 const initialState = {
   data: {
     name: '',
     description: '',
     type: ProjectTypes.PRIVATE,
+    template: ProjectTemplates.NONE,
+    sprintDuration: 2,
   },
   isSubmitting: false,
 };

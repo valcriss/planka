@@ -32,6 +32,55 @@ export const makeSelectCardById = () =>
 
 export const selectCardById = makeSelectCardById();
 
+export const makeSelectCardByProjectCodeAndNumber = () =>
+  createSelector(
+    orm,
+    (_, projectCode, number) => ({ projectCode, number: Number(number) }),
+    ({ Card, Project, Board }, { projectCode, number }) => {
+      const projectModel = Project.all()
+        .toModelArray()
+        .find((p) => p.code === projectCode);
+
+      if (!projectModel) {
+        return null;
+      }
+
+      const cardModel = Card.all()
+        .toModelArray()
+        .find((c) => {
+          if (c.number !== number) {
+            return false;
+          }
+
+          const boardModel = Board.withId(c.boardId);
+          return boardModel && boardModel.projectId === projectModel.id;
+        });
+
+      if (!cardModel) {
+        return null;
+      }
+
+      return {
+        ...cardModel.ref,
+        isPersisted: !isLocalId(cardModel.id),
+      };
+    },
+  );
+
+export const selectCardByProjectCodeAndNumber = makeSelectCardByProjectCodeAndNumber();
+
+export const selectCardNamesById = createSelector(orm, ({ Card }) =>
+  Card.all()
+    .toModelArray()
+    .reduce(
+      (result, cardModel) => ({
+        ...result,
+        [cardModel.id]: cardModel.name,
+      }),
+      {},
+    ),
+);
+
 export const makeSelectCardIndexById = () =>
   createSelector(
     orm,
@@ -465,8 +514,11 @@ export const selectIsCurrentUserInCurrentCard = createSelector(
 export default {
   makeSelectCardById,
   selectCardById,
+  makeSelectCardByProjectCodeAndNumber,
+  selectCardByProjectCodeAndNumber,
   makeSelectCardIndexById,
   selectCardIndexById,
+  selectCardNamesById,
   makeSelectUserIdsByCardId,
   selectUserIdsByCardId,
   makeSelectLabelIdsByCardId,

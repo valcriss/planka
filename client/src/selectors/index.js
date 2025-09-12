@@ -14,9 +14,11 @@ import projects from './projects';
 import projectManagers from './project-managers';
 import backgroundImages from './background-images';
 import baseCustomFieldGroups from './base-custom-field-groups';
+import cardTypes from './card-types';
 import boards from './boards';
 import boardMemberships from './board-memberships';
 import labels from './labels';
+import epics from './epics';
 import lists from './lists';
 import cards from './cards';
 import taskLists from './task-lists';
@@ -42,9 +44,11 @@ export default {
   ...projectManagers,
   ...backgroundImages,
   ...baseCustomFieldGroups,
+  ...cardTypes,
   ...boards,
   ...boardMemberships,
   ...labels,
+  ...epics,
   ...lists,
   ...cards,
   ...taskLists,

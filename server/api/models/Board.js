@@ -39,6 +39,10 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    slug: {
+      type: 'string',
+      required: true,
+    },
     defaultView: {
       type: 'string',
       isIn: Object.values(Views),
@@ -47,9 +51,12 @@ module.exports = {
     },
     defaultCardType: {
       type: 'string',
-      isIn: Object.values(Card.Types),
       defaultsTo: Card.Types.PROJECT,
       columnName: 'default_card_type',
+    },
+    defaultCardTypeId: {
+      model: 'CardType',
+      columnName: 'default_card_type_id',
     },
     limitCardTypesToDefaultOne: {
       type: 'boolean',

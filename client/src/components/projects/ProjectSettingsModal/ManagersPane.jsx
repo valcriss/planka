@@ -18,9 +18,22 @@ import styles from './ManagersPane.module.scss';
 
 const ManagersPane = React.memo(() => {
   // TODO: rename?
+  const projectManagers = useSelector(selectors.selectManagersForCurrentProject);
+  const managerUserIds = useSelector(selectors.selectManagerUserIdsForCurrentProject);
+  const memberUserIds = useSelector(selectors.selectMemberUserIdsForCurrentProject);
+  const currentUserId = useSelector(selectors.selectCurrentUserId);
+
   const isShared = useSelector(
     (state) => !selectors.selectCurrentProject(state).ownerProjectManagerId,
   );
+
+  const canMakePrivate =
+    isShared &&
+    projectManagers.length === 1 &&
+    managerUserIds.length === 1 &&
+    memberUserIds.length === 1 &&
+    managerUserIds[0] === currentUserId &&
+    memberUserIds[0] === currentUserId;
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
@@ -32,6 +45,16 @@ const ManagersPane = React.memo(() => {
       }),
     );
   }, [dispatch]);
+
+  const handleMakePrivateConfirm = useCallback(() => {
+    if (projectManagers.length > 0) {
+      dispatch(
+        entryActions.updateCurrentProject({
+          ownerProjectManagerId: projectManagers[0].id,
+        }),
+      );
+    }
+  }, [dispatch, projectManagers]);
 
   const ConfirmationPopup = usePopupInClosableContext(ConfirmationStep);
 
@@ -57,6 +80,32 @@ const ManagersPane = React.memo(() => {
             >
               <Button className={styles.actionButton}>
                 {t('action.makeProjectShared', {
+                  context: 'title',
+                })}
+              </Button>
+            </ConfirmationPopup>
+          </div>
+        </>
+      )}
+      {canMakePrivate && (
+        <>
+          <Divider horizontal section>
+            <Header as="h4">
+              {t('common.dangerZone', {
+                context: 'title',
+              })}
+            </Header>
+          </Divider>
+          <div className={styles.action}>
+            <ConfirmationPopup
+              title="common.makeProjectPrivate"
+              content="common.areYouSureYouWantToMakeThisProjectPrivate"
+              buttonType="negative"
+              buttonContent="action.makeProjectPrivate"
+              onConfirm={handleMakePrivateConfirm}
+            >
+              <Button className={styles.actionButton}>
+                {t('action.makeProjectPrivate', {
                   context: 'title',
                 })}
               </Button>

@@ -64,6 +64,38 @@ export const makeSelectFilteredCardIdsByListId = () =>
 
 export const selectFilteredCardIdsByListId = makeSelectFilteredCardIdsByListId();
 
+export const makeSelectListIdBySlug = () =>
+  createSelector(
+    orm,
+    (_, slug) => slug,
+    ({ List }, slug) => {
+      const listModel = List.all().filter({ slug }).first();
+
+      return listModel && listModel.id;
+    },
+  );
+
+export const selectListIdBySlug = makeSelectListIdBySlug();
+
+export const makeSelectStoryPointsTotalByListId = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ List }, id) => {
+      const listModel = List.withId(id);
+
+      if (!listModel) {
+        return listModel;
+      }
+
+      return listModel
+        .getFilteredCardsModelArray()
+        .reduce((total, cardModel) => total + cardModel.storyPoints, 0);
+    },
+  );
+
+export const selectStoryPointsTotalByListId = makeSelectStoryPointsTotalByListId();
+
 export const selectCurrentListId = createSelector(
   orm,
   (state) => selectPath(state).boardId,
@@ -154,6 +186,10 @@ export default {
   selectCardIdsByListId,
   makeSelectFilteredCardIdsByListId,
   selectFilteredCardIdsByListId,
+  makeSelectStoryPointsTotalByListId,
+  selectStoryPointsTotalByListId,
+  makeSelectListIdBySlug,
+  selectListIdBySlug,
   selectCurrentListId,
   selectCurrentList,
   selectFirstFiniteListId,

@@ -21,6 +21,12 @@ const GeneralPane = React.memo(() => {
 
   const boardId = useSelector((state) => selectors.selectCurrentModal(state).params.id);
   const board = useSelector((state) => selectBoardById(state, boardId));
+  const project = useSelector((state) =>
+    board ? selectors.selectProjectById(state, board.projectId) : null,
+  );
+
+  const isScrumBoard =
+    board && project && project.useScrum && ['Backlog', 'Sprint'].includes(board.name);
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
@@ -34,29 +40,33 @@ const GeneralPane = React.memo(() => {
   return (
     <Tab.Pane attached={false} className={styles.wrapper}>
       <EditInformation />
-      <Divider horizontal section>
-        <Header as="h4">
-          {t('common.dangerZone', {
-            context: 'title',
-          })}
-        </Header>
-      </Divider>
-      <div className={styles.action}>
-        <ConfirmationPopup
-          title="common.deleteBoard"
-          content="common.areYouSureYouWantToDeleteThisBoard"
-          buttonContent="action.deleteBoard"
-          typeValue={board.name}
-          typeContent="common.typeTitleToConfirm"
-          onConfirm={handleDeleteConfirm}
-        >
-          <Button className={styles.actionButton}>
-            {t(`action.deleteBoard`, {
-              context: 'title',
-            })}
-          </Button>
-        </ConfirmationPopup>
-      </div>
+      {!isScrumBoard && (
+        <>
+          <Divider horizontal section>
+            <Header as="h4">
+              {t('common.dangerZone', {
+                context: 'title',
+              })}
+            </Header>
+          </Divider>
+          <div className={styles.action}>
+            <ConfirmationPopup
+              title="common.deleteBoard"
+              content="common.areYouSureYouWantToDeleteThisBoard"
+              buttonContent="action.deleteBoard"
+              typeValue={board.name}
+              typeContent="common.typeTitleToConfirm"
+              onConfirm={handleDeleteConfirm}
+            >
+              <Button className={styles.actionButton}>
+                {t(`action.deleteBoard`, {
+                  context: 'title',
+                })}
+              </Button>
+            </ConfirmationPopup>
+          </div>
+        </>
+      )}
     </Tab.Pane>
   );
 });

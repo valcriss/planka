@@ -10,6 +10,9 @@ import { openModal } from './modals';
 import request from '../request';
 import selectors from '../../../selectors';
 import actions from '../../../actions';
+import entryActions from '../../../entry-actions';
+import { fetchBaseCardTypes } from './base-card-types';
+import { fetchCardTypes } from './card-types';
 import api from '../../../api';
 import { createLocalId } from '../../../utils/local-id';
 import ActionTypes from '../../../constants/ActionTypes';
@@ -149,6 +152,20 @@ export function* fetchBoard(id) {
       customFieldValues,
     ),
   );
+
+  // Fetch card types so icons are available immediately
+  yield call(fetchBaseCardTypes);
+  if (board.projectId) {
+    yield call(fetchCardTypes, board.projectId);
+  }
+
+  const project = yield select(selectors.selectProjectById, board.projectId);
+  if (project && project.useEpics) {
+    const epicIds = yield select(selectors.selectEpicIdsByProjectId, project.id);
+    if (!epicIds || epicIds.length === 0) {
+      yield put(entryActions.fetchEpics(project.id));
+    }
+  }
 }
 
 export function* updateBoard(id, data) {

@@ -42,6 +42,7 @@ export function* initializeCore() {
     customFieldValues,
     notifications,
     notificationServices,
+    epics,
   } = yield call(requests.fetchCore); // TODO: handle error
 
   yield call(i18n.changeLanguage, user.language);
@@ -74,6 +75,10 @@ export function* initializeCore() {
       notificationServices,
     ),
   );
+
+  if (epics && board && board.projectId) {
+    yield put(actions.fetchEpics.success(board.projectId, epics));
+  }
 }
 
 export function* changeCoreLanguage(language) {

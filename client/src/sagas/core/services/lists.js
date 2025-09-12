@@ -10,6 +10,8 @@ import request from '../request';
 import selectors from '../../../selectors';
 import actions from '../../../actions';
 import api from '../../../api';
+import cardsServices from './cards';
+import boardsServices from './boards';
 import { createLocalId } from '../../../utils/local-id';
 import ToastTypes from '../../../constants/ToastTypes';
 
@@ -130,6 +132,56 @@ export function* moveListCardsToArchiveList(id) {
   yield call(moveListCards, id, archiveListId);
 }
 
+export function* moveListCardsToSlug(fromSlug, toSlug) {
+  const fromListId = yield select(selectors.selectListIdBySlugForCurrentBoard, fromSlug);
+  let toListId = yield select(selectors.selectListIdBySlugForCurrentBoard, toSlug);
+
+  if (!toListId) {
+    toListId = yield select(selectors.selectListIdBySlug, toSlug);
+  }
+
+  if (!toListId) {
+    const { projectId } = yield select(selectors.selectPath);
+    const boardIds = yield select(selectors.selectBoardIdsByProjectId, projectId);
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const boardId of boardIds) {
+      const board = yield select(selectors.selectBoardById, boardId);
+
+      if (board && board.isFetching === null) {
+        // eslint-disable-next-line import/no-named-as-default-member
+        yield call(boardsServices.fetchBoard, boardId);
+      }
+
+      toListId = yield select(selectors.selectListIdBySlug, toSlug);
+
+      if (toListId) {
+        break;
+      }
+    }
+  }
+
+  if (!fromListId || !toListId) {
+    return;
+  }
+
+  const fromList = yield select(selectors.selectListById, fromListId);
+  const toList = yield select(selectors.selectListById, toListId);
+
+  if (fromList.boardId === toList.boardId) {
+    yield call(moveListCards, fromListId, toListId);
+    return;
+  }
+
+  const cardIds = yield select(selectors.selectCardIdsByListId, fromListId);
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const cardId of cardIds) {
+    // eslint-disable-next-line import/no-named-as-default-member
+    yield call(cardsServices.transferCard, cardId, toList.boardId, toListId);
+  }
+}
+
 export function* clearTrashListInCurrentBoard() {
   const trashListId = yield select(selectors.selectTrashListIdForCurrentBoard);
 
@@ -192,6 +244,7 @@ export default {
   moveList,
   sortList,
   moveListCardsToArchiveList,
+  moveListCardsToSlug,
   clearTrashListInCurrentBoard,
   handleListClear,
   deleteList,

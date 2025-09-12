@@ -3,6 +3,8 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
+const _ = require('lodash');
+
 const LIMIT = 50;
 
 const SEARCH_PARTS_REGEX = /[ ,;]+/;
@@ -200,6 +202,20 @@ const getOneById = (id, { listId } = {}) => {
   return Card.findOne(criteria);
 };
 
+const getOneByProjectCodeAndNumber = async (projectCode, number) => {
+  const query = `
+    SELECT card.* FROM card
+    JOIN board ON board.id = card.board_id
+    JOIN project ON project.id = board.project_id
+    WHERE project.code = $1 AND card.number = $2
+    LIMIT 1
+  `;
+  const { rows } = await sails.sendNativeQuery(query, [projectCode, number]);
+
+  const card = rows[0];
+  return card ? _.mapKeys(card, (v, k) => _.camelCase(k)) : null;
+};
+
 const update = (criteria, values) => Card.update(criteria).set(values).fetch();
 
 const updateOne = (criteria, values) => Card.updateOne(criteria).set({ ...values });
@@ -219,6 +235,7 @@ module.exports = {
   getByEndlessListId,
   getByListIds,
   getOneById,
+  getOneByProjectCodeAndNumber,
   update,
   updateOne,
   deleteOne,

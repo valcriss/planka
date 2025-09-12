@@ -13,9 +13,12 @@ import projects from './projects';
 import projectManagers from './project-managers';
 import backgroundImages from './background-images';
 import baseCustomFieldGroups from './base-custom-field-groups';
+import baseCardTypes from './base-card-types';
+import cardTypes from './card-types';
 import boards from './boards';
 import boardMemberships from './board-memberships';
 import labels from './labels';
+import epics from './epics';
 import lists from './lists';
 import cards from './cards';
 import cardMemberships from './card-memberships';
@@ -30,6 +33,8 @@ import comments from './comments';
 import activities from './activities';
 import notifications from './notifications';
 import notificationServices from './notification-services';
+import repositories from './repositories';
+import sprints from './sprints';
 
 export { http, socket };
 
@@ -42,6 +47,8 @@ export default {
   ...projectManagers,
   ...backgroundImages,
   ...baseCustomFieldGroups,
+  ...baseCardTypes,
+  ...cardTypes,
   ...boards,
   ...boardMemberships,
   ...labels,
@@ -52,11 +59,14 @@ export default {
   ...taskLists,
   ...tasks,
   ...attachments,
+  ...epics,
   ...customFieldGroups,
   ...customFields,
   ...customFieldValues,
+  ...sprints,
   ...comments,
   ...activities,
   ...notifications,
   ...notificationServices,
+  ...repositories,
 };

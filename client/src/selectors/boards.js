@@ -271,6 +271,53 @@ export const selectTrashListIdForCurrentBoard = createSelector(
   },
 );
 
+export const makeSelectListIdBySlugForCurrentBoard = () =>
+  createSelector(
+    orm,
+    (state) => selectPath(state).boardId,
+    (_, slug) => slug,
+    ({ Board }, boardId, slug) => {
+      if (!boardId) {
+        return boardId;
+      }
+
+      const boardModel = Board.withId(boardId);
+
+      if (!boardModel) {
+        return boardModel;
+      }
+
+      const listModel = boardModel.lists.filter({ slug }).first();
+
+      return listModel && listModel.id;
+    },
+  );
+
+export const selectListIdBySlugForCurrentBoard = makeSelectListIdBySlugForCurrentBoard();
+
+export const makeSelectBoardIdByProjectIdAndSlug = () =>
+  createSelector(
+    orm,
+    (_, projectId, slug) => ({ projectId, slug }),
+    (state) => selectCurrentUserId(state),
+    ({ Project, User }, { projectId, slug }, currentUserId) => {
+      const projectModel = Project.withId(projectId);
+
+      if (!projectModel) {
+        return projectModel;
+      }
+
+      const currentUserModel = User.withId(currentUserId);
+      const boardsModels = projectModel.getBoardsModelArrayAvailableForUser(currentUserModel);
+
+      const boardModel = boardsModels.find((b) => b.slug === slug);
+
+      return boardModel && boardModel.id;
+    },
+  );
+
+export const selectBoardIdByProjectIdAndSlug = makeSelectBoardIdByProjectIdAndSlug();
+
 export const selectFiniteListIdsForCurrentBoard = createSelector(
   orm,
   (state) => selectPath(state).boardId,
@@ -291,6 +338,50 @@ export const selectFiniteListIdsForCurrentBoard = createSelector(
       .map((list) => list.id);
   },
 );
+
+export const makeSelectFiniteListIdsByBoardId = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ Board }, id) => {
+      if (!id) {
+        return id;
+      }
+
+      const boardModel = Board.withId(id);
+
+      if (!boardModel) {
+        return boardModel;
+      }
+
+      return boardModel
+        .getFiniteListsQuerySet()
+        .toRefArray()
+        .map((list) => list.id);
+    },
+  );
+
+export const makeSelectListIdByTypeByBoardId = () =>
+  createSelector(
+    orm,
+    (_, boardId) => boardId,
+    (_, __, type) => type,
+    ({ Board }, boardId, type) => {
+      if (!boardId) {
+        return boardId;
+      }
+
+      const boardModel = Board.withId(boardId);
+
+      if (!boardModel) {
+        return boardModel;
+      }
+
+      const listModel = boardModel.lists.filter({ type }).first();
+
+      return listModel && listModel.id;
+    },
+  );
 
 // TODO: rename?
 export const selectAvailableListsForCurrentBoard = createSelector(
@@ -461,8 +552,14 @@ export default {
   selectArchiveListIdForCurrentBoard,
   selectTrashListIdForCurrentBoard,
   selectFiniteListIdsForCurrentBoard,
+  makeSelectFiniteListIdsByBoardId,
+  makeSelectListIdByTypeByBoardId,
   selectAvailableListsForCurrentBoard,
   selectFilteredCardIdsForCurrentBoard,
+  makeSelectListIdBySlugForCurrentBoard,
+  selectListIdBySlugForCurrentBoard,
+  makeSelectBoardIdByProjectIdAndSlug,
+  selectBoardIdByProjectIdAndSlug,
   selectCustomFieldGroupIdsForCurrentBoard,
   selectCustomFieldGroupsForCurrentBoard,
   selectActivityIdsForCurrentBoard,

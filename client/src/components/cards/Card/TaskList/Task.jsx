@@ -9,17 +9,51 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
 import selectors from '../../../../selectors';
+import { ListTypes } from '../../../../constants/Enums';
 import Linkify from '../../../common/Linkify';
 
 import styles from './Task.module.scss';
 
 const Task = React.memo(({ id }) => {
   const selectTaskById = useMemo(() => selectors.makeSelectTaskById(), []);
+  const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
+  const selectCardByProjectCodeAndNumber = useMemo(
+    () => selectors.makeSelectCardByProjectCodeAndNumber(),
+    [],
+  );
+  const selectListById = useMemo(() => selectors.makeSelectListById(), []);
 
   const task = useSelector((state) => selectTaskById(state, id));
 
+  const isLinkedCardCompleted = useSelector((state) => {
+    const regex = /\/cards\/([^/]+)(?:\/([^/]+))?/g;
+    const matches = task.name.matchAll(regex);
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const match of matches) {
+      let card;
+      if (match[2]) {
+        card = selectCardByProjectCodeAndNumber(state, match[1], Number(match[2]));
+      } else {
+        card = selectCardById(state, match[1]);
+      }
+
+      if (card) {
+        const list = selectListById(state, card.listId);
+
+        if (list && list.type === ListTypes.CLOSED) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  });
+
+  const isCompleted = task.isCompleted || isLinkedCardCompleted;
+
   return (
-    <li className={classNames(styles.wrapper, task.isCompleted && styles.wrapperCompleted)}>
+    <li className={classNames(styles.wrapper, isCompleted && styles.wrapperCompleted)}>
       <Linkify linkStopPropagation>{task.name}</Linkify>
     </li>
   );

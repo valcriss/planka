@@ -27,6 +27,25 @@ export const makeSelectProjectById = () =>
 
 export const selectProjectById = makeSelectProjectById();
 
+export const makeSelectProjectByCode = () =>
+  createSelector(
+    orm,
+    (_, code) => code,
+    ({ Project }, code) => {
+      const projectModel = Project.all()
+        .toModelArray()
+        .find((p) => p.code === code);
+
+      if (!projectModel) {
+        return projectModel;
+      }
+
+      return projectModel.ref;
+    },
+  );
+
+export const selectProjectByCode = makeSelectProjectByCode();
+
 export const makeSelectBoardIdsByProjectId = () =>
   createSelector(
     orm,
@@ -202,6 +221,38 @@ export const selectManagerUserIdsForCurrentProject = createSelector(
   },
 );
 
+export const selectMemberUserIdsForCurrentProject = createSelector(
+  orm,
+  (state) => selectPath(state).projectId,
+  ({ Project }, id) => {
+    if (!id) {
+      return id;
+    }
+
+    const projectModel = Project.withId(id);
+
+    if (!projectModel) {
+      return projectModel;
+    }
+
+    const userIdSet = new Set();
+
+    projectModel
+      .getBoardsQuerySet()
+      .toModelArray()
+      .forEach((boardModel) => {
+        boardModel
+          .getMembershipsQuerySet()
+          .toRefArray()
+          .forEach((membership) => {
+            userIdSet.add(membership.userId);
+          });
+      });
+
+    return Array.from(userIdSet);
+  },
+);
+
 export const selectBackgroundImageIdsForCurrentProject = createSelector(
   orm,
   (state) => selectPath(state).projectId,
@@ -313,6 +364,8 @@ export const selectIsCurrentUserManagerForCurrentProject = createSelector(
 export default {
   makeSelectProjectById,
   selectProjectById,
+  makeSelectProjectByCode,
+  selectProjectByCode,
   makeSelectBoardIdsByProjectId,
   selectBoardIdsByProjectId,
   makeSelectFirstBoardIdByProjectId,
@@ -326,6 +379,7 @@ export default {
   selectCurrentProject,
   selectManagersForCurrentProject,
   selectManagerUserIdsForCurrentProject,
+  selectMemberUserIdsForCurrentProject,
   selectBackgroundImageIdsForCurrentProject,
   selectBaseCustomFieldGroupIdsForCurrentProject,
   selectBaseCustomFieldGroupsForCurrentProject,

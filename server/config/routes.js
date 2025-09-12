@@ -85,9 +85,14 @@ module.exports.routes = {
 
   'GET /api/projects': 'projects/index',
   'POST /api/projects': 'projects/create',
+  'GET /api/projects/code/:code': 'projects/show-by-code',
   'GET /api/projects/:id': 'projects/show',
   'PATCH /api/projects/:id': 'projects/update',
   'DELETE /api/projects/:id': 'projects/delete',
+  'POST /api/projects/:projectId/start-sprint': 'projects/start-sprint',
+  'GET /api/projects/:projectId/current-sprint': 'sprints/current',
+  'GET /api/projects/:projectId/sprints': 'sprints/index',
+  'GET /api/sprints/:id': 'sprints/show',
 
   'POST /api/projects/:projectId/project-managers': 'project-managers/create',
   'DELETE /api/project-managers/:id': 'project-managers/delete',
@@ -99,8 +104,30 @@ module.exports.routes = {
   'PATCH /api/base-custom-field-groups/:id': 'base-custom-field-groups/update',
   'DELETE /api/base-custom-field-groups/:id': 'base-custom-field-groups/delete',
 
+  'POST /api/base-card-types': 'base-card-types/create',
+  'PATCH /api/base-card-types/:id': 'base-card-types/update',
+  'DELETE /api/base-card-types/:id': 'base-card-types/delete',
+  'GET /api/base-card-types': 'base-card-types/index',
+
+  'GET /api/projects/:projectId/card-types': 'card-types/index',
+
+  'POST /api/projects/:projectId/card-types': 'card-types/create',
+  'PATCH /api/card-types/:id': 'card-types/update',
+  'DELETE /api/card-types/:id': 'card-types/delete',
+
+  'GET /api/projects/:projectId/epics': 'epics/index',
+  'POST /api/projects/:projectId/epics': 'epics/create',
+  'PATCH /api/epics/:id': 'epics/update',
+  'DELETE /api/epics/:id': 'epics/delete',
+
+  'GET /api/projects/:projectId/repositories': 'repositories/index',
+  'POST /api/projects/:projectId/repositories': 'repositories/create',
+  'PATCH /api/repositories/:id': 'repositories/update',
+  'DELETE /api/repositories/:id': 'repositories/delete',
+
   'POST /api/projects/:projectId/boards': 'boards/create',
   'GET /api/boards/:id': 'boards/show',
+  'GET /api/boards/:projectCode/:slug': 'boards/show-by-slug',
   'PATCH /api/boards/:id': 'boards/update',
   'DELETE /api/boards/:id': 'boards/delete',
 
@@ -122,6 +149,7 @@ module.exports.routes = {
 
   'GET /api/lists/:listId/cards': 'cards/index',
   'POST /api/lists/:listId/cards': 'cards/create',
+  'GET /api/cards/:projectCode/:number': 'cards/show-by-number',
   'GET /api/cards/:id': 'cards/show',
   'PATCH /api/cards/:id': 'cards/update',
   'POST /api/cards/:id/duplicate': 'cards/duplicate',

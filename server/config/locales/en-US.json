@@ -10,7 +10,19 @@
 	"You Were Mentioned in Comment": "You Were Mentioned in Comment",
 	"%s added you to %s on %s": "%s added you to %s on %s",
 	"%s created %s in %s on %s": "%s created %s in %s on %s",
-	"%s left a new comment to %s on %s": "%s left a new comment to %s on %s",
-	"%s mentioned you in %s on %s": "%s mentioned you in %s on %s",
-	"%s moved %s from %s to %s on %s": "%s moved %s from %s to %s on %s"
+        "%s left a new comment to %s on %s": "%s left a new comment to %s on %s",
+        "%s mentioned you in %s on %s": "%s mentioned you in %s on %s",
+        "%s moved %s from %s to %s on %s": "%s moved %s from %s to %s on %s",
+        "Board": "Board",
+        "To do": "To do",
+        "Ongoing": "Ongoing",
+        "Done": "Done",
+        "Raw Ideas": "Raw Ideas",
+        "To Refine": "To Refine",
+        "To Estimate": "To Estimate",
+        "Ready for Sprint": "Ready for Sprint",
+        "To Do": "To Do",
+        "In Progress": "In Progress",
+        "Code Review": "Code Review",
+        "Testing": "Testing"
 }

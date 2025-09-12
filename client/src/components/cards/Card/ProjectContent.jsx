@@ -17,9 +17,12 @@ import { BoardMembershipRoles, BoardViews, ListTypes } from '../../../constants/
 import TaskList from './TaskList';
 import DueDateChip from '../DueDateChip';
 import StopwatchChip from '../StopwatchChip';
+import StoryPointsChip from '../StoryPointsChip';
 import UserAvatar from '../../users/UserAvatar';
 import LabelChip from '../../labels/LabelChip';
 import CustomFieldValueChip from '../../custom-field-values/CustomFieldValueChip';
+import { CardTypeIcons } from '../../../constants/Icons';
+import EpicChip from '../../epics/EpicChip';
 
 import styles from './ProjectContent.module.scss';
 
@@ -53,6 +56,18 @@ const ProjectContent = React.memo(({ cardId }) => {
 
   const card = useSelector((state) => selectCardById(state, cardId));
   const list = useSelector((state) => selectListById(state, card.listId));
+  const project = useSelector(selectors.selectCurrentProject);
+  const isTeamProject = !project.ownerProjectManagerId;
+  const cardType = useSelector((state) => {
+    if (!card.cardTypeId) {
+      return null;
+    }
+
+    return (
+      selectors.selectCardTypeById(state, card.cardTypeId) ||
+      selectors.selectBaseCardTypeById(state, card.cardTypeId)
+    );
+  });
   const userIds = useSelector((state) => selectUserIdsByCardId(state, cardId));
   const labelIds = useSelector((state) => selectLabelIdsByCardId(state, cardId));
 
@@ -147,9 +162,34 @@ const ProjectContent = React.memo(({ cardId }) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={classNames(styles.name, isInClosedList && styles.nameClosed)}>
-        {card.name}
+      <div className={styles.nameRow}>
+        <div className={classNames(styles.name, isInClosedList && styles.nameClosed)}>
+          {(() => {
+            const iconName = (cardType && cardType.icon) || CardTypeIcons[card.type];
+            return iconName ? (
+              <Icon
+                name={iconName}
+                className={styles.typeIcon}
+                style={cardType && cardType.color ? { color: cardType.color } : undefined}
+              />
+            ) : null;
+          })()}
+          {card.name}
+        </div>
+        {project.useStoryPoints && card.storyPoints !== 0 && (
+          <StoryPointsChip value={card.storyPoints} size="tiny" className={styles.storyPoints} />
+        )}
       </div>
+      {isTeamProject && (
+        <div className={styles.cardKey}>
+          {project.code}-{card.number}
+        </div>
+      )}
+      {card.epicId && project.useEpics && (
+        <div className={styles.epic}>
+          <EpicChip id={card.epicId} size="tiny" />
+        </div>
+      )}
       {coverUrl && (
         <div className={styles.coverWrapper}>
           <img src={coverUrl} alt="" className={styles.cover} />

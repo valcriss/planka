@@ -18,10 +18,14 @@ module.exports.policies = {
 
   '*': ['is-authenticated', 'is-external'],
 
-  'webhooks/index': ['is-authenticated', 'is-external', 'is-admin'],
-  'webhooks/create': ['is-authenticated', 'is-external', 'is-admin'],
-  'webhooks/update': ['is-authenticated', 'is-external', 'is-admin'],
-  'webhooks/delete': ['is-authenticated', 'is-external', 'is-admin'],
+  'webhooks/index': ['is-admin'],
+  'webhooks/create': ['is-admin'],
+  'webhooks/update': ['is-admin'],
+  'webhooks/delete': ['is-admin'],
+
+  'base-card-types/create': ['is-admin'],
+  'base-card-types/update': ['is-admin'],
+  'base-card-types/delete': ['is-admin'],
 
   'users/index': 'is-authenticated',
   'users/create': ['is-authenticated', 'is-admin'],

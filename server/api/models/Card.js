@@ -25,12 +25,19 @@ module.exports = {
 
     type: {
       type: 'string',
-      isIn: Object.values(Types),
       required: true,
+    },
+    cardTypeId: {
+      model: 'CardType',
+      columnName: 'card_type_id',
     },
     position: {
       type: 'number',
       allowNull: true,
+    },
+    number: {
+      type: 'number',
+      required: true,
     },
     name: {
       type: 'string',
@@ -45,8 +52,25 @@ module.exports = {
       type: 'ref',
       columnName: 'due_date',
     },
+    ganttStartDate: {
+      type: 'ref',
+      columnName: 'gantt_start_date',
+    },
+    ganttEndDate: {
+      type: 'ref',
+      columnName: 'gantt_end_date',
+    },
     stopwatch: {
       type: 'json',
+    },
+    storyPoints: {
+      type: 'number',
+      defaultsTo: 0,
+      columnName: 'story_points',
+    },
+    epicId: {
+      model: 'Epic',
+      columnName: 'epic_id',
     },
     commentsTotal: {
       type: 'number',
@@ -56,6 +80,10 @@ module.exports = {
     listChangedAt: {
       type: 'ref',
       columnName: 'list_changed_at',
+    },
+    closedAt: {
+      type: 'ref',
+      columnName: 'closed_at',
     },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
@@ -119,6 +147,11 @@ module.exports = {
     actions: {
       collection: 'Action',
       via: 'cardId',
+    },
+    sprints: {
+      collection: 'Sprint',
+      via: 'cardId',
+      through: 'SprintCard',
     },
   },
 };

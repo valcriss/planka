@@ -17,6 +17,12 @@ export const transformCard = (card) => ({
   ...(card.dueDate && {
     dueDate: new Date(card.dueDate),
   }),
+  ...(card.ganttStartDate && {
+    ganttStartDate: new Date(card.ganttStartDate),
+  }),
+  ...(card.ganttEndDate && {
+    ganttEndDate: new Date(card.ganttEndDate),
+  }),
   ...(card.stopwatch && {
     stopwatch: {
       ...card.stopwatch,
@@ -37,6 +43,12 @@ export const transformCardData = (data) => ({
   ...data,
   ...(data.dueDate && {
     dueDate: data.dueDate.toISOString(),
+  }),
+  ...(data.ganttStartDate && {
+    ganttStartDate: data.ganttStartDate.toISOString(),
+  }),
+  ...(data.ganttEndDate && {
+    ganttEndDate: data.ganttEndDate.toISOString(),
   }),
   ...(data.stopwatch && {
     stopwatch: {
@@ -68,6 +80,16 @@ const createCard = (listId, data, headers) =>
 
 const getCard = (id, headers) =>
   socket.get(`/cards/${id}`, undefined, headers).then((body) => ({
+    ...body,
+    item: transformCard(body.item),
+    included: {
+      ...body.included,
+      attachments: body.included.attachments.map(transformAttachment),
+    },
+  }));
+
+const getCardByProjectCodeAndNumber = (projectCode, number, headers) =>
+  socket.get(`/cards/${projectCode}/${number}`, undefined, headers).then((body) => ({
     ...body,
     item: transformCard(body.item),
     included: {
@@ -136,6 +158,7 @@ export default {
   getCards,
   createCard,
   getCard,
+  getCardByProjectCodeAndNumber,
   updateCard,
   duplicateCard,
   readCardNotifications,

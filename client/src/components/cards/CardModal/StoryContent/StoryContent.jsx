@@ -16,12 +16,13 @@ import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
 import { usePopupInClosableContext } from '../../../../hooks';
 import { isUsableMarkdownElement } from '../../../../utils/element-helpers';
-import { BoardMembershipRoles, CardTypes, ListTypes } from '../../../../constants/Enums';
+import { BoardMembershipRoles, ListTypes } from '../../../../constants/Enums';
 import { CardTypeIcons } from '../../../../constants/Icons';
 import { ClosableContext } from '../../../../contexts';
 import Thumbnail from './Thumbnail';
 import NameField from '../NameField';
 import CustomFieldGroups from '../CustomFieldGroups';
+import StoryPointsField from '../StoryPointsField';
 import Communication from '../Communication';
 import CreationDetailsStep from '../CreationDetailsStep';
 import SelectCardTypeStep from '../../SelectCardTypeStep';
@@ -47,6 +48,18 @@ const StoryContent = React.memo(({ onClose }) => {
 
   const card = useSelector(selectors.selectCurrentCard);
   const board = useSelector(selectors.selectCurrentBoard);
+  const project = useSelector(selectors.selectCurrentProject);
+  const isTeamProject = !project.ownerProjectManagerId;
+  const cardType = useSelector((state) => {
+    if (!card.cardTypeId) {
+      return null;
+    }
+
+    return (
+      selectors.selectCardTypeById(state, card.cardTypeId) ||
+      selectors.selectBaseCardTypeById(state, card.cardTypeId)
+    );
+  });
   const userIds = useSelector(selectors.selectUserIdsForCurrentCard);
   const labelIds = useSelector(selectors.selectLabelIdsForCurrentCard);
   const attachmentIds = useSelector(selectors.selectAttachmentIdsForCurrentCard);
@@ -183,6 +196,17 @@ const StoryContent = React.memo(({ onClose }) => {
     [dispatch],
   );
 
+  const handleStoryPointsUpdate = useCallback(
+    (value) => {
+      dispatch(
+        entryActions.updateCurrentCard({
+          storyPoints: value,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
   const handleDuplicateClick = useCallback(() => {
     dispatch(
       entryActions.duplicateCurrentCard({
@@ -312,14 +336,20 @@ const StoryContent = React.memo(({ onClose }) => {
         <Grid.Column width={16} className={styles.headerPadding}>
           <div className={styles.headerWrapper}>
             <Icon
-              name={CardTypeIcons[CardTypes.STORY]}
+              name={(cardType && cardType.icon) || CardTypeIcons[card.type]}
               className={classNames(styles.moduleIcon, styles.moduleIconTitle)}
+              style={cardType && cardType.color ? { color: cardType.color } : undefined}
             />
             <div className={styles.headerTitleWrapper}>
               {canEditName ? (
                 <NameField defaultValue={card.name} size="large" onUpdate={handleNameUpdate} />
               ) : (
                 <div className={styles.headerTitle}>{card.name}</div>
+              )}
+              {isTeamProject && (
+                <div className={styles.headerKey}>
+                  {project.code}-{card.number}
+                </div>
               )}
             </div>
           </div>
@@ -479,6 +509,18 @@ const StoryContent = React.memo(({ onClose }) => {
               </div>
             )}
           </Gallery>
+          {project.useStoryPoints && (
+            <div className={styles.contentModule}>
+              <div className={styles.moduleWrapper}>
+                <Icon name="hashtag" className={styles.moduleIcon} />
+                <div className={styles.moduleHeader}>{t('common.storyPoints')}</div>
+                <StoryPointsField
+                  defaultValue={card.storyPoints}
+                  onUpdate={handleStoryPointsUpdate}
+                />
+              </div>
+            </div>
+          )}
           <CustomFieldGroups />
           {attachmentIds.length > 0 && (
             <div className={styles.contentModule}>
@@ -616,6 +658,7 @@ const StoryContent = React.memo(({ onClose }) => {
                 )}
                 {!board.limitCardTypesToDefaultOne && canEditType && (
                   <SelectCardTypePopup
+                    projectId={board.projectId}
                     withButton
                     defaultValue={card.type}
                     title="common.editType"

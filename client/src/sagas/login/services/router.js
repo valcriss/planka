@@ -33,6 +33,7 @@ export function* handleLocationChange() {
   switch (pathsMatch.pattern.path) {
     case Paths.ROOT:
     case Paths.PROJECTS:
+    case Paths.PROJECT_EPICS:
     case Paths.BOARDS:
     case Paths.CARDS:
       yield call(goToLogin);

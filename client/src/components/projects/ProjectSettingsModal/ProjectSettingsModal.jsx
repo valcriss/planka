@@ -15,6 +15,8 @@ import GeneralPane from './GeneralPane';
 import ManagersPane from './ManagersPane';
 import BackgroundPane from './BackgroundPane';
 import BaseCustomFieldGroupsPane from './BaseCustomFieldGroupsPane';
+import CardTypesPane from './CardTypesPane';
+import RepositoriesPane from './RepositoriesPane';
 
 import styles from './ProjectSettingsModal.module.scss';
 
@@ -64,6 +66,18 @@ const ProjectSettingsModal = React.memo(() => {
         }),
         render: () => <BaseCustomFieldGroupsPane />,
       },
+      {
+        menuItem: t('common.cardTypes', {
+          context: 'title',
+        }),
+        render: () => <CardTypesPane />,
+      },
+      {
+        menuItem: t('common.repositories', {
+          context: 'title',
+        }),
+        render: () => <RepositoriesPane />,
+      },
     );
   }
 
@@ -72,7 +86,7 @@ const ProjectSettingsModal = React.memo(() => {
   return (
     <ClosableModal
       closeIcon
-      size="small"
+      size="large"
       centered={false}
       dimmer={isBackgroundPaneActive && { className: styles.dimmerTransparent }}
       onClose={handleClose}

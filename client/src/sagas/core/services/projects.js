@@ -6,14 +6,14 @@
 import omit from 'lodash/omit';
 import { call, put, select } from 'redux-saga/effects';
 
-import { goToProject, goToRoot } from './router';
+import { goToProject, goToBoard, goToRoot } from './router';
 import request from '../request';
 import requests from '../requests';
 import selectors from '../../../selectors';
 import actions from '../../../actions';
 import api from '../../../api';
 import mergeRecords from '../../../utils/merge-records';
-import { UserRoles } from '../../../constants/Enums';
+import { UserRoles, ProjectTemplates } from '../../../constants/Enums';
 
 export function* searchProjects(value) {
   yield put(actions.searchProjects(value));
@@ -54,6 +54,38 @@ export function* createProject(data) {
   }
 
   yield put(actions.createProject.success(project, projectManagers));
+
+  if (data.template === ProjectTemplates.KABAN || data.template === ProjectTemplates.SCRUM) {
+    let projectFull;
+    let included;
+    try {
+      ({ item: projectFull, included } = yield call(request, api.getProject, project.id));
+    } catch {
+      /* ignore */
+    }
+    if (projectFull) {
+      yield put(
+        actions.handleProjectCreate(
+          projectFull,
+          included.users,
+          included.projectManagers,
+          included.backgroundImages,
+          included.baseCustomFieldGroups,
+          included.boards,
+          included.boardMemberships,
+          included.customFields,
+          included.notificationServices,
+        ),
+      );
+
+      const [board] = included.boards || [];
+      if (board) {
+        yield call(goToBoard, board.id);
+        return;
+      }
+    }
+  }
+
   yield call(goToProject, project.id);
 }
 
@@ -122,9 +154,31 @@ export function* updateProject(id, data) {
 }
 
 export function* updateCurrentProject(data) {
-  const { projectId } = yield select(selectors.selectPath);
+  const { projectId, boardId } = yield select(selectors.selectPath);
+  const prevProject = yield select(selectors.selectProjectById, projectId);
+
+  let scrumBoards = [];
+
+  if (prevProject && prevProject.useScrum && data.useScrum === false) {
+    scrumBoards = yield select((state) => {
+      const ids = selectors.selectBoardIdsByProjectId(state, projectId);
+      return ids
+        .map((id) => selectors.selectBoardById(state, id))
+        .filter((b) => b && ['Backlog', 'Sprint'].includes(b.name));
+    });
+  }
 
   yield call(updateProject, projectId, data);
+
+  if (prevProject && prevProject.useScrum && data.useScrum === false) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const board of scrumBoards) {
+      yield put(actions.handleBoardDelete(board));
+      if (board.id === boardId) {
+        yield call(goToProject, projectId);
+      }
+    }
+  }
 }
 
 export function* handleProjectUpdate(project) {

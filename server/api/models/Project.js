@@ -62,6 +62,10 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    code: {
+      type: 'string',
+      required: true,
+    },
     description: {
       type: 'string',
       isNotEmptyString: true,
@@ -83,6 +87,26 @@ module.exports = {
       type: 'boolean',
       defaultsTo: false, // TODO: implement via normalizeValues?
       columnName: 'is_hidden',
+    },
+    useStoryPoints: {
+      type: 'boolean',
+      defaultsTo: false,
+      columnName: 'use_story_points',
+    },
+    useScrum: {
+      type: 'boolean',
+      defaultsTo: false,
+      columnName: 'use_scrum',
+    },
+    sprintDuration: {
+      type: 'number',
+      defaultsTo: 2,
+      columnName: 'sprint_duration',
+    },
+    useEpics: {
+      type: 'boolean',
+      defaultsTo: false,
+      columnName: 'use_epics',
     },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗

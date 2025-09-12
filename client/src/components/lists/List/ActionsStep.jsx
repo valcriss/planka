@@ -17,6 +17,7 @@ import { ListTypes } from '../../../constants/Enums';
 import EditColorStep from './EditColorStep';
 import SortStep from './SortStep';
 import SelectListTypeStep from '../SelectListTypeStep';
+import EditDefaultCardTypeStep from './EditDefaultCardTypeStep';
 import ConfirmationStep from '../../common/ConfirmationStep';
 import ArchiveCardsStep from '../../cards/ArchiveCardsStep';
 
@@ -26,6 +27,7 @@ const StepTypes = {
   EDIT_TYPE: 'EDIT_TYPE',
   EDIT_COLOR: 'EDIT_COLOR',
   SORT: 'SORT',
+  EDIT_DEFAULT_CARD_TYPE: 'EDIT_DEFAULT_CARD_TYPE',
   ARCHIVE_CARDS: 'ARCHIVE_CARDS',
   DELETE: 'DELETE',
 };
@@ -72,6 +74,10 @@ const ActionsStep = React.memo(({ listId, onNameEdit, onCardAdd, onClose }) => {
     openStep(StepTypes.EDIT_COLOR);
   }, [openStep]);
 
+  const handleEditDefaultCardTypeClick = useCallback(() => {
+    openStep(StepTypes.EDIT_DEFAULT_CARD_TYPE);
+  }, [openStep]);
+
   const handleSortClick = useCallback(() => {
     openStep(StepTypes.SORT);
   }, [openStep]);
@@ -100,6 +106,8 @@ const ActionsStep = React.memo(({ listId, onNameEdit, onCardAdd, onClose }) => {
         );
       case StepTypes.EDIT_COLOR:
         return <EditColorStep listId={listId} onBack={handleBack} onClose={onClose} />;
+      case StepTypes.EDIT_DEFAULT_CARD_TYPE:
+        return <EditDefaultCardTypeStep listId={listId} onBack={handleBack} onClose={onClose} />;
       case StepTypes.SORT:
         return <SortStep listId={listId} onBack={handleBack} onClose={onClose} />;
       case StepTypes.ARCHIVE_CARDS:
@@ -139,6 +147,11 @@ const ActionsStep = React.memo(({ listId, onNameEdit, onCardAdd, onClose }) => {
           </Menu.Item>
           <Menu.Item className={styles.menuItem} onClick={handleEditColorClick}>
             {t('action.editColor', {
+              context: 'title',
+            })}
+          </Menu.Item>
+          <Menu.Item className={styles.menuItem} onClick={handleEditDefaultCardTypeClick}>
+            {t('action.editDefaultCardType', {
               context: 'title',
             })}
           </Menu.Item>

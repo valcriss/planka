@@ -1,0 +1,32 @@
+:global(#app) {
+  .wrapper {
+    border-radius: 3px;
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+  }
+
+  .wrapperTiny {
+    font-size: 12px;
+    line-height: 20px;
+    padding: 0 6px;
+  }
+
+  .wrapperSmall {
+    font-size: 12px;
+    line-height: 20px;
+    padding: 2px 8px;
+  }
+
+  .wrapperMedium {
+    font-size: 14px;
+    line-height: 24px;
+    padding: 4px 12px;
+  }
+
+  .icon {
+    margin-right: 4px;
+  }
+}

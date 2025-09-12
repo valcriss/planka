@@ -30,6 +30,23 @@ const openAddProjectModal = (defaultProjectType) => ({
   },
 });
 
+const openAddEpicModal = () => ({
+  type: EntryActionTypes.MODAL_OPEN,
+  payload: {
+    type: ModalTypes.ADD_EPIC,
+  },
+});
+
+const openEditEpicModal = (epicId) => ({
+  type: EntryActionTypes.MODAL_OPEN,
+  payload: {
+    type: ModalTypes.EDIT_EPIC,
+    params: {
+      id: epicId,
+    },
+  },
+});
+
 const openProjectSettingsModal = () => ({
   type: EntryActionTypes.MODAL_OPEN,
   payload: {
@@ -54,6 +71,13 @@ const openBoardActivitiesModal = () => ({
   },
 });
 
+const openSprintStatisticsModal = () => ({
+  type: EntryActionTypes.MODAL_OPEN,
+  payload: {
+    type: ModalTypes.SPRINT_STATISTICS,
+  },
+});
+
 const closeModal = () => ({
   type: EntryActionTypes.MODAL_CLOSE,
   payload: {},
@@ -66,5 +90,8 @@ export default {
   openProjectSettingsModal,
   openBoardSettingsModal,
   openBoardActivitiesModal,
+  openSprintStatisticsModal,
+  openAddEpicModal,
+  openEditEpicModal,
   closeModal,
 };

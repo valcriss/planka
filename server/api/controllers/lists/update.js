@@ -5,6 +5,8 @@
 
 const { idInput } = require('../../../utils/inputs');
 
+const HEX_COLOR_REGEX = /^#[0-9a-fA-F]{6}$/;
+
 const Errors = {
   NOT_ENOUGH_RIGHTS: {
     notEnoughRights: 'Not enough rights',
@@ -12,6 +14,7 @@ const Errors = {
   LIST_NOT_FOUND: {
     listNotFound: 'List not found',
   },
+  CARD_TYPE_NOT_FOUND: { cardTypeNotFound: 'Card type not found' },
 };
 
 module.exports = {
@@ -35,7 +38,19 @@ module.exports = {
     },
     color: {
       type: 'string',
-      isIn: List.COLORS,
+      custom: (value) => HEX_COLOR_REGEX.test(value) || List.COLORS.includes(value),
+      allowNull: true,
+    },
+    slug: {
+      type: 'string',
+      allowNull: true,
+    },
+    defaultCardTypeId: {
+      type: 'string',
+      allowNull: true,
+    },
+    defaultCardType: {
+      type: 'string',
       allowNull: true,
     },
   },
@@ -47,6 +62,7 @@ module.exports = {
     listNotFound: {
       responseType: 'notFound',
     },
+    cardTypeNotFound: { responseType: 'notFound' },
   },
 
   async fn(inputs) {
@@ -76,7 +92,28 @@ module.exports = {
       throw Errors.NOT_ENOUGH_RIGHTS;
     }
 
-    const values = _.pick(inputs, ['type', 'position', 'name', 'color']);
+    const values = _.pick(inputs, [
+      'type',
+      'position',
+      'name',
+      'color',
+      'defaultCardType',
+      'defaultCardTypeId',
+    ]);
+
+    if (values.defaultCardTypeId) {
+      const cardType = await sails.helpers.cardTypes.getOrCreateForProject
+        .with({
+          project,
+          id: values.defaultCardTypeId,
+          actorUser: currentUser,
+          request: this.req,
+        })
+        .intercept('notFound', () => Errors.CARD_TYPE_NOT_FOUND);
+
+      values.defaultCardType = cardType.name;
+      values.defaultCardTypeId = cardType.id;
+    }
 
     list = await sails.helpers.lists.updateOne.with({
       values,

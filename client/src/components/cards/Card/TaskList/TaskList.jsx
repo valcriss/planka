@@ -9,6 +9,7 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { Progress } from 'semantic-ui-react';
 import { useToggle } from '../../../../lib/hooks';
+import { ListTypes } from '../../../../constants/Enums';
 
 import selectors from '../../../../selectors';
 import Task from './Task';
@@ -23,9 +24,42 @@ const TaskList = React.memo(({ id }) => {
   const [isOpened, toggleOpened] = useToggle();
 
   // TODO: move to selector?
-  const completedTasksTotal = useMemo(
-    () => tasks.reduce((result, task) => (task.isCompleted ? result + 1 : result), 0),
-    [tasks],
+  const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
+  const selectCardByProjectCodeAndNumber = useMemo(
+    () => selectors.makeSelectCardByProjectCodeAndNumber(),
+    [],
+  );
+  const selectListById = useMemo(() => selectors.makeSelectListById(), []);
+
+  const completedTasksTotal = useSelector((state) =>
+    tasks.reduce((result, task) => {
+      if (task.isCompleted) {
+        return result + 1;
+      }
+
+      const regex = /\/cards\/([^/]+)(?:\/([^/]+))?/g;
+      const matches = task.name.matchAll(regex);
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const match of matches) {
+        let card;
+        if (match[2]) {
+          card = selectCardByProjectCodeAndNumber(state, match[1], Number(match[2]));
+        } else {
+          card = selectCardById(state, match[1]);
+        }
+
+        if (card) {
+          const list = selectListById(state, card.listId);
+
+          if (list && list.type === ListTypes.CLOSED) {
+            return result + 1;
+          }
+        }
+      }
+
+      return result;
+    }, 0),
   );
 
   const handleToggleClick = useCallback(

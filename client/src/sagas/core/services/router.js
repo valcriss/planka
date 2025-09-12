@@ -13,6 +13,8 @@ import actions from '../../../actions';
 import api from '../../../api';
 import { getAccessToken } from '../../../utils/access-token-storage';
 import mergeRecords from '../../../utils/merge-records';
+import { fetchBaseCardTypes } from './base-card-types';
+import { fetchCardTypes } from './card-types';
 import ActionTypes from '../../../constants/ActionTypes';
 import Paths from '../../../constants/Paths';
 
@@ -25,15 +27,38 @@ export function* goToRoot() {
 }
 
 export function* goToProject(projectId) {
-  yield call(goTo, Paths.PROJECTS.replace(':id', projectId));
+  const project = yield select(selectors.selectProjectById, projectId);
+  const code = project ? project.code : projectId;
+  yield call(goTo, Paths.PROJECTS.replace(':code', code));
+}
+
+export function* goToProjectEpics(projectId) {
+  const project = yield select(selectors.selectProjectById, projectId);
+  const code = project ? project.code : projectId;
+  yield call(goTo, Paths.PROJECT_EPICS.replace(':code', code));
 }
 
 export function* goToBoard(boardId) {
-  yield call(goTo, Paths.BOARDS.replace(':id', boardId));
+  const board = yield select(selectors.selectBoardById, boardId);
+  const project = board ? yield select(selectors.selectProjectById, board.projectId) : null;
+  const code = project ? project.code : boardId;
+  const slug = board ? board.slug : boardId;
+  yield call(goTo, Paths.BOARDS.replace(':code', code).replace(':slug', slug));
 }
 
 export function* goToCard(cardId) {
-  yield call(goTo, Paths.CARDS.replace(':id', cardId));
+  const card = yield select(selectors.selectCardById, cardId);
+  const board = card ? yield select(selectors.selectBoardById, card.boardId) : null;
+  const project = board ? yield select(selectors.selectProjectById, board.projectId) : null;
+
+  if (card && project) {
+    yield call(
+      goTo,
+      Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number),
+    );
+  } else {
+    yield call(goTo, `/cards/${cardId}`);
+  }
 }
 
 export function* handleLocationChange() {
@@ -95,6 +120,7 @@ export function* handleLocationChange() {
   let customFields2;
   let customFieldValues1;
   let customFieldValues2;
+  let epics;
   let notificationsToDelete;
 
   switch (pathsMatch.pattern.path) {
@@ -111,6 +137,8 @@ export function* handleLocationChange() {
 
       break;
     }
+    case Paths.PROJECT_EPICS:
+      break;
     case Paths.BOARDS:
       if (currentBoard) {
         ({ id: currentBoardId } = currentBoard);
@@ -138,6 +166,15 @@ export function* handleLocationChange() {
                 customFieldValues: customFieldValues1,
               },
             } = yield call(request, api.getBoard, currentBoard.id, true));
+
+            const project = projects && projects[0];
+            if (project && project.useEpics) {
+              try {
+                ({ items: epics } = yield call(request, api.getEpics, project.id));
+              } catch {
+                /* empty */
+              }
+            }
           } catch {
             /* empty */
           }
@@ -145,10 +182,14 @@ export function* handleLocationChange() {
       }
 
       break;
-    case Paths.CARDS:
+    case Paths.CARDS: {
       ({ cardId: currentCardId, boardId: currentBoardId } = yield select(selectors.selectPath));
 
-      if (!currentCardId) {
+      if (currentCardId) {
+        card = yield select(selectors.selectCardById, currentCardId);
+      }
+
+      if (!card) {
         yield put(actions.handleLocationChange.fetchContent());
 
         try {
@@ -165,44 +206,58 @@ export function* handleLocationChange() {
               customFields: customFields1,
               customFieldValues: customFieldValues1,
             },
-          } = yield call(request, api.getCard, pathsMatch.params.id));
+          } = yield call(
+            request,
+            api.getCardByProjectCodeAndNumber,
+            pathsMatch.params.projectCode,
+            pathsMatch.params.number,
+          ));
+          currentCardId = card.id;
         } catch {
           /* empty */
         }
+      }
 
-        if (card) {
-          ({ id: currentCardId } = card);
-
+      if (card) {
+        if (currentBoardId) {
+          currentBoard = yield select(selectors.selectBoardById, currentBoardId);
+        } else {
           currentBoard = yield select(selectors.selectBoardById, card.boardId);
+          currentBoardId = card.boardId;
+        }
 
-          if (currentBoard) {
-            ({ id: currentBoardId } = currentBoard);
+        if (!currentBoard && card.boardId) {
+          try {
+            ({
+              item: board,
+              included: {
+                projects,
+                boardMemberships,
+                labels,
+                lists,
+                cards,
+                users: users2,
+                cardMemberships: cardMemberships2,
+                cardLabels: cardLabels2,
+                taskLists: taskLists2,
+                tasks: tasks2,
+                attachments: attachments2,
+                customFieldGroups: customFieldGroups2,
+                customFields: customFields2,
+                customFieldValues: customFieldValues2,
+              },
+            } = yield call(request, api.getBoard, card.boardId, true));
 
-            if (currentBoard.isFetching === null) {
+            const project = projects && projects[0];
+            if (project && project.useEpics) {
               try {
-                ({
-                  item: board,
-                  included: {
-                    projects,
-                    boardMemberships,
-                    labels,
-                    lists,
-                    cards,
-                    users: users2,
-                    cardMemberships: cardMemberships2,
-                    cardLabels: cardLabels2,
-                    taskLists: taskLists2,
-                    tasks: tasks2,
-                    attachments: attachments2,
-                    customFieldGroups: customFieldGroups2,
-                    customFields: customFields2,
-                    customFieldValues: customFieldValues2,
-                  },
-                } = yield call(request, api.getBoard, card.boardId, true));
+                ({ items: epics } = yield call(request, api.getEpics, project.id));
               } catch {
                 /* empty */
               }
             }
+          } catch {
+            /* empty */
           }
         }
       }
@@ -225,7 +280,17 @@ export function* handleLocationChange() {
       }
 
       break;
+    }
+
     default:
+  }
+
+  const boardForTypes = board || currentBoard;
+  if (boardForTypes) {
+    yield call(fetchBaseCardTypes);
+    if (boardForTypes.projectId) {
+      yield call(fetchCardTypes, boardForTypes.projectId);
+    }
   }
 
   yield put(
@@ -249,6 +314,7 @@ export function* handleLocationChange() {
       mergeRecords(customFieldGroups1, customFieldGroups2),
       mergeRecords(customFields1, customFields2),
       mergeRecords(customFieldValues1, customFieldValues2),
+      epics,
       notificationsToDelete,
     ),
   );
@@ -258,6 +324,7 @@ export default {
   goTo,
   goToRoot,
   goToProject,
+  goToProjectEpics,
   goToBoard,
   goToCard,
   handleLocationChange,
