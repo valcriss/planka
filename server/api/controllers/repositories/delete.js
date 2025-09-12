@@ -28,7 +28,10 @@ module.exports = {
       throw Errors.REPOSITORY_NOT_FOUND;
     }
 
-    const isProjectManager = await sails.helpers.users.isProjectManager(currentUser.id, repository.projectId);
+    const isProjectManager = await sails.helpers.users.isProjectManager(
+      currentUser.id,
+      repository.projectId,
+    );
     if (!isProjectManager) {
       throw Errors.REPOSITORY_NOT_FOUND; // Forbidden
     }
