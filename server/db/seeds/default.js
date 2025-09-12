@@ -5,19 +5,18 @@
 
 const bcrypt = require('bcrypt');
 
-const buildData = () => {
+const buildData = (email) => {
   const data = {
     role: 'admin',
     isSsoUser: false,
     isDeactivated: false,
+    name: process.env.DEFAULT_ADMIN_NAME || process.env.DEFAULT_ADMIN_USERNAME || email || 'Admin',
   };
 
   if (process.env.DEFAULT_ADMIN_PASSWORD) {
     data.password = bcrypt.hashSync(process.env.DEFAULT_ADMIN_PASSWORD, 10);
   }
-  if (process.env.DEFAULT_ADMIN_NAME) {
-    data.name = process.env.DEFAULT_ADMIN_NAME;
-  }
+
   if (process.env.DEFAULT_ADMIN_USERNAME) {
     data.username = process.env.DEFAULT_ADMIN_USERNAME.toLowerCase();
   }
@@ -29,7 +28,7 @@ exports.seed = async (knex) => {
   const email = process.env.DEFAULT_ADMIN_EMAIL && process.env.DEFAULT_ADMIN_EMAIL.toLowerCase();
 
   if (email) {
-    const data = buildData();
+    const data = buildData(email);
 
     let userId;
     try {
