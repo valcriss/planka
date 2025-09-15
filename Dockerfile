@@ -28,6 +28,7 @@ FROM node:22-bookworm-slim
 RUN apt-get update \
   && apt-get upgrade -y \
   && apt-get install -y bash python3 python3-venv \
+  && apt-get install -y --no-install-recommends ca-certificates curl openssl \
   && rm -rf /var/lib/apt/lists/* \
   && npm install npm --global
 
