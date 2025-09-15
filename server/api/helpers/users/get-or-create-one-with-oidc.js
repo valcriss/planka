@@ -182,6 +182,6 @@ module.exports = {
       }
     }
 
-    return user;
+    return { user, idToken: tokenSet.id_token };
   },
 };

@@ -27,6 +27,12 @@ module.exports = {
       allowNull: true,
       columnName: 'http_only_token',
     },
+    oidcIdToken: {
+      type: 'string',
+      isNotEmptyString: true,
+      allowNull: true,
+      columnName: 'oidc_id_token',
+    },
     remoteAddress: {
       type: 'string',
       required: true,

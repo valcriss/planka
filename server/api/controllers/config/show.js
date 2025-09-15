@@ -5,7 +5,7 @@
 
 module.exports = {
   async fn() {
-    const { currentUser } = this.req;
+    const { currentUser, currentSession } = this.req;
 
     const oidcClient = await sails.hooks.oidc.getClient();
 
@@ -21,7 +21,14 @@ module.exports = {
 
       oidc = {
         authorizationUrl: oidcClient.authorizationUrl(authorizationUrlParams),
-        endSessionUrl: oidcClient.issuer.end_session_endpoint ? oidcClient.endSessionUrl({}) : null,
+        endSessionUrl: oidcClient.issuer.end_session_endpoint
+          ? oidcClient.endSessionUrl({
+              post_logout_redirect_uri: `${sails.config.custom.baseUrl}/login`,
+              ...(currentSession && currentSession.oidcIdToken
+                ? { id_token_hint: currentSession.oidcIdToken }
+                : {}),
+            })
+          : null,
         isEnforced: sails.config.custom.oidcEnforced,
       };
     }
