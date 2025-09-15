@@ -1,7 +1,9 @@
-FROM node:22-alpine AS server-dependencies
+FROM node:22-bookworm-slim AS server-dependencies
 
-RUN apk -U upgrade \
-  && apk add build-base python3 --no-cache
+RUN apt-get update \
+  && apt-get upgrade -y \
+  && apt-get install -y build-essential python3 \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -21,10 +23,12 @@ RUN npm install npm --global \
 
 RUN DISABLE_ESLINT_PLUGIN=true npm run build
 
-FROM node:22-alpine
+FROM node:22-bookworm-slim
 
-RUN apk -U upgrade \
-  && apk add bash python3 --no-cache \
+RUN apt-get update \
+  && apt-get upgrade -y \
+  && apt-get install -y bash python3 python3-venv \
+  && rm -rf /var/lib/apt/lists/* \
   && npm install npm --global
 
 USER node
