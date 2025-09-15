@@ -76,7 +76,7 @@ module.exports = {
   async fn(inputs) {
     const remoteAddress = getRemoteAddress(this.req);
 
-    const user = await sails.helpers.users
+    const { user, idToken } = await sails.helpers.users
       .getOrCreateOneWithOidc(inputs.code, inputs.nonce)
       .intercept('invalidOidcConfiguration', () => Errors.INVALID_OIDC_CONFIGURATION)
       .intercept('invalidCodeOrNonce', () => {
@@ -101,6 +101,7 @@ module.exports = {
       remoteAddress,
       userId: user.id,
       userAgent: this.req.headers['user-agent'],
+      oidcIdToken: idToken,
     });
 
     if (httpOnlyToken && !this.req.isSocket) {
