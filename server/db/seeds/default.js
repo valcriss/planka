@@ -29,10 +29,7 @@ exports.seed = async (knex) => {
 
   if (email) {
     const data = buildData(email);
-    const existingUser = await knex('user_account')
-      .select('id')
-      .where({ email })
-      .first();
+    const existingUser = await knex('user_account').select('id').where({ email }).first();
 
     if (existingUser) {
       await knex('user_account').update(data).where('id', existingUser.id);
