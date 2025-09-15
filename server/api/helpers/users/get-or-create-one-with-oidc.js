@@ -49,6 +49,15 @@ module.exports = {
       throw 'invalidCodeOrNonce';
     }
 
+    const tokenSetInfo = {
+      expires_at: tokenSet.expires_at,
+      claims: tokenSet.claims(),
+    };
+    ['access_token', 'refresh_token', 'id_token'].forEach((k) => {
+      if (tokenSet[k]) tokenSetInfo[k] = '<hidden>';
+    });
+    sails.log.debug('Retrieved OIDC tokenSet', tokenSetInfo);
+
     let claims;
     if (sails.config.custom.oidcClaimsSource === 'id_token') {
       claims = tokenSet.claims();
@@ -73,6 +82,8 @@ module.exports = {
 
     const email = claims[sails.config.custom.oidcEmailAttribute];
     const name = claims[sails.config.custom.oidcNameAttribute];
+    const claimsRoles = claims[sails.config.custom.oidcRolesAttribute];
+    sails.log.debug('Received OIDC claims', { email, name, roles: claimsRoles });
 
     if (!email || !name) {
       throw 'missingValues';
@@ -80,8 +91,6 @@ module.exports = {
 
     let role = User.Roles.BOARD_USER;
     if (!sails.config.custom.oidcIgnoreRoles) {
-      const claimsRoles = claims[sails.config.custom.oidcRolesAttribute];
-
       if (Array.isArray(claimsRoles)) {
         // Use a Set here to avoid quadratic time complexity
         const claimsRolesSet = new Set(claimsRoles);
