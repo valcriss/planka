@@ -76,6 +76,10 @@ module.exports = {
   async fn(inputs) {
     const remoteAddress = getRemoteAddress(this.req);
 
+    sails.log.debug(
+      `OIDC exchange attempt (IP: ${remoteAddress}, code length: ${inputs.code.length}, nonce length: ${inputs.nonce.length})`,
+    );
+
     const { user, idToken } = await sails.helpers.users
       .getOrCreateOneWithOidc(inputs.code, inputs.nonce)
       .intercept('invalidOidcConfiguration', () => Errors.INVALID_OIDC_CONFIGURATION)
@@ -103,6 +107,10 @@ module.exports = {
       userAgent: this.req.headers['user-agent'],
       oidcIdToken: idToken,
     });
+
+    sails.log.info(
+      `OIDC session created (userId: ${user.id}, IP: ${remoteAddress}, userAgent: ${this.req.headers['user-agent']})`,
+    );
 
     if (httpOnlyToken && !this.req.isSocket) {
       sails.helpers.utils.setHttpOnlyTokenCookie(httpOnlyToken, accessTokenPayload, this.res);
