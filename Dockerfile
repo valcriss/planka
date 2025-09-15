@@ -2,7 +2,7 @@ FROM node:22-bookworm-slim AS server-dependencies
 
 RUN apt-get update \
   && apt-get upgrade -y \
-  && apt-get install -y build-essential python3 \
+  && apt-get install -y build-essential python3 python3-venv \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
