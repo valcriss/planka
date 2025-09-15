@@ -26,6 +26,14 @@ module.exports = function defineOidcHook(sails) {
       }
 
       sails.log.info('Initializing custom hook (`oidc`)');
+      sails.log.debug('OIDC initialization parameters', {
+        oidcIssuer: sails.config.custom.oidcIssuer,
+        redirectUri: sails.config.custom.oidcRedirectUri,
+        algorithms: {
+          idTokenSignedResponseAlg: sails.config.custom.oidcIdTokenSignedResponseAlg,
+          userinfoSignedResponseAlg: sails.config.custom.oidcUserinfoSignedResponseAlg,
+        },
+      });
     },
 
     // TODO: wait for initialization if called more than once
@@ -36,6 +44,10 @@ module.exports = function defineOidcHook(sails) {
         let issuer;
         try {
           issuer = await openidClient.Issuer.discover(sails.config.custom.oidcIssuer);
+          sails.log.debug('OIDC discovery successful', {
+            discoveryUrl: sails.config.custom.oidcIssuer,
+            metadata: issuer.metadata,
+          });
         } catch (error) {
           sails.log.warn(`Error while initializing OIDC client: ${error}`);
           return null;
@@ -52,6 +64,8 @@ module.exports = function defineOidcHook(sails) {
         if (sails.config.custom.oidcIdTokenSignedResponseAlg) {
           metadata.id_token_signed_response_alg = sails.config.custom.oidcIdTokenSignedResponseAlg;
         }
+
+        sails.log.debug('OIDC client metadata', metadata);
 
         client = new issuer.Client(metadata);
       }
