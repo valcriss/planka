@@ -94,6 +94,7 @@ export default {
       canComment: 'Може коментувати',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Може створювати власні проекти та бути запрошеним до роботи в інших.',
+      canCreatePersonalProjectsOnly: 'Може створювати лише особисті проєкти.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Можна редагувати макет дошки та призначати учасників на картки.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -233,6 +234,8 @@ export default {
       project: 'Проект',
       projectNotFound_title: 'Проект не знайдено',
       projectOwner: 'Власник проекту',
+      personalProjectOwner: 'Власник особистого проєкту',
+      personalProjectsLimitReached: 'Досягнуто ліміт особистих проєктів.',
       referenceDataAndKnowledgeStorage: 'Довідкові дані та сховище знань.',
       removeManager_title: 'Видалити Менеджера',
       removeMember_title: 'Видалити Учасника',

@@ -108,6 +108,7 @@ export default {
       canComment: 'Μπορεί να σχολιάσει',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Μπορεί να δημιουργήσει δικά του έργα και να προσκληθεί να εργαστεί σε άλλα.',
+      canCreatePersonalProjectsOnly: 'Μπορεί να δημιουργεί μόνο προσωπικά έργα.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Μπορεί να επεξεργαστεί τη διάταξη του πίνακα και να αναθέσει μέλη σε κάρτες.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -250,6 +251,8 @@ export default {
       project: 'Έργο',
       projectNotFound_title: 'Το έργο δεν βρέθηκε',
       projectOwner: 'Ιδιοκτήτης έργου',
+      personalProjectOwner: 'Ιδιοκτήτης προσωπικού έργου',
+      personalProjectsLimitReached: 'Έχει επιτευχθεί το όριο των προσωπικών έργων.',
       referenceDataAndKnowledgeStorage: 'Αποθήκευση δεδομένων και γνώσης αναφοράς.',
       removeManager_title: 'Αφαίρεση διαχειριστή',
       removeMember_title: 'Αφαίρεση μέλους',

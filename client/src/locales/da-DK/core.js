@@ -99,6 +99,7 @@ export default {
       canComment: 'Kan kommentere',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Kan oprette egne projekter og blive inviteret til at arbejde i andres.',
+      canCreatePersonalProjectsOnly: 'Kan kun oprette personlige projekter.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Kan redigere tavlens layout og tildele medlemmer til kort.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -240,6 +241,8 @@ export default {
       project: 'Kanban',
       projectNotFound_title: 'Projekt ikke fundet',
       projectOwner: 'Projektejer',
+      personalProjectOwner: 'Personlig projektsejer',
+      personalProjectsLimitReached: 'Grænsen for personlige projekter er nået.',
       referenceDataAndKnowledgeStorage: 'Reference data og vidensopbevaring',
       removeManager_title: 'Fjern projektleder',
       removeMember_title: 'Fjern medlem',

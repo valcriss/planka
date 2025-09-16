@@ -99,6 +99,7 @@ export default {
       canComment: 'Puede comentar',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Puede crear sus propios proyectos y ser invitado a trabajar en otros.',
+      canCreatePersonalProjectsOnly: 'Solo puede crear proyectos personales.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Puede editar el diseño del tablero y asignar miembros a las tarjetas.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -237,6 +238,8 @@ export default {
       project: 'Proyecto',
       projectNotFound_title: 'Proyecto no encontrado',
       projectOwner: 'Propietario del proyecto',
+      personalProjectOwner: 'Propietario de proyecto personal',
+      personalProjectsLimitReached: 'Se ha alcanzado el límite de proyectos personales.',
       referenceDataAndKnowledgeStorage: 'Datos de referencia y almacenamiento de conocimiento',
       removeMember_title: 'Remover Miembro',
       role: 'Rol',

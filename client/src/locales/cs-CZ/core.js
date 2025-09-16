@@ -94,6 +94,7 @@ export default {
       canComment: 'Může komentovat',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Může vytvářet vlastní projekty a být pozván k práci na jiných.',
+      canCreatePersonalProjectsOnly: 'Může vytvářet pouze osobní projekty.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Může upravovat rozvržení nástěnky a přiřazovat členy ke kartám.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -231,6 +232,8 @@ export default {
       project: 'Projekt',
       projectNotFound_title: 'Projekt nenalezen',
       projectOwner: 'Vlastník projektu',
+      personalProjectOwner: 'Vlastník osobního projektu',
+      personalProjectsLimitReached: 'Bylo dosaženo limitu osobních projektů.',
       referenceDataAndKnowledgeStorage: 'Uchovávání referenčních údajů a znalostí.',
       removeManager_title: 'Odstranit správce',
       removeMember_title: 'Odstranit člena',
