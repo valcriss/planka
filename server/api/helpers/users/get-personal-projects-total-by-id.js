@@ -21,7 +21,6 @@ module.exports = {
     const ownerProjectManagerIds = projectManagers.map((projectManager) => projectManager.id);
 
     return Project.count({
-      type: Project.Types.PRIVATE,
       ownerProjectManagerId: ownerProjectManagerIds,
     });
   },
