@@ -20,6 +20,10 @@
 - **Multilingual & Easy to Translate**: Full internationalization support for a global audience
 - **Stable List Slugs**: Lists have optional `slug` identifiers for reliable API queries, unaffected by renaming
 
+## Personal Project Owners
+
+Planka now includes a dedicated **personal project owner** role that gives users the ability to create and manage their own private projects without granting them global administration rights. Personal project owners are limited to two personal projects each by default. You can customize this cap with the `PERSONNAL_PROJECT_OWNER_LIMIT` environment variable (set it to `0` to disallow new personal projects entirely). If you provision users through OpenID Connect, map identity-provider groups to the role with the comma-separated `OIDC_PERSONNAL_PROJECT_OWNER_ROLES` environment variable.
+
 ## How to Deploy
 
 PLANKA is easy to install using multiple methods - learn more in the [installation guide](https://docs.planka.cloud/docs/welcome/).

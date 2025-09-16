@@ -31,6 +31,10 @@ existingAdminCredsSecret: ""
 # Defaults to `http://localhost:3000` if ingress is disabled.
 baseUrl: ""
 
+## @param personalProjectOwnerLimit Maximum number of personal projects each personal project owner can create.
+## Leave empty to use the application default (currently 2).
+personalProjectOwnerLimit: ""
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -200,6 +204,13 @@ oidc:
     ##
     roles: []
       # - planka-admin
+
+  personalProjectOwner:
+    ## @param oidc.personalProjectOwner.roles The groups that should receive the personal project owner role.
+    ## These map to the `OIDC_PERSONNAL_PROJECT_OWNER_ROLES` environment variable.
+    ##
+    roles: []
+      # - personnal_project_owner
 
 ## Extra environment variables for planka deployment
 ## Supports hard coded and getting values from a k8s secret
