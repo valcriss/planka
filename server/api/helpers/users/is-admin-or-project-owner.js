@@ -3,6 +3,12 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
+const PROJECT_CREATION_ROLES = new Set([
+  User.Roles.ADMIN,
+  User.Roles.PROJECT_OWNER,
+  User.Roles.PERSONAL_PROJECT_OWNER,
+]);
+
 module.exports = {
   sync: true,
 
@@ -14,6 +20,6 @@ module.exports = {
   },
 
   fn(inputs) {
-    return [User.Roles.ADMIN, User.Roles.PROJECT_OWNER].includes(inputs.record.role);
+    return PROJECT_CREATION_ROLES.has(inputs.record.role);
   },
 };

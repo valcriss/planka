@@ -37,7 +37,11 @@ module.exports.policies = {
   'users/update-avatar': 'is-authenticated',
   'users/delete': ['is-authenticated', 'is-admin'],
 
-  'projects/create': ['is-authenticated', 'is-external', 'is-admin-or-project-owner'],
+  'projects/create': [
+    'is-authenticated',
+    'is-external',
+    'is-admin-or-project-owner', // Allows admins, project owners, and personal project owners.
+  ],
 
   'config/show': true,
   'access-tokens/create': true,
