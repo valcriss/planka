@@ -63,8 +63,8 @@ const AddStep = React.memo(({ onClose }) => {
     password: '',
     name: '',
     username: '',
-    role: UserRoles.BOARD_USER,
     ...defaultData,
+    role: defaultData?.role ?? UserRoles.BOARD_USER,
   }));
 
   const [step, openStep, handleBack] = useSteps();
@@ -81,6 +81,7 @@ const AddStep = React.memo(({ onClose }) => {
       email: data.email.trim(),
       name: data.name.trim(),
       username: data.username.trim() || null,
+      role: data.role,
     };
 
     if (!isEmail(cleanData.email)) {
