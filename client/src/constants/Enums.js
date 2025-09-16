@@ -21,6 +21,7 @@ export const HomeViews = {
 export const UserRoles = {
   ADMIN: 'admin',
   PROJECT_OWNER: 'projectOwner',
+  PERSONAL_PROJECT_OWNER: 'personalProjectOwner',
   BOARD_USER: 'boardUser',
 };
 
