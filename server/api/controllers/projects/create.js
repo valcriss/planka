@@ -72,9 +72,7 @@ module.exports = {
       const personalProjectsTotal = await sails.helpers.users.getPersonalProjectsTotalById(
         currentUser.id,
       );
-      const personalProjectOwnerLimit = _.isNil(sails.config.custom.personalProjectOwnerLimit)
-        ? sails.config.custom.personnalProjectOwnerLimit
-        : sails.config.custom.personalProjectOwnerLimit;
+      const personalProjectOwnerLimit = sails.helpers.users.getPersonalProjectOwnerLimit();
 
       if (
         _.isFinite(personalProjectOwnerLimit) &&

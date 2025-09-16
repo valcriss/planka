@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 import { canUserCreateProject, isUserAdminOrProjectOwner } from '../../../utils/record-helpers';
-import { ProjectGroups, ProjectTypes } from '../../../constants/Enums';
+import { ProjectGroups, ProjectTypes, UserRoles } from '../../../constants/Enums';
 import { ProjectGroupIcons } from '../../../constants/Icons';
 import Projects from './Projects';
 
@@ -27,15 +27,18 @@ const DEFAULT_TYPE_BY_GROUP = {
 
 const GroupedProjectsView = React.memo(() => {
   const projectIdsByGroup = useSelector(selectors.selectFilteredProjctIdsByGroupForCurrentUser);
+  const user = useSelector(selectors.selectCurrentUser);
+  const personalProjectsTotal = useSelector(selectors.selectPersonalProjectsTotalForCurrentUser);
+  const personalProjectOwnerLimit = useSelector(selectors.selectPersonalProjectOwnerLimit);
 
-  const { canAddProject, canAddTeamProject } = useSelector((state) => {
-    const user = selectors.selectCurrentUser(state);
-
-    return {
-      canAddProject: canUserCreateProject(user),
-      canAddTeamProject: isUserAdminOrProjectOwner(user),
-    };
-  });
+  const canAddTeamProject = user ? isUserAdminOrProjectOwner(user) : false;
+  const canCreateProject = user ? canUserCreateProject(user) : false;
+  const canAddPersonalProject =
+    canCreateProject &&
+    (!user ||
+      user.role !== UserRoles.PERSONAL_PROJECT_OWNER ||
+      !Number.isFinite(personalProjectOwnerLimit) ||
+      personalProjectsTotal < personalProjectOwnerLimit);
 
   const dispatch = useDispatch();
 
@@ -50,7 +53,8 @@ const GroupedProjectsView = React.memo(() => {
     <>
       {[ProjectGroups.MY_OWN, ProjectGroups.TEAM].map((group) => {
         const hasProjects = projectIdsByGroup[group].length > 0;
-        const canAddToGroup = group === ProjectGroups.TEAM ? canAddTeamProject : canAddProject;
+        const canAddToGroup =
+          group === ProjectGroups.TEAM ? canAddTeamProject : canAddPersonalProject;
         const onAdd =
           canAddToGroup && DEFAULT_TYPE_BY_GROUP[group]
             ? () => handleAdd(DEFAULT_TYPE_BY_GROUP[group])

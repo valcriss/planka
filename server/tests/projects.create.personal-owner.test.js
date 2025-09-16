@@ -46,6 +46,7 @@ const createDefaultSails = () => ({
     },
     users: {
       getPersonalProjectsTotalById: async () => 0,
+      getPersonalProjectOwnerLimit: () => null,
     },
     projects: {
       createOne: {
@@ -117,6 +118,7 @@ describe('projects/create personal project owner restrictions', () => {
         },
         users: {
           getPersonalProjectsTotalById: jest.fn(),
+          getPersonalProjectOwnerLimit: jest.fn(),
         },
         projects: {
           createOne: {
@@ -199,7 +201,7 @@ describe('projects/create personal project owner restrictions', () => {
   test('throws when personal project owner exceeds project limit', async () => {
     const context = makeContext();
 
-    global.sails.config.custom.personalProjectOwnerLimit = 2;
+    global.sails.helpers.users.getPersonalProjectOwnerLimit.mockReturnValue(2);
     global.sails.helpers.users.getPersonalProjectsTotalById.mockResolvedValue(2);
 
     const inputs = {
@@ -215,9 +217,47 @@ describe('projects/create personal project owner restrictions', () => {
       personalProjectsLimitReached: 'Personal projects limit reached',
     });
 
+    expect(global.sails.helpers.users.getPersonalProjectOwnerLimit).toHaveBeenCalled();
     expect(global.sails.helpers.users.getPersonalProjectsTotalById).toHaveBeenCalledWith(
       context.req.currentUser.id,
     );
     expect(global.sails.helpers.projects.createOne.with).not.toHaveBeenCalled();
+  });
+
+  test('allows personal project owner to create project when under limit', async () => {
+    const context = makeContext();
+
+    global.sails.helpers.users.getPersonalProjectOwnerLimit.mockReturnValue(3);
+    global.sails.helpers.users.getPersonalProjectsTotalById.mockResolvedValue(2);
+    global.sails.helpers.projects.createOne.with.mockResolvedValue({
+      project: { id: 1 },
+      projectManager: { id: 2 },
+    });
+
+    const inputs = {
+      type: Project.Types.PRIVATE,
+      name: 'Another private project',
+      code: 'APP',
+      description: null,
+      template: 'none',
+      sprintDuration: 2,
+    };
+
+    await expect(createProjectController.fn.call(context, inputs)).resolves.toEqual({
+      item: { id: 1 },
+      included: {
+        projectManagers: [{ id: 2 }],
+      },
+    });
+
+    expect(global.sails.helpers.users.getPersonalProjectOwnerLimit).toHaveBeenCalled();
+    expect(global.sails.helpers.users.getPersonalProjectsTotalById).toHaveBeenCalledWith(
+      context.req.currentUser.id,
+    );
+    expect(global.sails.helpers.projects.createOne.with).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: expect.objectContaining({ type: Project.Types.PRIVATE }),
+      }),
+    );
   });
 });
