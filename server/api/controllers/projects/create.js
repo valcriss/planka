@@ -5,6 +5,15 @@
 
 const { POSITION_GAP } = require('../../../constants');
 
+const Errors = {
+  INVALID_TYPE: {
+    invalidType: 'Invalid type',
+  },
+  PERSONAL_PROJECTS_LIMIT_REACHED: {
+    personalProjectsLimitReached: 'Personal projects limit reached',
+  },
+};
+
 module.exports = {
   inputs: {
     type: {
@@ -39,12 +48,42 @@ module.exports = {
     },
   },
 
+  exits: {
+    invalidType: {
+      responseType: 'unprocessableEntity',
+    },
+    personalProjectsLimitReached: {
+      responseType: 'unprocessableEntity',
+    },
+  },
+
   async fn(inputs) {
     const { currentUser } = this.req;
 
     const t = sails.helpers.utils.makeTranslator(currentUser.language || this.req.getLocale());
 
     const values = _.pick(inputs, ['type', 'name', 'code', 'description', 'sprintDuration']);
+
+    if (currentUser.role === User.Roles.PERSONAL_PROJECT_OWNER) {
+      if (inputs.type !== Project.Types.PRIVATE) {
+        throw Errors.INVALID_TYPE;
+      }
+
+      const personalProjectsTotal = await sails.helpers.users.getPersonalProjectsTotalById(
+        currentUser.id,
+      );
+      const personalProjectOwnerLimit = _.isNil(sails.config.custom.personalProjectOwnerLimit)
+        ? sails.config.custom.personnalProjectOwnerLimit
+        : sails.config.custom.personalProjectOwnerLimit;
+
+      if (
+        _.isFinite(personalProjectOwnerLimit) &&
+        personalProjectsTotal >= personalProjectOwnerLimit
+      ) {
+        throw Errors.PERSONAL_PROJECTS_LIMIT_REACHED;
+      }
+    }
+
     if (!values.sprintDuration) {
       values.sprintDuration = 2;
     }

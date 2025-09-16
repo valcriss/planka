@@ -54,6 +54,8 @@ module.exports.custom = {
 
   internalAccessToken: process.env.INTERNAL_ACCESS_TOKEN,
   activeUsersLimit: envToNumber(process.env.ACTIVE_USERS_LIMIT),
+  personalProjectOwnerLimit:
+    personnalProjectOwnerLimitValue === null ? 2 : personnalProjectOwnerLimitValue,
   personnalProjectOwnerLimit:
     personnalProjectOwnerLimitValue === null ? 2 : personnalProjectOwnerLimitValue,
   showDetailedAuthErrors: process.env.SHOW_DETAILED_AUTH_ERRORS === 'true',
