@@ -95,17 +95,38 @@ module.exports = {
         // Use a Set here to avoid quadratic time complexity
         const claimsRolesSet = new Set(claimsRoles);
 
-        const foundRole = [User.Roles.ADMIN, User.Roles.PROJECT_OWNER, User.Roles.BOARD_USER].find(
-          (roleItem) => {
-            const configRoles = sails.config.custom[`oidc${_.upperFirst(roleItem)}Roles`];
-
-            if (configRoles.includes('*')) {
-              return true;
+        const getConfigRoles = (roleItem) => {
+          if (roleItem === User.Roles.PERSONAL_PROJECT_OWNER) {
+            if (Array.isArray(sails.config.custom.oidcPersonalProjectOwnerRoles)) {
+              return sails.config.custom.oidcPersonalProjectOwnerRoles;
             }
 
-            return configRoles.some((configRole) => claimsRolesSet.has(configRole));
-          },
-        );
+            if (Array.isArray(sails.config.custom.oidcPersonnalProjectOwnerRoles)) {
+              return sails.config.custom.oidcPersonnalProjectOwnerRoles;
+            }
+
+            return [];
+          }
+
+          const configRoles = sails.config.custom[`oidc${_.upperFirst(roleItem)}Roles`];
+
+          return Array.isArray(configRoles) ? configRoles : [];
+        };
+
+        const foundRole = [
+          User.Roles.ADMIN,
+          User.Roles.PROJECT_OWNER,
+          User.Roles.PERSONAL_PROJECT_OWNER,
+          User.Roles.BOARD_USER,
+        ].find((roleItem) => {
+          const configRoles = getConfigRoles(roleItem);
+
+          if (configRoles.includes('*')) {
+            return true;
+          }
+
+          return configRoles.some((configRole) => claimsRolesSet.has(configRole));
+        });
 
         if (foundRole) {
           role = foundRole;
