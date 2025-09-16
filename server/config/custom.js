@@ -52,6 +52,8 @@ module.exports.custom = {
 
   internalAccessToken: process.env.INTERNAL_ACCESS_TOKEN,
   activeUsersLimit: envToNumber(process.env.ACTIVE_USERS_LIMIT),
+  personnalProjectOwnerLimit:
+    envToNumber(process.env.PERSONNAL_PROJECT_OWNER_LIMIT) ?? 2,
   showDetailedAuthErrors: process.env.SHOW_DETAILED_AUTH_ERRORS === 'true',
 
   s3Endpoint: process.env.S3_ENDPOINT,
@@ -70,6 +72,9 @@ module.exports.custom = {
   oidcResponseMode: process.env.OIDC_RESPONSE_MODE || 'fragment',
   oidcUseDefaultResponseMode: process.env.OIDC_USE_DEFAULT_RESPONSE_MODE === 'true',
   oidcAdminRoles: envToArray(process.env.OIDC_ADMIN_ROLES),
+  oidcPersonnalProjectOwnerRoles: envToArray(
+    process.env.OIDC_PERSONNAL_PROJECT_OWNER_ROLES,
+  ),
   oidcProjectOwnerRoles: envToArray(process.env.OIDC_PROJECT_OWNER_ROLES),
   oidcBoardUserRoles: envToArray(process.env.OIDC_BOARD_USER_ROLES),
   oidcClaimsSource: process.env.OIDC_CLAIMS_SOURCE || 'userinfo',

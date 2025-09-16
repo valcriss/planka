@@ -54,6 +54,7 @@ services:
 
       # - INTERNAL_ACCESS_TOKEN=
       # - ACTIVE_USERS_LIMIT=
+      # - PERSONNAL_PROJECT_OWNER_LIMIT=2
 
       # Set to true to show more detailed authentication error messages.
       # It should not be enabled without a rate limiter for security reasons.
@@ -79,6 +80,7 @@ services:
       # - OIDC_RESPONSE_MODE=fragment
       # - OIDC_USE_DEFAULT_RESPONSE_MODE=true
       # - OIDC_ADMIN_ROLES=admin
+      # - OIDC_PERSONNAL_PROJECT_OWNER_ROLES=personnal_project_owner
       # - OIDC_PROJECT_OWNER_ROLES=project_owner
       # - OIDC_BOARD_USER_ROLES=board_user
       # - OIDC_CLAIMS_SOURCE=userinfo
