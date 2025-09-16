@@ -17,6 +17,7 @@ import styles from './SelectRoleStep.module.scss';
 const DESCRIPTION_BY_ROLE = {
   [UserRoles.ADMIN]: 'common.canManageSystemWideSettingsAndActAsProjectOwner',
   [UserRoles.PROJECT_OWNER]: 'common.canCreateOwnProjectsAndBeInvitedToWorkInOthers',
+  [UserRoles.PERSONAL_PROJECT_OWNER]: 'common.canCreatePersonalProjectsOnly',
   [UserRoles.BOARD_USER]: 'common.canBeInvitedToWorkInBoards',
 };
 
@@ -58,7 +59,12 @@ const SelectRoleStep = React.memo(
         <Popup.Content>
           <Form onSubmit={handleSubmit}>
             <Menu secondary vertical className={styles.menu}>
-              {[UserRoles.ADMIN, UserRoles.PROJECT_OWNER, UserRoles.BOARD_USER].map((role) => (
+              {[
+                UserRoles.ADMIN,
+                UserRoles.PROJECT_OWNER,
+                UserRoles.PERSONAL_PROJECT_OWNER,
+                UserRoles.BOARD_USER,
+              ].map((role) => (
                 <Menu.Item
                   key={role}
                   value={role}
