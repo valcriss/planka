@@ -21,6 +21,7 @@ module.exports = {
       ...inputs.record,
       version: sails.config.custom.version,
     };
+    data.personalProjectOwnerLimit = sails.helpers.users.getPersonalProjectOwnerLimit();
     if (inputs.user && inputs.user.role === User.Roles.ADMIN) {
       data.activeUsersLimit = sails.config.custom.activeUsersLimit;
     }

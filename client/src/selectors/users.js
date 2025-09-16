@@ -197,6 +197,30 @@ export const selectFavoriteProjectIdsForCurrentUser = createSelector(
   },
 );
 
+export const selectPersonalProjectsTotalForCurrentUser = createSelector(
+  orm,
+  (state) => selectCurrentUserId(state),
+  ({ User }, id) => {
+    if (!id) {
+      return 0;
+    }
+
+    const userModel = User.withId(id);
+
+    if (!userModel) {
+      return 0;
+    }
+
+    return userModel.projectManagers
+      .toModelArray()
+      .filter(
+        (projectManagerModel) =>
+          projectManagerModel.project &&
+          projectManagerModel.project.ownerProjectManagerId === projectManagerModel.id,
+      ).length;
+  },
+);
+
 export const selectProjectsToListsWithEditorRightsForCurrentUser = createSelector(
   orm,
   (state) => selectCurrentUserId(state),
@@ -333,6 +357,7 @@ export default {
   selectProjectIdsForCurrentUser,
   selectFilteredProjectIdsForCurrentUser,
   selectFilteredProjctIdsByGroupForCurrentUser,
+  selectPersonalProjectsTotalForCurrentUser,
   selectFavoriteProjectIdsForCurrentUser,
   selectProjectsToListsWithEditorRightsForCurrentUser,
   selectBoardIdsForCurrentUser,

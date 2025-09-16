@@ -13,6 +13,26 @@ export const selectOidcConfig = (state) => selectConfig(state).oidc;
 
 export const selectActiveUsersLimit = (state) => selectConfig(state).activeUsersLimit;
 
+const hasOwnProperty = (object, property) => Object.prototype.hasOwnProperty.call(object, property);
+
+export const selectPersonalProjectOwnerLimit = (state) => {
+  const config = selectConfig(state);
+
+  if (!config) {
+    return null;
+  }
+
+  if (hasOwnProperty(config, 'personalProjectOwnerLimit')) {
+    return config.personalProjectOwnerLimit;
+  }
+
+  if (hasOwnProperty(config, 'personnalProjectOwnerLimit')) {
+    return config.personnalProjectOwnerLimit;
+  }
+
+  return null;
+};
+
 export const selectAccessToken = ({ auth: { accessToken } }) => accessToken;
 
 export const selectAuthenticateForm = ({ ui: { authenticateForm } }) => authenticateForm;
@@ -27,6 +47,7 @@ export default {
   selectConfig,
   selectOidcConfig,
   selectActiveUsersLimit,
+  selectPersonalProjectOwnerLimit,
   selectAccessToken,
   selectAuthenticateForm,
   selectUserCreateForm,
