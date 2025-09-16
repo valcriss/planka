@@ -95,6 +95,7 @@ export default {
       canComment: 'Voi kommentoida',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Voi luoda omia projekteja ja tulla kutsutuksi muihin.',
+      canCreatePersonalProjectsOnly: 'Voi luoda vain henkilökohtaisia projekteja.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Voi muokata taulun asettelua ja lisätä jäseniä kortteihin.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -235,6 +236,8 @@ export default {
       project: 'Projekti',
       projectNotFound_title: 'Projektia ei löytynyt',
       projectOwner: 'Projektin omistaja',
+      personalProjectOwner: 'Henkilökohtainen projektinomistaja',
+      personalProjectsLimitReached: 'Henkilökohtaisten projektien raja on saavutettu.',
       referenceDataAndKnowledgeStorage: 'Viitetiedot ja tietovarasto.',
       removeManager_title: 'Poista ylläpitäjä',
       removeMember_title: 'Poista jäsen',

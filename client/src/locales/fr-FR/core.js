@@ -112,6 +112,7 @@ export default {
       canComment: 'Peut commenter',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Peut créer ses propres projets et être invité à travailler dans d’autres.',
+      canCreatePersonalProjectsOnly: 'Ne peut créer que des projets personnels.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Peut modifier la disposition du tableau et attribuer des membres aux cartes.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -296,6 +297,8 @@ export default {
       project: 'Projet',
       projectNotFound_title: 'Projet introuvable',
       projectOwner: 'Propriétaire de projet',
+      personalProjectOwner: 'Propriétaire de projet personnel',
+      personalProjectsLimitReached: 'La limite des projets personnels a été atteinte.',
       projectTemplate: 'Modèle de projet',
       noTemplate: 'Aucun modèle',
       kabanProject: 'Projet Kaban',

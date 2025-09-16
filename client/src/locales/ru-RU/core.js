@@ -98,6 +98,7 @@ export default {
       canComment: 'Может комментировать',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Может создавать собственные проекты и быть приглашенным работать в других.',
+      canCreatePersonalProjectsOnly: 'Может создавать только личные проекты.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Может редактировать макет доски и назначать участников для карточек.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -237,6 +238,8 @@ export default {
       project: 'Проект',
       projectNotFound_title: 'Проект не найден',
       projectOwner: 'Владелец проекта',
+      personalProjectOwner: 'Владелец личного проекта',
+      personalProjectsLimitReached: 'Достигнут лимит личных проектов.',
       referenceDataAndKnowledgeStorage: 'Хранение справочных данных и знаний',
       removeManager_title: 'Удалить менеджера',
       removeMember_title: 'Удаление участника',

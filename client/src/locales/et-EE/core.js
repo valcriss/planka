@@ -99,6 +99,7 @@ export default {
       canComment: 'Saab kommenteerida',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Saab luua oma projekte ja kutsuda tööle teised.',
+      canCreatePersonalProjectsOnly: 'Saab luua ainult isiklikke projekte.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Saab tahveli kujundust ja liikmeid kaarte määrama.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -239,6 +240,8 @@ export default {
       project: 'Projekt',
       projectNotFound_title: 'Projekt ei leitud',
       projectOwner: 'Projekti omanik',
+      personalProjectOwner: 'Isikliku projekti omanik',
+      personalProjectsLimitReached: 'Isiklike projektide limiit on saavutatud.',
       referenceDataAndKnowledgeStorage: 'Viideandmete ja teadmise salvestamiseks.',
       removeManager_title: 'Eemalda haldur',
       removeMember_title: 'Eemalda liige',

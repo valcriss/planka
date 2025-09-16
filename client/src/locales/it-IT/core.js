@@ -98,6 +98,7 @@ export default {
       canComment: 'Può commentare',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Può creare i propri progetti ed essere invitato a lavorare in altri.',
+      canCreatePersonalProjectsOnly: 'Può creare solo progetti personali.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Può modificare il layout della bacheca e assegnare membri alle schede.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -238,6 +239,8 @@ export default {
       project: 'Progetto',
       projectNotFound_title: 'Progetto non trovato',
       projectOwner: 'Proprietario del progetto',
+      personalProjectOwner: 'Proprietario del progetto personale',
+      personalProjectsLimitReached: 'È stato raggiunto il limite dei progetti personali.',
       referenceDataAndKnowledgeStorage: 'Dati di riferimento e di archiviazione',
       removeManager_title: 'Rimuovi manager',
       removeMember_title: 'Rimuovi membro',

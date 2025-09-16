@@ -100,6 +100,7 @@ export default {
       canComment: 'Can comment',
       canCreateOwnProjectsAndBeInvitedToWorkInOthers:
         'Can create own projects and be invited to work in others.',
+      canCreatePersonalProjectsOnly: 'Can only create personal projects.',
       canEditBoardLayoutAndAssignMembersToCards:
         'Can edit the board layout and assign members to cards.',
       canManageSystemWideSettingsAndActAsProjectOwner:
@@ -243,6 +244,8 @@ export default {
       project: 'Project',
       projectNotFound_title: 'Project Not Found',
       projectOwner: 'Project owner',
+      personalProjectOwner: 'Personal project owner',
+      personalProjectsLimitReached: 'The personal projects limit has been reached.',
       referenceDataAndKnowledgeStorage: 'Reference data and knowledge storage.',
       removeManager_title: 'Remove Manager',
       removeMember_title: 'Remove Member',
