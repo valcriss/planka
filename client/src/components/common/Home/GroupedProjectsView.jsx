@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
-import { canUserCreateProject } from '../../../utils/record-helpers';
+import { canUserCreateProject, isUserAdminOrProjectOwner } from '../../../utils/record-helpers';
 import { ProjectGroups, ProjectTypes } from '../../../constants/Enums';
 import { ProjectGroupIcons } from '../../../constants/Icons';
 import Projects from './Projects';
@@ -28,9 +28,13 @@ const DEFAULT_TYPE_BY_GROUP = {
 const GroupedProjectsView = React.memo(() => {
   const projectIdsByGroup = useSelector(selectors.selectFilteredProjctIdsByGroupForCurrentUser);
 
-  const canAdd = useSelector((state) => {
+  const { canAddProject, canAddTeamProject } = useSelector((state) => {
     const user = selectors.selectCurrentUser(state);
-    return canUserCreateProject(user);
+
+    return {
+      canAddProject: canUserCreateProject(user),
+      canAddTeamProject: isUserAdminOrProjectOwner(user),
+    };
   });
 
   const dispatch = useDispatch();
@@ -44,18 +48,26 @@ const GroupedProjectsView = React.memo(() => {
 
   return (
     <>
-      {[ProjectGroups.MY_OWN, ProjectGroups.TEAM].map(
-        (group) =>
-          (projectIdsByGroup[group].length > 0 || canAdd) && (
+      {[ProjectGroups.MY_OWN, ProjectGroups.TEAM].map((group) => {
+        const hasProjects = projectIdsByGroup[group].length > 0;
+        const canAddToGroup = group === ProjectGroups.TEAM ? canAddTeamProject : canAddProject;
+        const onAdd =
+          canAddToGroup && DEFAULT_TYPE_BY_GROUP[group]
+            ? () => handleAdd(DEFAULT_TYPE_BY_GROUP[group])
+            : undefined;
+
+        return (
+          (hasProjects || canAddToGroup) && (
             <Projects
               key={group}
               ids={projectIdsByGroup[group]}
               title={TITLE_BY_GROUP[group]}
               titleIcon={ProjectGroupIcons[group]}
-              onAdd={() => handleAdd(DEFAULT_TYPE_BY_GROUP[group])}
+              onAdd={onAdd}
             />
-          ),
-      )}
+          )
+        );
+      })}
       {[ProjectGroups.SHARED_WITH_ME, ProjectGroups.OTHERS].map(
         (group) =>
           projectIdsByGroup[group].length > 0 && (
