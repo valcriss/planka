@@ -9,7 +9,6 @@ import { UserRoles, ListTypes } from '../src/constants/Enums';
 describe('record helpers', () => {
   test('isUserAdminOrProjectOwner', () => {
     expect(isUserAdminOrProjectOwner({ role: UserRoles.ADMIN })).toBe(true);
-    expect(isUserAdminOrProjectOwner({ role: UserRoles.PERSONAL_PROJECT_OWNER })).toBe(false);
     expect(isUserAdminOrProjectOwner({ role: UserRoles.BOARD_USER })).toBe(false);
   });
 
@@ -18,6 +17,13 @@ describe('record helpers', () => {
     expect(canUserCreateProject({ role: UserRoles.PROJECT_OWNER })).toBe(true);
     expect(canUserCreateProject({ role: UserRoles.PERSONAL_PROJECT_OWNER })).toBe(true);
     expect(canUserCreateProject({ role: UserRoles.BOARD_USER })).toBe(false);
+  });
+
+  test('personal project owners can create projects but are not admins', () => {
+    const user = { role: UserRoles.PERSONAL_PROJECT_OWNER };
+
+    expect(canUserCreateProject(user)).toBe(true);
+    expect(isUserAdminOrProjectOwner(user)).toBe(false);
   });
 
   test('isListArchiveOrTrash', () => {
