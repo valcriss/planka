@@ -100,6 +100,20 @@ ingress:
 helm install planka . -f values.yaml
 ```
 
+### Personal project owners
+
+Planka's personal project owner role lets designated users maintain their own private projects while keeping shared workspaces under tighter control. The application allows two personal projects per user by default. Override the limit with the chart's `personalProjectOwnerLimit` value, which sets the `PERSONNAL_PROJECT_OWNER_LIMIT` environment variable inside the pod. When using OpenID Connect, map identity-provider groups to the role through `oidc.personalProjectOwner.roles` (this populates `OIDC_PERSONNAL_PROJECT_OWNER_ROLES`).
+
+```yaml
+personalProjectOwnerLimit: 4
+
+oidc:
+  enabled: true
+  personalProjectOwner:
+    roles:
+      - personnal_project_owner
+```
+
 ### Things to consider if production hosting
 
 If you want to host PLANKA for more than just playing around with, you might want to do the following things:
