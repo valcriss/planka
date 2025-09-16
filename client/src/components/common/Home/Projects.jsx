@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { Grid, Icon } from 'semantic-ui-react';
 
 import selectors from '../../../selectors';
-import { isUserAdminOrProjectOwner } from '../../../utils/record-helpers';
+import { canUserCreateProject } from '../../../utils/record-helpers';
 import ProjectCard from '../../projects/ProjectCard';
 import PlusIcon from '../../../assets/images/plus-icon.svg?react';
 
@@ -20,7 +20,7 @@ import styles from './Projects.module.scss';
 const Projects = React.memo(({ ids, title, titleIcon, withTypeIndicator, onAdd }) => {
   const canAdd = useSelector((state) => {
     const user = selectors.selectCurrentUser(state);
-    return isUserAdminOrProjectOwner(user);
+    return canUserCreateProject(user);
   });
 
   const [t] = useTranslation();

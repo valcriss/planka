@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
-import { isUserAdminOrProjectOwner } from '../../../utils/record-helpers';
+import { canUserCreateProject } from '../../../utils/record-helpers';
 import { ProjectGroups, ProjectTypes } from '../../../constants/Enums';
 import { ProjectGroupIcons } from '../../../constants/Icons';
 import Projects from './Projects';
@@ -30,7 +30,7 @@ const GroupedProjectsView = React.memo(() => {
 
   const canAdd = useSelector((state) => {
     const user = selectors.selectCurrentUser(state);
-    return isUserAdminOrProjectOwner(user);
+    return canUserCreateProject(user);
   });
 
   const dispatch = useDispatch();

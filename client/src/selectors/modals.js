@@ -8,7 +8,7 @@ import { createSelector } from 'redux-orm';
 import orm from '../orm';
 import { selectPath } from './router';
 import { selectCurrentUserId } from './users';
-import { isUserAdminOrProjectOwner } from '../utils/record-helpers';
+import { canUserCreateProject } from '../utils/record-helpers';
 import ModalTypes from '../constants/ModalTypes';
 import { UserRoles } from '../constants/Enums';
 
@@ -27,7 +27,7 @@ export const isCurrentModalAvailableForCurrentUser = createSelector(
         case ModalTypes.ADMINISTRATION:
           return currentUserModel.role === UserRoles.ADMIN;
         case ModalTypes.ADD_PROJECT:
-          return isUserAdminOrProjectOwner(currentUserModel);
+          return canUserCreateProject(currentUserModel);
         case ModalTypes.PROJECT_SETTINGS: {
           const projectModel = Project.withId(currentProjectId);
           return !!projectModel && projectModel.isExternalAccessibleForUser(currentUserModel);
