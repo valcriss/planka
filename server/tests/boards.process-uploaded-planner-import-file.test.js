@@ -29,6 +29,7 @@ describe('boards/process-uploaded-planner-import-file helper', () => {
     const sheetData = [
       [
         'ID de tâche',
+        'Nom de tâche',
         'Nom du compartiment',
         'Date de début',
         "Date d'échéance",
@@ -38,6 +39,7 @@ describe('boards/process-uploaded-planner-import-file helper', () => {
       ],
       [
         'task-1',
+        'Préparer dossier',
         'Backlog',
         excelSerialFromIso('2024-01-05T00:00:00.000Z'),
         '01/02/2024 15:30',
@@ -63,16 +65,35 @@ describe('boards/process-uploaded-planner-import-file helper', () => {
     expect(result.sheetName).toBe('Plan');
     expect(result.columns).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ key: 'taskId', original: 'ID de tâche' }),
-        expect.objectContaining({ key: 'bucketName', original: 'Nom du compartiment' }),
+        expect.objectContaining({
+          key: 'taskId',
+          original: 'ID de tâche',
+          index: 0,
+        }),
+        expect.objectContaining({
+          key: 'taskName',
+          original: 'Nom de tâche',
+          index: 1,
+        }),
+        expect.objectContaining({
+          key: 'bucketName',
+          original: 'Nom du compartiment',
+          index: 2,
+        }),
       ]),
     );
 
     expect(result.rows).toHaveLength(1);
     const [row] = result.rows;
 
+    expect(Array.isArray(row.plannerColumnValues)).toBe(true);
+    expect(row.plannerColumnValues[0]).toBe('task-1');
+    expect(row.plannerColumnValues[1]).toBe('Préparer dossier');
+    expect(row.plannerColumnValues[2]).toBe('Backlog');
+
     expect(row).toMatchObject({
       taskId: 'task-1',
+      taskName: 'Préparer dossier',
       bucketName: 'Backlog',
       startDate: '2024-01-05T00:00:00.000Z',
       dueDate: '2024-02-01T15:30:00.000Z',

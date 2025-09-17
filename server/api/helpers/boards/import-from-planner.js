@@ -38,6 +38,27 @@ const BOOLEAN_FALSE_VALUES = new Set([
   'non terminee',
 ]);
 
+const PLANNER_COLUMN_INDEXES = {
+  TASK_ID: 0,
+  TASK_NAME: 1,
+  BUCKET_NAME: 2,
+  PROGRESS: 3,
+  PRIORITY: 4,
+  ASSIGNMENTS: 5,
+  CREATED_BY: 6,
+  CREATED_DATE: 7,
+  START_DATE: 8,
+  DUE_DATE: 9,
+  IS_RECURRING: 10,
+  IS_LATE: 11,
+  COMPLETED_DATE: 12,
+  EXECUTED_BY: 13,
+  CHECKLIST_COMPLETED_COUNT: 14,
+  CHECKLIST_ITEMS: 15,
+  LABELS: 16,
+  DESCRIPTION: 17,
+};
+
 const stripDiacritics = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
 const normalizeText = (value) => {
@@ -105,6 +126,45 @@ const getFirstNonEmpty = (object, keys) => {
   }
 
   return null;
+};
+
+const getPlannerColumnValues = (row) => {
+  if (!row || typeof row !== 'object') {
+    return null;
+  }
+
+  const { plannerColumnValues } = row;
+  if (!Array.isArray(plannerColumnValues)) {
+    return null;
+  }
+
+  return plannerColumnValues;
+};
+
+const getPlannerColumnValue = (row, columnIndex) => {
+  if (columnIndex === null || columnIndex === undefined) {
+    return null;
+  }
+
+  const columnValues = getPlannerColumnValues(row);
+  if (!columnValues) {
+    return null;
+  }
+
+  return columnValues[columnIndex];
+};
+
+const getPlannerValue = (row, columnIndex, fallbackKeys = []) => {
+  const columnValue = getPlannerColumnValue(row, columnIndex);
+  if (!isEmptyValue(columnValue)) {
+    return columnValue;
+  }
+
+  if (!Array.isArray(fallbackKeys) || fallbackKeys.length === 0) {
+    return null;
+  }
+
+  return getFirstNonEmpty(row, fallbackKeys);
 };
 
 const parseBooleanish = (value) => {
@@ -192,27 +252,40 @@ const parseChecklistCompletedCount = (value) => {
 };
 
 const getCompletedDate = (row) =>
-  getFirstNonEmpty(row, ['completedDate', 'completedAt', 'actualEndDate']);
+  getPlannerValue(row, PLANNER_COLUMN_INDEXES.COMPLETED_DATE, [
+    'completedDate',
+    'completedAt',
+    'actualEndDate',
+  ]);
 
-const getStartDate = (row) => getFirstNonEmpty(row, ['startDate', 'actualStartDate']);
+const getStartDate = (row) =>
+  getPlannerValue(row, PLANNER_COLUMN_INDEXES.START_DATE, ['startDate', 'actualStartDate']);
 
-const getDueDate = (row) => getFirstNonEmpty(row, ['dueDate', 'due']);
+const getDueDate = (row) =>
+  getPlannerValue(row, PLANNER_COLUMN_INDEXES.DUE_DATE, ['dueDate', 'due']);
 
 const getBucketName = (row, t) => {
-  const bucket = getFirstNonEmpty(row, ['bucketName', 'bucket']);
+  const bucket = getPlannerValue(row, PLANNER_COLUMN_INDEXES.BUCKET_NAME, ['bucketName', 'bucket']);
   const text = bucket === null || bucket === undefined ? '' : String(bucket).trim();
 
   return text || t('No bucket');
 };
 
 const getCardName = (row, t) => {
-  const name = getFirstNonEmpty(row, ['title', 'name', 'taskName']);
+  const name = getPlannerValue(row, PLANNER_COLUMN_INDEXES.TASK_NAME, [
+    'title',
+    'name',
+    'taskName',
+    'nomDeTache',
+    'nomDeLaTache',
+    'nomTache',
+  ]);
 
   if (!isEmptyValue(name)) {
     return String(name).trim();
   }
 
-  const fallback = getFirstNonEmpty(row, ['taskId', 'id']);
+  const fallback = getPlannerValue(row, PLANNER_COLUMN_INDEXES.TASK_ID, ['taskId', 'id']);
   if (!isEmptyValue(fallback)) {
     return String(fallback).trim();
   }
@@ -221,7 +294,10 @@ const getCardName = (row, t) => {
 };
 
 const getPlannerDescription = (row) => {
-  const description = getFirstNonEmpty(row, ['description', 'notes']);
+  const description = getPlannerValue(row, PLANNER_COLUMN_INDEXES.DESCRIPTION, [
+    'description',
+    'notes',
+  ]);
 
   if (isEmptyValue(description)) {
     return null;
@@ -422,22 +498,24 @@ module.exports = {
 
     const labelsToCreate = [];
     plannerRows.forEach((row) => {
-      toArray(row.labels).forEach((labelName) => {
-        const normalized = normalizeText(labelName);
-        if (!normalized) {
-          return;
-        }
+      toArray(getPlannerValue(row, PLANNER_COLUMN_INDEXES.LABELS, ['labels'])).forEach(
+        (labelName) => {
+          const normalized = normalizeText(labelName);
+          if (!normalized) {
+            return;
+          }
 
-        if (labelByNormalizedName.has(normalized)) {
-          return;
-        }
+          if (labelByNormalizedName.has(normalized)) {
+            return;
+          }
 
-        if (labelsToCreate.some((item) => item.normalized === normalized)) {
-          return;
-        }
+          if (labelsToCreate.some((item) => item.normalized === normalized)) {
+            return;
+          }
 
-        labelsToCreate.push({ normalized, name: labelName });
-      });
+          labelsToCreate.push({ normalized, name: labelName });
+        },
+      );
     });
 
     for (let labelIndex = 0; labelIndex < labelsToCreate.length; labelIndex += 1) {
@@ -498,7 +576,11 @@ module.exports = {
 
       for (let rowIndex = 0; rowIndex < entry.rows.length; rowIndex += 1) {
         const row = entry.rows[rowIndex];
-        const creatorEntries = collectNameEntries(row.createdBy, row.creePar);
+        const creatorEntries = collectNameEntries(
+          getPlannerValue(row, PLANNER_COLUMN_INDEXES.CREATED_BY, ['createdBy', 'creePar']),
+          row.createdBy,
+          row.creePar,
+        );
         const creatorUser = creatorEntries
           .map((entryItem) => findUserByNormalized(entryItem.normalized))
           .find(Boolean);
@@ -506,14 +588,24 @@ module.exports = {
         const cardName = getCardName(row, t);
         const plannerDescription = getPlannerDescription(row);
 
-        const plannerTaskIdValue = getFirstNonEmpty(row, ['taskId', 'id']);
+        const plannerTaskIdValue = getPlannerValue(row, PLANNER_COLUMN_INDEXES.TASK_ID, [
+          'taskId',
+          'id',
+        ]);
         const plannerTaskId = !isEmptyValue(plannerTaskIdValue)
           ? String(plannerTaskIdValue).trim()
           : null;
 
-        const progressValue = getFirstNonEmpty(row, ['progress']);
-        const planName = getFirstNonEmpty(row, ['planName']);
-        const executedEntries = collectNameEntries(row.executePar, row.executedBy, row.completedBy);
+        const executedEntries = collectNameEntries(
+          getPlannerValue(row, PLANNER_COLUMN_INDEXES.EXECUTED_BY, [
+            'executePar',
+            'executedBy',
+            'completedBy',
+          ]),
+          row.executePar,
+          row.executedBy,
+          row.completedBy,
+        );
 
         const completedDate = getCompletedDate(row);
         const startDate = getStartDate(row);
@@ -521,9 +613,14 @@ module.exports = {
 
         const isArchived = parseBooleanish(row.isArchived);
         const isRecurring = parseBooleanish(
-          getFirstNonEmpty(row, ['estPeriodique', 'isRecurring']),
+          getPlannerValue(row, PLANNER_COLUMN_INDEXES.IS_RECURRING, [
+            'estPeriodique',
+            'isRecurring',
+          ]),
         );
-        const isLate = parseBooleanish(getFirstNonEmpty(row, ['enRetard', 'isLate']));
+        const isLate = parseBooleanish(
+          getPlannerValue(row, PLANNER_COLUMN_INDEXES.IS_LATE, ['enRetard', 'isLate']),
+        );
 
         const targetList = bucketList || archiveList || null;
         const finalList = isArchived && archiveList ? archiveList : targetList;
@@ -554,35 +651,7 @@ module.exports = {
         const prevListId = isArchived && archiveList && bucketList ? bucketList.id : null;
         const position = getNextCardPosition(finalList.id);
 
-        const metaLines = [];
-        if (plannerTaskId) {
-          metaLines.push(`- ${t('Task ID')}: ${plannerTaskId}`);
-        }
-
-        if (!isEmptyValue(progressValue)) {
-          metaLines.push(`- ${t('Progress')}: ${String(progressValue).trim()}`);
-        }
-
-        if (!isEmptyValue(planName)) {
-          metaLines.push(`- ${t('Plan')}: ${String(planName).trim()}`);
-        }
-
-        if (executedEntries.length > 0) {
-          metaLines.push(
-            `- ${t('Completed by')}: ${executedEntries.map((entryItem) => entryItem.original).join(', ')}`,
-          );
-        }
-
-        const descriptionParts = [];
-        if (plannerDescription) {
-          descriptionParts.push(plannerDescription);
-        }
-
-        if (metaLines.length > 0) {
-          descriptionParts.push(`**${t('Planner Metadata')}**\n${metaLines.join('\n')}`);
-        }
-
-        const description = descriptionParts.length > 0 ? descriptionParts.join('\n\n') : null;
+        const description = plannerDescription || null;
 
         const cardNumber = getNextCardNumber();
 
@@ -663,6 +732,13 @@ module.exports = {
         };
 
         const assignmentEntries = collectNameEntries(
+          getPlannerValue(row, PLANNER_COLUMN_INDEXES.ASSIGNMENTS, [
+            'assignments',
+            'attribueA',
+            'assignees',
+            'assignedTo',
+            'responsables',
+          ]),
           row.assignments,
           row.attribueA,
           row.assignees,
@@ -710,7 +786,10 @@ module.exports = {
           labelIds.add(label.id);
         };
 
-        const priority = getFirstNonEmpty(row, ['priority', 'importance']);
+        const priority = getPlannerValue(row, PLANNER_COLUMN_INDEXES.PRIORITY, [
+          'priority',
+          'importance',
+        ]);
         if (!isEmptyValue(priority)) {
           const normalizedPriority = normalizeText(priority);
           if (normalizedPriority.includes('important')) {
@@ -719,7 +798,9 @@ module.exports = {
           }
         }
 
-        const rowLabelNames = toArray(row.labels);
+        const rowLabelNames = toArray(
+          getPlannerValue(row, PLANNER_COLUMN_INDEXES.LABELS, ['labels']),
+        );
         for (let labelIndex = 0; labelIndex < rowLabelNames.length; labelIndex += 1) {
           const labelName = rowLabelNames[labelIndex];
           // eslint-disable-next-line no-await-in-loop
@@ -737,11 +818,14 @@ module.exports = {
         }
 
         const checklistItems = toArray(
-          getFirstNonEmpty(row, ['checklistItems', 'elementsDeLaListeDeControle']),
+          getPlannerValue(row, PLANNER_COLUMN_INDEXES.CHECKLIST_ITEMS, [
+            'checklistItems',
+            'elementsDeLaListeDeControle',
+          ]),
         );
         if (checklistItems.length > 0) {
           const completedCount = parseChecklistCompletedCount(
-            getFirstNonEmpty(row, [
+            getPlannerValue(row, PLANNER_COLUMN_INDEXES.CHECKLIST_COMPLETED_COUNT, [
               'elementsDeLaListeDeControleEffectues',
               'checklistItemsChecked',
               'checklistItemsCompleted',

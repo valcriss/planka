@@ -105,6 +105,10 @@ const HEADER_ALIASES = {
   'plan name': 'planName',
   'nom du compartiment': 'bucketName',
   'bucket name': 'bucketName',
+  'task name': 'taskName',
+  'nom de tache': 'taskName',
+  'nom de la tache': 'taskName',
+  'nom tache': 'taskName',
   titre: 'title',
   title: 'title',
   description: 'description',
@@ -430,15 +434,20 @@ module.exports = {
         .filter((row) => row.some((cell) => !isCellEmpty(cell)))
         .map((row) => {
           const entry = {};
+          const columnValues = [];
 
           normalizedHeaders.forEach((key, index) => {
+            const transformed = transformValue(key, row[index], workbookOptions);
+            columnValues[index] = transformed;
+
             if (!key) {
               return;
             }
 
-            const transformed = transformValue(key, row[index], workbookOptions);
             entry[key] = transformed;
           });
+
+          entry.plannerColumnValues = columnValues;
 
           return entry;
         });
@@ -453,6 +462,7 @@ module.exports = {
           return {
             key,
             original,
+            index,
           };
         })
         .filter(Boolean);
