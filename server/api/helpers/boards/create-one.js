@@ -101,8 +101,19 @@ module.exports = {
       },
     );
 
-    if (inputs.import && inputs.import.type === Board.ImportTypes.TRELLO) {
-      await sails.helpers.boards.importFromTrello(board, lists, inputs.import.board);
+    if (inputs.import) {
+      if (inputs.import.type === Board.ImportTypes.TRELLO) {
+        await sails.helpers.boards.importFromTrello(board, lists, inputs.import.board);
+      } else if (inputs.import.type === Board.ImportTypes.PLANNER) {
+        await sails.helpers.boards.importFromPlanner.with({
+          board,
+          lists,
+          planner: inputs.import.planner,
+          project: values.project,
+          actorUser: inputs.actorUser,
+          request: inputs.request,
+        });
+      }
     }
 
     scoper.board = board;
