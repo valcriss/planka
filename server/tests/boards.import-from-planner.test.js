@@ -243,7 +243,7 @@ describe('boards/import-from-planner helper', () => {
       rows: [
         {
           taskId: 'task-1',
-          title: 'Préparer dossier',
+          taskName: 'Préparer dossier',
           bucketName: 'En cours',
           createdBy: 'Alice Martin',
           assignments: 'Bob Durant',
@@ -315,8 +315,7 @@ describe('boards/import-from-planner helper', () => {
       listChangedAt: new Date('2024-06-15T09:00:00.000Z').toISOString(),
       number: 1,
     });
-    expect(createdCards[0].description).toContain('**Planner Metadata**');
-    expect(createdCards[0].description).toContain('Task ID');
+    expect(createdCards[0].description).toBe('Description initiale');
 
     expect(createdCards[1]).toMatchObject({
       name: 'Clôturer projet',
@@ -325,9 +324,7 @@ describe('boards/import-from-planner helper', () => {
       closedAt: '2024-06-03T00:00:00.000Z',
       number: 2,
     });
-    expect(createdCards[1].description).toContain('- Progress: 100%');
-    expect(createdCards[1].description).toContain('- Plan: Plan A');
-    expect(createdCards[1].description).toContain('- Completed by: Charlie Durand');
+    expect(createdCards[1].description).toBeNull();
 
     expect(createdBoardMemberships).toHaveLength(3);
     expect(createdBoardMemberships).toEqual(

@@ -206,7 +206,14 @@ const getBucketName = (row, t) => {
 };
 
 const getCardName = (row, t) => {
-  const name = getFirstNonEmpty(row, ['title', 'name', 'taskName']);
+  const name = getFirstNonEmpty(row, [
+    'title',
+    'name',
+    'taskName',
+    'nomDeTache',
+    'nomDeLaTache',
+    'nomTache',
+  ]);
 
   if (!isEmptyValue(name)) {
     return String(name).trim();
@@ -511,8 +518,6 @@ module.exports = {
           ? String(plannerTaskIdValue).trim()
           : null;
 
-        const progressValue = getFirstNonEmpty(row, ['progress']);
-        const planName = getFirstNonEmpty(row, ['planName']);
         const executedEntries = collectNameEntries(row.executePar, row.executedBy, row.completedBy);
 
         const completedDate = getCompletedDate(row);
@@ -554,35 +559,7 @@ module.exports = {
         const prevListId = isArchived && archiveList && bucketList ? bucketList.id : null;
         const position = getNextCardPosition(finalList.id);
 
-        const metaLines = [];
-        if (plannerTaskId) {
-          metaLines.push(`- ${t('Task ID')}: ${plannerTaskId}`);
-        }
-
-        if (!isEmptyValue(progressValue)) {
-          metaLines.push(`- ${t('Progress')}: ${String(progressValue).trim()}`);
-        }
-
-        if (!isEmptyValue(planName)) {
-          metaLines.push(`- ${t('Plan')}: ${String(planName).trim()}`);
-        }
-
-        if (executedEntries.length > 0) {
-          metaLines.push(
-            `- ${t('Completed by')}: ${executedEntries.map((entryItem) => entryItem.original).join(', ')}`,
-          );
-        }
-
-        const descriptionParts = [];
-        if (plannerDescription) {
-          descriptionParts.push(plannerDescription);
-        }
-
-        if (metaLines.length > 0) {
-          descriptionParts.push(`**${t('Planner Metadata')}**\n${metaLines.join('\n')}`);
-        }
-
-        const description = descriptionParts.length > 0 ? descriptionParts.join('\n\n') : null;
+        const description = plannerDescription || null;
 
         const cardNumber = getNextCardNumber();
 
