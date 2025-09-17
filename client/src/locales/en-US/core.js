@@ -185,6 +185,10 @@ export default {
       threeWeeks: '3 weeks',
       fourWeeks: '4 weeks',
       dropFileToUpload: 'Drop file to upload',
+      importFromPlanner: 'Import data from Planner',
+      importFromPlanner_title: 'Import data from Planner',
+      importFromPlannerDescription:
+        'Upload a Microsoft Planner export to create a board for this project.',
       dueDate_title: 'Due Date',
       dynamicAndUnevenlySpacedLayout: 'Dynamic and unevenly spaced layout.',
       editAttachment_title: 'Edit Attachment',
@@ -468,6 +472,7 @@ export default {
       emptyTrash: 'Empty trash',
       emptyTrash_title: 'Empty Trash',
       import: 'Import',
+      selectPlannerFile: 'Select Planner file',
       join: 'Join',
       leave: 'Leave',
       leaveBoard: 'Leave board',

@@ -195,6 +195,10 @@ export default {
       threeWeeks: '3 semaines',
       fourWeeks: '4 semaines',
       dropFileToUpload: 'Déposer le fichier à télécharger',
+      importFromPlanner: 'Importer les données depuis Planner',
+      importFromPlanner_title: 'Importer les données depuis Planner',
+      importFromPlannerDescription:
+        'Importez un fichier exporté de Microsoft Planner pour créer un tableau dans ce projet.',
       dueDate_title: "Date d'échéance",
       dynamicAndUnevenlySpacedLayout: 'Mise en page dynamique et inégalement espacée.',
       editAttachment_title: 'Modifier la pièce jointe',
@@ -479,6 +483,7 @@ export default {
       emptyTrash: 'Vider la corbeille',
       emptyTrash_title: 'Vider la corbeille',
       import: 'Importer',
+      selectPlannerFile: 'Sélectionner un fichier Planner',
       join: 'Rejoindre',
       leave: 'Quitter',
       leaveBoard: 'Quitter le tableau',
