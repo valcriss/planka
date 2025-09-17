@@ -65,14 +65,31 @@ describe('boards/process-uploaded-planner-import-file helper', () => {
     expect(result.sheetName).toBe('Plan');
     expect(result.columns).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ key: 'taskId', original: 'ID de tâche' }),
-        expect.objectContaining({ key: 'taskName', original: 'Nom de tâche' }),
-        expect.objectContaining({ key: 'bucketName', original: 'Nom du compartiment' }),
+        expect.objectContaining({
+          key: 'taskId',
+          original: 'ID de tâche',
+          index: 0,
+        }),
+        expect.objectContaining({
+          key: 'taskName',
+          original: 'Nom de tâche',
+          index: 1,
+        }),
+        expect.objectContaining({
+          key: 'bucketName',
+          original: 'Nom du compartiment',
+          index: 2,
+        }),
       ]),
     );
 
     expect(result.rows).toHaveLength(1);
     const [row] = result.rows;
+
+    expect(Array.isArray(row.plannerColumnValues)).toBe(true);
+    expect(row.plannerColumnValues[0]).toBe('task-1');
+    expect(row.plannerColumnValues[1]).toBe('Préparer dossier');
+    expect(row.plannerColumnValues[2]).toBe('Backlog');
 
     expect(row).toMatchObject({
       taskId: 'task-1',
