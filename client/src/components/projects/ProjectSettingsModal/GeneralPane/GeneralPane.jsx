@@ -3,7 +3,7 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button, Divider, Header, Radio, Tab, Dropdown } from 'semantic-ui-react';
@@ -13,8 +13,21 @@ import entryActions from '../../../../entry-actions';
 import { usePopupInClosableContext } from '../../../../hooks';
 import EditInformation from './EditInformation';
 import ConfirmationStep from '../../../common/ConfirmationStep';
+import { FilePicker } from '../../../../lib/custom-ui';
 
 import styles from './GeneralPane.module.scss';
+
+const deriveBoardName = (fileName, fallbackName) => {
+  if (!fileName) {
+    return fallbackName;
+  }
+
+  const lastDotPosition = fileName.lastIndexOf('.');
+  const baseName = lastDotPosition > 0 ? fileName.slice(0, lastDotPosition) : fileName;
+  const trimmedName = baseName.trim();
+
+  return trimmedName || fallbackName;
+};
 
 const GeneralPane = React.memo(() => {
   const project = useSelector(selectors.selectCurrentProject);
@@ -27,6 +40,7 @@ const GeneralPane = React.memo(() => {
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
+  const [selectedPlannerFileName, setSelectedPlannerFileName] = useState(null);
 
   const handleToggleChange = useCallback(
     (_, { name: fieldName, checked }) => {
@@ -66,6 +80,27 @@ const GeneralPane = React.memo(() => {
       );
     },
     [dispatch],
+  );
+
+  const handlePlannerImportSelect = useCallback(
+    (file) => {
+      if (!file) {
+        return;
+      }
+
+      setSelectedPlannerFileName(file.name);
+
+      dispatch(
+        entryActions.createBoardInCurrentProject({
+          name: deriveBoardName(file.name, t('common.board')),
+          import: {
+            type: 'planner',
+            file,
+          },
+        }),
+      );
+    },
+    [dispatch, t],
   );
 
   const handleDeleteConfirm = useCallback(() => {
@@ -145,6 +180,27 @@ const GeneralPane = React.memo(() => {
             className={styles.radio}
             onChange={handleToggleChange}
           />
+          <Divider horizontal section>
+            <Header as="h4">
+              {t('common.importFromPlanner', {
+                context: 'title',
+              })}
+            </Header>
+          </Divider>
+          <div className={styles.importSection}>
+            <p className={styles.importDescription}>{t('common.importFromPlannerDescription')}</p>
+            <FilePicker accept=".xlsx,.xls,.xlsm" onSelect={handlePlannerImportSelect}>
+              <Button
+                primary
+                icon="upload"
+                content={t('action.selectPlannerFile')}
+                className={styles.importButton}
+              />
+            </FilePicker>
+            {selectedPlannerFileName && (
+              <div className={styles.importFileName}>{selectedPlannerFileName}</div>
+            )}
+          </div>
         </>
       )}
       {canEdit && (

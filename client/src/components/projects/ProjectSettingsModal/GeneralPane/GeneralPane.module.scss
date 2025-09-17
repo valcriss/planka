@@ -45,6 +45,25 @@
     width: 100%;
   }
 
+  .importSection {
+    margin-bottom: 24px;
+  }
+
+  .importDescription {
+    color: #6b808c;
+    margin: 0 0 12px;
+  }
+
+  .importButton {
+    margin-bottom: 0;
+  }
+
+  .importFileName {
+    color: #6b808c;
+    margin-top: 8px;
+    word-break: break-word;
+  }
+
   .wrapper {
     border: none;
     box-shadow: none;
