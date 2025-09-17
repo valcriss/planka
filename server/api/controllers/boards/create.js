@@ -104,6 +104,15 @@ module.exports = {
           type: inputs.importType,
           board: trelloBoard,
         };
+      } else if (inputs.importType === Board.ImportTypes.PLANNER) {
+        const planner = await sails.helpers.boards
+          .processUploadedPlannerImportFile(file)
+          .intercept('invalidFile', () => Errors.INVALID_IMPORT_FILE);
+
+        boardImport = {
+          type: inputs.importType,
+          planner,
+        };
       }
     }
 

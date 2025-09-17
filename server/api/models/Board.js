@@ -20,6 +20,7 @@ const Views = {
 
 const ImportTypes = {
   TRELLO: 'trello',
+  PLANNER: 'planner',
 };
 
 module.exports = {
