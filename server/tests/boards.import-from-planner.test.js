@@ -92,6 +92,12 @@ describe('boards/import-from-planner helper', () => {
           makeTranslator: jest.fn().mockImplementation(() => (key) => key),
         },
       },
+      sendNativeQuery: jest.fn().mockResolvedValue({ rows: [{ next: 1 }] }),
+      log: {
+        debug: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+      },
     };
   });
 
@@ -271,6 +277,12 @@ describe('boards/import-from-planner helper', () => {
     await helper.fn({ board, lists, planner, project, actorUser, request });
 
     expect(global.sails.helpers.utils.makeTranslator).toHaveBeenCalledWith('fr');
+    expect(global.sails.sendNativeQuery).toHaveBeenCalledWith(
+      expect.stringContaining('SELECT COALESCE(MAX(card.number), 0) + 1 AS next'),
+      [project.id],
+    );
+
+    expect(global.sails.log.warn).not.toHaveBeenCalled();
 
     expect(createdLists).toHaveLength(2);
     expect(createdLists[0]).toMatchObject({
@@ -301,6 +313,7 @@ describe('boards/import-from-planner helper', () => {
       ganttStartDate: '2024-06-10T00:00:00.000Z',
       closedAt: null,
       listChangedAt: new Date('2024-06-15T09:00:00.000Z').toISOString(),
+      number: 1,
     });
     expect(createdCards[0].description).toContain('**Planner Metadata**');
     expect(createdCards[0].description).toContain('Task ID');
@@ -310,6 +323,7 @@ describe('boards/import-from-planner helper', () => {
       listId: createdLists[1].id,
       ganttEndDate: '2024-06-03T00:00:00.000Z',
       closedAt: '2024-06-03T00:00:00.000Z',
+      number: 2,
     });
     expect(createdCards[1].description).toContain('- Progress: 100%');
     expect(createdCards[1].description).toContain('- Plan: Plan A');

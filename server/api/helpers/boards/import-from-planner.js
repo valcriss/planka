@@ -5,6 +5,8 @@
 
 const { POSITION_GAP } = require('../../../constants');
 
+const LOG_TAG = 'boards/import-from-planner';
+
 const BOOLEAN_TRUE_VALUES = new Set([
   'true',
   '1',
@@ -261,8 +263,54 @@ module.exports = {
 
     const plannerRows = Array.isArray(planner.rows) ? planner.rows : [];
     if (plannerRows.length === 0) {
+      sails.log.debug(`[${LOG_TAG}] No planner rows to import`, {
+        boardId: board.id,
+        projectId: project.id,
+      });
       return;
     }
+
+    sails.log.debug(`[${LOG_TAG}] Starting planner import`, {
+      boardId: board.id,
+      projectId: project.id,
+      rowCount: plannerRows.length,
+    });
+
+    let nextCardNumber = 1;
+    try {
+      const { rows } = await sails.sendNativeQuery(
+        `SELECT COALESCE(MAX(card.number), 0) + 1 AS next
+         FROM card
+         JOIN board ON board.id = card.board_id
+         WHERE board.project_id = $1`,
+        [project.id],
+      );
+
+      const rowsArray = Array.isArray(rows) ? rows : [];
+      const nextValueRaw = rowsArray.length > 0 ? rowsArray[0].next : null;
+      const parsedNextValue = Number(nextValueRaw);
+      const startingNumber =
+        Number.isFinite(parsedNextValue) && parsedNextValue > 0 ? parsedNextValue : 1;
+
+      nextCardNumber = startingNumber;
+
+      sails.log.debug(`[${LOG_TAG}] Initialized card numbering`, {
+        projectId: project.id,
+        nextCardNumber: startingNumber,
+      });
+    } catch (error) {
+      sails.log.error(`[${LOG_TAG}] Failed to initialize card numbering`, {
+        projectId: project.id,
+        error,
+      });
+      throw error;
+    }
+
+    const getNextCardNumber = () => {
+      const number = nextCardNumber;
+      nextCardNumber += 1;
+      return number;
+    };
 
     const archiveList = lists.find((list) => list.type === List.Types.ARCHIVE) || null;
 
@@ -306,6 +354,14 @@ module.exports = {
           position: POSITION_GAP * (listIndex + 1),
           name: entry.name,
           slug,
+        });
+
+        sails.log.debug(`[${LOG_TAG}] Created list from planner bucket`, {
+          boardId: board.id,
+          listId: list.id,
+          bucketKey: entry.key,
+          bucketName: entry.name,
+          type,
         });
 
         listIndex += 1;
@@ -449,29 +505,15 @@ module.exports = {
 
         const cardName = getCardName(row, t);
         const plannerDescription = getPlannerDescription(row);
-        const metaLines = [];
 
-        const plannerTaskId = getFirstNonEmpty(row, ['taskId', 'id']);
-        if (!isEmptyValue(plannerTaskId)) {
-          metaLines.push(`- ${t('Task ID')}: ${String(plannerTaskId).trim()}`);
-        }
+        const plannerTaskIdValue = getFirstNonEmpty(row, ['taskId', 'id']);
+        const plannerTaskId = !isEmptyValue(plannerTaskIdValue)
+          ? String(plannerTaskIdValue).trim()
+          : null;
 
         const progressValue = getFirstNonEmpty(row, ['progress']);
-        if (!isEmptyValue(progressValue)) {
-          metaLines.push(`- ${t('Progress')}: ${String(progressValue).trim()}`);
-        }
-
         const planName = getFirstNonEmpty(row, ['planName']);
-        if (!isEmptyValue(planName)) {
-          metaLines.push(`- ${t('Plan')}: ${String(planName).trim()}`);
-        }
-
         const executedEntries = collectNameEntries(row.executePar, row.executedBy, row.completedBy);
-        if (executedEntries.length > 0) {
-          metaLines.push(
-            `- ${t('Completed by')}: ${executedEntries.map((entryItem) => entryItem.original).join(', ')}`,
-          );
-        }
 
         const completedDate = getCompletedDate(row);
         const startDate = getStartDate(row);
@@ -486,178 +528,247 @@ module.exports = {
         const targetList = bucketList || archiveList || null;
         const finalList = isArchived && archiveList ? archiveList : targetList;
 
-        if (finalList) {
-          if (creatorUser) {
-            // eslint-disable-next-line no-await-in-loop
-            await ensureBoardMembership(creatorUser);
-          }
-
-          const prevListId = isArchived && archiveList && bucketList ? bucketList.id : null;
-          const position = getNextCardPosition(finalList.id);
-
-          const descriptionParts = [];
-          if (plannerDescription) {
-            descriptionParts.push(plannerDescription);
-          }
-
-          if (metaLines.length > 0) {
-            descriptionParts.push(`**${t('Planner Metadata')}**\n${metaLines.join('\n')}`);
-          }
-
-          const description = descriptionParts.length > 0 ? descriptionParts.join('\n\n') : null;
-
-          const cardValues = {
+        if (!finalList) {
+          const skipLogContext = {
             boardId: board.id,
-            listId: finalList.id,
-            type: board.defaultCardType || Card.Types.PROJECT,
-            position,
-            name: cardName,
-            description,
-            creatorUserId: creatorUser ? creatorUser.id : actorUser.id,
-            dueDate: dueDate || null,
-            ganttStartDate: startDate || null,
-            ganttEndDate: completedDate || null,
-            closedAt:
-              completedDate ||
-              (finalList.type === List.Types.CLOSED || finalList.type === List.Types.ARCHIVE
-                ? importDate
-                : null),
-            listChangedAt: importDate,
+            projectId: project.id,
+            rowIndex,
+            bucketKey: entry.key,
+            bucketName: entry.name,
           };
 
-          if (board.defaultCardTypeId) {
-            cardValues.cardTypeId = board.defaultCardTypeId;
+          if (plannerTaskId) {
+            skipLogContext.plannerTaskId = plannerTaskId;
           }
 
-          if (prevListId) {
-            cardValues.prevListId = prevListId;
-          }
+          sails.log.warn(`[${LOG_TAG}] Skipping planner row without target list`, skipLogContext);
+          // eslint-disable-next-line no-continue
+          continue;
+        }
+
+        if (creatorUser) {
+          // eslint-disable-next-line no-await-in-loop
+          await ensureBoardMembership(creatorUser);
+        }
+
+        const prevListId = isArchived && archiveList && bucketList ? bucketList.id : null;
+        const position = getNextCardPosition(finalList.id);
+
+        const metaLines = [];
+        if (plannerTaskId) {
+          metaLines.push(`- ${t('Task ID')}: ${plannerTaskId}`);
+        }
+
+        if (!isEmptyValue(progressValue)) {
+          metaLines.push(`- ${t('Progress')}: ${String(progressValue).trim()}`);
+        }
+
+        if (!isEmptyValue(planName)) {
+          metaLines.push(`- ${t('Plan')}: ${String(planName).trim()}`);
+        }
+
+        if (executedEntries.length > 0) {
+          metaLines.push(
+            `- ${t('Completed by')}: ${executedEntries.map((entryItem) => entryItem.original).join(', ')}`,
+          );
+        }
+
+        const descriptionParts = [];
+        if (plannerDescription) {
+          descriptionParts.push(plannerDescription);
+        }
+
+        if (metaLines.length > 0) {
+          descriptionParts.push(`**${t('Planner Metadata')}**\n${metaLines.join('\n')}`);
+        }
+
+        const description = descriptionParts.length > 0 ? descriptionParts.join('\n\n') : null;
+
+        const cardNumber = getNextCardNumber();
+
+        const cardValues = {
+          boardId: board.id,
+          listId: finalList.id,
+          type: board.defaultCardType || Card.Types.PROJECT,
+          position,
+          name: cardName,
+          description,
+          creatorUserId: creatorUser ? creatorUser.id : actorUser.id,
+          dueDate: dueDate || null,
+          ganttStartDate: startDate || null,
+          ganttEndDate: completedDate || null,
+          closedAt:
+            completedDate ||
+            (finalList.type === List.Types.CLOSED || finalList.type === List.Types.ARCHIVE
+              ? importDate
+              : null),
+          listChangedAt: importDate,
+          number: cardNumber,
+        };
+
+        if (board.defaultCardTypeId) {
+          cardValues.cardTypeId = board.defaultCardTypeId;
+        }
+
+        if (prevListId) {
+          cardValues.prevListId = prevListId;
+        }
+
+        const cardLogContext = {
+          boardId: board.id,
+          projectId: project.id,
+          listId: finalList.id,
+          cardNumber,
+          cardName,
+          rowIndex,
+          bucketKey: entry.key,
+          bucketName: entry.name,
+        };
+
+        if (!isEmptyValue(plannerTaskId)) {
+          cardLogContext.plannerTaskId = String(plannerTaskId).trim();
+        }
+
+        let card;
+        try {
+          sails.log.debug(`[${LOG_TAG}] Creating card from planner row`, cardLogContext);
 
           // eslint-disable-next-line no-await-in-loop
-          const card = await Card.qm.createOne(cardValues);
+          card = await Card.qm.createOne(cardValues);
 
-          const cardMemberUserIds = new Set();
-          const ensureCardMembership = async (user) => {
-            if (!user || cardMemberUserIds.has(user.id)) {
-              return;
-            }
+          sails.log.debug(`[${LOG_TAG}] Created card from planner row`, {
+            ...cardLogContext,
+            cardId: card.id,
+          });
+        } catch (error) {
+          sails.log.error(`[${LOG_TAG}] Failed to create card from planner row`, {
+            ...cardLogContext,
+            error,
+          });
+          throw error;
+        }
 
-            await CardMembership.qm.createOne({
-              cardId: card.id,
-              userId: user.id,
-            });
+        const cardMemberUserIds = new Set();
+        const ensureCardMembership = async (user) => {
+          if (!user || cardMemberUserIds.has(user.id)) {
+            return;
+          }
 
-            cardMemberUserIds.add(user.id);
-          };
+          await CardMembership.qm.createOne({
+            cardId: card.id,
+            userId: user.id,
+          });
 
-          const assignmentEntries = collectNameEntries(
-            row.assignments,
-            row.attribueA,
-            row.assignees,
-            row.assignedTo,
-            row.responsables,
+          cardMemberUserIds.add(user.id);
+        };
+
+        const assignmentEntries = collectNameEntries(
+          row.assignments,
+          row.attribueA,
+          row.assignees,
+          row.assignedTo,
+          row.responsables,
+        );
+
+        for (
+          let assignmentIndex = 0;
+          assignmentIndex < assignmentEntries.length;
+          assignmentIndex += 1
+        ) {
+          const assignmentEntry = assignmentEntries[assignmentIndex];
+          const assignmentUser = findUserByNormalized(assignmentEntry.normalized);
+          if (assignmentUser) {
+            // eslint-disable-next-line no-await-in-loop
+            await ensureBoardMembership(assignmentUser);
+            // eslint-disable-next-line no-await-in-loop
+            await ensureCardMembership(assignmentUser);
+          }
+        }
+
+        for (let executedIndex = 0; executedIndex < executedEntries.length; executedIndex += 1) {
+          const executedEntry = executedEntries[executedIndex];
+          const executedUser = findUserByNormalized(executedEntry.normalized);
+          if (executedUser) {
+            // eslint-disable-next-line no-await-in-loop
+            await ensureBoardMembership(executedUser);
+            // eslint-disable-next-line no-await-in-loop
+            await ensureCardMembership(executedUser);
+          }
+        }
+
+        const labelIds = new Set();
+        const addUniqueLabel = async (label) => {
+          if (!label || labelIds.has(label.id)) {
+            return;
+          }
+
+          await CardLabel.qm.createOne({
+            cardId: card.id,
+            labelId: label.id,
+          });
+
+          labelIds.add(label.id);
+        };
+
+        const priority = getFirstNonEmpty(row, ['priority', 'importance']);
+        if (!isEmptyValue(priority)) {
+          const normalizedPriority = normalizeText(priority);
+          if (normalizedPriority.includes('important')) {
+            // eslint-disable-next-line no-await-in-loop
+            await addUniqueLabel(importantLabel);
+          }
+        }
+
+        const rowLabelNames = toArray(row.labels);
+        for (let labelIndex = 0; labelIndex < rowLabelNames.length; labelIndex += 1) {
+          const labelName = rowLabelNames[labelIndex];
+          // eslint-disable-next-line no-await-in-loop
+          await addUniqueLabel(await ensureLabel(labelName));
+        }
+
+        if (isRecurring === true) {
+          // eslint-disable-next-line no-await-in-loop
+          await addUniqueLabel(await ensureLabel(recurringLabelName));
+        }
+
+        if (isLate === true) {
+          // eslint-disable-next-line no-await-in-loop
+          await addUniqueLabel(await ensureLabel(lateLabelName));
+        }
+
+        const checklistItems = toArray(
+          getFirstNonEmpty(row, ['checklistItems', 'elementsDeLaListeDeControle']),
+        );
+        if (checklistItems.length > 0) {
+          const completedCount = parseChecklistCompletedCount(
+            getFirstNonEmpty(row, [
+              'elementsDeLaListeDeControleEffectues',
+              'checklistItemsChecked',
+              'checklistItemsCompleted',
+              'checklistCompletedItems',
+            ]),
           );
+
+          // eslint-disable-next-line no-await-in-loop
+          const taskList = await TaskList.qm.createOne({
+            cardId: card.id,
+            position: POSITION_GAP,
+            name: t('Actions'),
+          });
 
           for (
-            let assignmentIndex = 0;
-            assignmentIndex < assignmentEntries.length;
-            assignmentIndex += 1
+            let checklistIndex = 0;
+            checklistIndex < checklistItems.length;
+            checklistIndex += 1
           ) {
-            const assignmentEntry = assignmentEntries[assignmentIndex];
-            const assignmentUser = findUserByNormalized(assignmentEntry.normalized);
-            if (assignmentUser) {
-              // eslint-disable-next-line no-await-in-loop
-              await ensureBoardMembership(assignmentUser);
-              // eslint-disable-next-line no-await-in-loop
-              await ensureCardMembership(assignmentUser);
-            }
-          }
-
-          for (let executedIndex = 0; executedIndex < executedEntries.length; executedIndex += 1) {
-            const executedEntry = executedEntries[executedIndex];
-            const executedUser = findUserByNormalized(executedEntry.normalized);
-            if (executedUser) {
-              // eslint-disable-next-line no-await-in-loop
-              await ensureBoardMembership(executedUser);
-              // eslint-disable-next-line no-await-in-loop
-              await ensureCardMembership(executedUser);
-            }
-          }
-
-          const labelIds = new Set();
-          const addUniqueLabel = async (label) => {
-            if (!label || labelIds.has(label.id)) {
-              return;
-            }
-
-            await CardLabel.qm.createOne({
-              cardId: card.id,
-              labelId: label.id,
+            const checklistItem = checklistItems[checklistIndex];
+            // eslint-disable-next-line no-await-in-loop
+            await Task.qm.createOne({
+              taskListId: taskList.id,
+              position: POSITION_GAP * (checklistIndex + 1),
+              name: checklistItem,
+              isCompleted: checklistIndex < completedCount,
             });
-
-            labelIds.add(label.id);
-          };
-
-          const priority = getFirstNonEmpty(row, ['priority', 'importance']);
-          if (!isEmptyValue(priority)) {
-            const normalizedPriority = normalizeText(priority);
-            if (normalizedPriority.includes('important')) {
-              // eslint-disable-next-line no-await-in-loop
-              await addUniqueLabel(importantLabel);
-            }
-          }
-
-          const rowLabelNames = toArray(row.labels);
-          for (let labelIndex = 0; labelIndex < rowLabelNames.length; labelIndex += 1) {
-            const labelName = rowLabelNames[labelIndex];
-            // eslint-disable-next-line no-await-in-loop
-            await addUniqueLabel(await ensureLabel(labelName));
-          }
-
-          if (isRecurring === true) {
-            // eslint-disable-next-line no-await-in-loop
-            await addUniqueLabel(await ensureLabel(recurringLabelName));
-          }
-
-          if (isLate === true) {
-            // eslint-disable-next-line no-await-in-loop
-            await addUniqueLabel(await ensureLabel(lateLabelName));
-          }
-
-          const checklistItems = toArray(
-            getFirstNonEmpty(row, ['checklistItems', 'elementsDeLaListeDeControle']),
-          );
-          if (checklistItems.length > 0) {
-            const completedCount = parseChecklistCompletedCount(
-              getFirstNonEmpty(row, [
-                'elementsDeLaListeDeControleEffectues',
-                'checklistItemsChecked',
-                'checklistItemsCompleted',
-                'checklistCompletedItems',
-              ]),
-            );
-
-            // eslint-disable-next-line no-await-in-loop
-            const taskList = await TaskList.qm.createOne({
-              cardId: card.id,
-              position: POSITION_GAP,
-              name: t('Actions'),
-            });
-
-            for (
-              let checklistIndex = 0;
-              checklistIndex < checklistItems.length;
-              checklistIndex += 1
-            ) {
-              const checklistItem = checklistItems[checklistIndex];
-              // eslint-disable-next-line no-await-in-loop
-              await Task.qm.createOne({
-                taskListId: taskList.id,
-                position: POSITION_GAP * (checklistIndex + 1),
-                name: checklistItem,
-                isCompleted: checklistIndex < completedCount,
-              });
-            }
           }
         }
       }
