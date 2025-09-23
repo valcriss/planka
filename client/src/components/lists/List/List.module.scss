@@ -86,13 +86,17 @@
   }
 
   .header {
+    align-items: flex-start;
+    display: flex;
+    gap: 8px;
     outline: none;
-    padding: 6px 36px 6px 8px;
+    padding: 6px 8px;
     position: relative;
 
     &:hover {
       .headerButton {
         opacity: 1;
+        pointer-events: auto;
       }
 
       .headerIconHidable {
@@ -105,17 +109,26 @@
     cursor: pointer;
   }
 
+  .headerTitle {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
   .headerButton {
     background: none;
     box-shadow: none;
     color: #798d99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    height: 32px;
     line-height: 32px;
     margin: 0;
     opacity: 0;
     padding: 0;
-    position: absolute;
-    right: 4px;
-    top: 4px;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
     width: 32px;
 
     &:hover {
@@ -126,23 +139,26 @@
 
   .headerIcon {
     color: #798d99;
-    position: absolute;
-    right: 8px;
-    top: 10px;
+    flex: 0 0 auto;
+    transition: opacity 0.2s ease;
   }
 
-  .storyPoints {
-    position: absolute;
-    right: 14px;
-    top: 9px;
-    margin-bottom: 8px;
-    background-color: #FFF;
-    color: #333333;
+  .headerRight {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    gap: 6px;
+    margin-left: auto;
   }
 
-  .storyPoints:has(+ i),
-  .storyPoints:has(+ button) {
-    right: 44px;
+  .headerMetrics {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 4px;
+  }
+
+  .headerMetric {
+    margin-bottom: 0;
   }
 
   .headerName {
@@ -174,6 +190,16 @@
     flex-direction: column;
     max-height: calc(100vh - 198px);
     overflow: hidden;
+  }
+
+  .outerWrapperWarning {
+    background: #fbe9e7;
+    box-shadow: 0 0 0 1px rgba(205, 92, 92, 0.35);
+  }
+
+  .outerWrapperBlocking {
+    background: #f5d5d3;
+    box-shadow: 0 0 0 1px rgba(178, 34, 34, 0.45);
   }
 
   .outerWrapperTransitioning {
