@@ -40,6 +40,9 @@ export default class extends BaseModel {
     color: attr(),
     defaultCardType: attr(),
     defaultCardTypeId: attr(),
+    cardLimit: attr({
+      getDefault: () => 0,
+    }),
     lastCard: attr({
       getDefault: () => null,
     }),

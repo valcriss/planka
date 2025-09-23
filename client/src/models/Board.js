@@ -33,6 +33,9 @@ export default class extends BaseModel {
     defaultCardTypeId: attr(),
     limitCardTypesToDefaultOne: attr(),
     alwaysDisplayCardCreator: attr(),
+    showCardCount: attr({
+      getDefault: () => false,
+    }),
     context: attr(),
     view: attr(),
     search: attr(),
