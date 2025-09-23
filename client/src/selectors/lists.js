@@ -47,6 +47,63 @@ export const makeSelectCardIdsByListId = () =>
 
 export const selectCardIdsByListId = makeSelectCardIdsByListId();
 
+export const makeSelectCardCountByListId = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ List }, id) => {
+      const listModel = List.withId(id);
+
+      if (!listModel) {
+        return listModel;
+      }
+
+      return listModel.getCardsModelArray().length;
+    },
+  );
+
+export const selectCardCountByListId = makeSelectCardCountByListId();
+
+export const makeSelectIsCardLimitReachedByListId = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ List }, id) => {
+      const listModel = List.withId(id);
+
+      if (!listModel) {
+        return listModel;
+      }
+
+      const count = listModel.getCardsModelArray().length;
+      const limit = listModel.cardLimit;
+
+      return limit > 0 && count >= limit;
+    },
+  );
+
+export const selectIsCardLimitReachedByListId = makeSelectIsCardLimitReachedByListId();
+
+export const makeSelectIsCardLimitBlockingByListId = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ List }, id) => {
+      const listModel = List.withId(id);
+
+      if (!listModel) {
+        return listModel;
+      }
+
+      const count = listModel.getCardsModelArray().length;
+      const limit = listModel.cardLimit;
+
+      return limit > 0 && count >= limit * 2;
+    },
+  );
+
+export const selectIsCardLimitBlockingByListId = makeSelectIsCardLimitBlockingByListId();
+
 export const makeSelectFilteredCardIdsByListId = () =>
   createSelector(
     orm,
@@ -184,6 +241,12 @@ export default {
   selectListById,
   makeSelectCardIdsByListId,
   selectCardIdsByListId,
+  makeSelectCardCountByListId,
+  selectCardCountByListId,
+  makeSelectIsCardLimitReachedByListId,
+  selectIsCardLimitReachedByListId,
+  makeSelectIsCardLimitBlockingByListId,
+  selectIsCardLimitBlockingByListId,
   makeSelectFilteredCardIdsByListId,
   selectFilteredCardIdsByListId,
   makeSelectStoryPointsTotalByListId,
