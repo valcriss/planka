@@ -28,6 +28,7 @@ import ArchiveCardsStep from '../../cards/ArchiveCardsStep';
 import StartSprintStep from './StartSprintStep';
 import PlusMathIcon from '../../../assets/images/plus-math-icon.svg?react';
 import StoryPointsChip from '../../cards/StoryPointsChip';
+import ListMetricChip from './ListMetricChip';
 
 import styles from './List.module.scss';
 import globalStyles from '../../../styles.module.scss';
@@ -40,6 +41,18 @@ const List = React.memo(({ id, index }) => {
     [],
   );
 
+  const selectCardCountByListId = useMemo(() => selectors.makeSelectCardCountByListId(), []);
+
+  const selectIsCardLimitReachedByListId = useMemo(
+    () => selectors.makeSelectIsCardLimitReachedByListId(),
+    [],
+  );
+
+  const selectIsCardLimitBlockingByListId = useMemo(
+    () => selectors.makeSelectIsCardLimitBlockingByListId(),
+    [],
+  );
+
   const selectStoryPointsTotalByListId = useMemo(
     () => selectors.makeSelectStoryPointsTotalByListId(),
     [],
@@ -48,8 +61,12 @@ const List = React.memo(({ id, index }) => {
   const isFavoritesActive = useSelector(selectors.selectIsFavoritesActiveForCurrentUser);
   const list = useSelector((state) => selectListById(state, id));
   const cardIds = useSelector((state) => selectFilteredCardIdsByListId(state, id));
+  const totalCardCount = useSelector((state) => selectCardCountByListId(state, id));
+  const isLimitWarning = useSelector((state) => selectIsCardLimitReachedByListId(state, id));
+  const isLimitBlocking = useSelector((state) => selectIsCardLimitBlockingByListId(state, id));
   const storyPointsTotal = useSelector((state) => selectStoryPointsTotalByListId(state, id));
   const project = useSelector(selectors.selectCurrentProject);
+  const board = useSelector(selectors.selectCurrentBoard);
   const isProjectManager = useSelector(selectors.selectIsCurrentUserManagerForCurrentProject);
 
   const { canEdit, canArchiveCards, canAddCard, canDropCard } = useSelector((state) => {
@@ -74,6 +91,9 @@ const List = React.memo(({ id, index }) => {
   const wrapperRef = useRef(null);
   const cardsWrapperRef = useRef(null);
 
+  const filteredCardCount = cardIds.length;
+  const showCardCount = board && board.showCardCount;
+
   const handleCardCreate = useCallback(
     (data, autoOpen) => {
       dispatch(entryActions.createCard(id, data, autoOpen));
@@ -88,16 +108,24 @@ const List = React.memo(({ id, index }) => {
   }, [list.isPersisted, canEdit]);
 
   const handleAddCardClick = useCallback(() => {
+    if (isLimitBlocking) {
+      return;
+    }
+
     setIsAddCardOpened(true);
-  }, []);
+  }, [isLimitBlocking]);
 
   const handleAddCardClose = useCallback(() => {
     setIsAddCardOpened(false);
   }, []);
 
   const handleCardAdd = useCallback(() => {
+    if (isLimitBlocking) {
+      return;
+    }
+
     setIsAddCardOpened(true);
-  }, []);
+  }, [isLimitBlocking]);
 
   const handleNameEdit = useCallback(() => {
     setIsEditNameOpened(true);
@@ -119,6 +147,12 @@ const List = React.memo(({ id, index }) => {
     }
   }, [cardIds, isAddCardOpened]);
 
+  useDidUpdate(() => {
+    if (isLimitBlocking && isAddCardOpened) {
+      setIsAddCardOpened(false);
+    }
+  }, [isLimitBlocking, isAddCardOpened]);
+
   const ActionsPopup = usePopup(ActionsStep);
   const ArchiveCardsPopup = usePopup(ArchiveCardsStep);
   const StartSprintPopup = usePopup(StartSprintStep);
@@ -127,7 +161,7 @@ const List = React.memo(({ id, index }) => {
     <Droppable
       droppableId={`list:${id}`}
       type={DroppableTypes.CARD}
-      isDropDisabled={!list.isPersisted || !canDropCard}
+      isDropDisabled={!list.isPersisted || !canDropCard || isLimitBlocking}
     >
       {({ innerRef, droppableProps, placeholder }) => (
         // eslint-disable-next-line react/jsx-props-no-spreading
@@ -137,7 +171,7 @@ const List = React.memo(({ id, index }) => {
               <DraggableCard key={cardId} id={cardId} index={cardIndex} className={styles.card} />
             ))}
             {placeholder}
-            {canAddCard && (
+            {canAddCard && !isLimitBlocking && (
               <AddCard
                 isOpened={isAddCardOpened}
                 className={styles.addCard}
@@ -170,6 +204,8 @@ const List = React.memo(({ id, index }) => {
             className={classNames(
               styles.outerWrapper,
               isFavoritesActive && styles.outerWrapperWithFavorites,
+              !isLimitBlocking && isLimitWarning && styles.outerWrapperWarning,
+              isLimitBlocking && styles.outerWrapperBlocking,
             )}
             onTransitionEnd={handleWrapperTransitionEnd}
           >
@@ -180,77 +216,93 @@ const List = React.memo(({ id, index }) => {
               className={classNames(styles.header, canEdit && styles.headerEditable)}
               onClick={handleHeaderClick}
             >
-              {isEditNameOpened ? (
-                <EditName listId={id} onClose={handleEditNameClose} />
-              ) : (
-                <div className={styles.headerName}>
-                  {list.color && (
-                    <Icon
-                      name="circle"
-                      className={classNames(
-                        styles.headerNameColor,
-                        !list.color.startsWith('#') &&
-                          globalStyles[`color${upperFirst(camelCase(list.color))}`],
-                      )}
-                      style={list.color.startsWith('#') ? { color: list.color } : null}
-                    />
-                  )}
-                  {list.name}
-                </div>
-              )}
-              {project.useStoryPoints && storyPointsTotal !== 0 && (
-                <StoryPointsChip
-                  value={storyPointsTotal}
-                  size="tiny"
-                  className={styles.storyPoints}
-                />
-              )}
-              {list.type !== ListTypes.ACTIVE && (
-                <Icon
-                  name={ListTypeIcons[list.type]}
-                  className={classNames(
-                    styles.headerIcon,
-                    list.isPersisted && (canEdit || canArchiveCards) && styles.headerIconHidable,
-                  )}
-                />
-              )}
-              {list.isPersisted &&
-                (canEdit ? (
-                  <ActionsPopup listId={id} onNameEdit={handleNameEdit} onCardAdd={handleCardAdd}>
-                    <Button className={styles.headerButton}>
-                      <Icon fitted name="pencil" size="small" />
-                    </Button>
-                  </ActionsPopup>
+              <div className={styles.headerTitle}>
+                {isEditNameOpened ? (
+                  <EditName listId={id} onClose={handleEditNameClose} />
                 ) : (
-                  canArchiveCards && (
-                    <ArchiveCardsPopup listId={id}>
+                  <div className={styles.headerName}>
+                    {list.color && (
+                      <Icon
+                        name="circle"
+                        className={classNames(
+                          styles.headerNameColor,
+                          !list.color.startsWith('#') &&
+                            globalStyles[`color${upperFirst(camelCase(list.color))}`],
+                        )}
+                        style={list.color.startsWith('#') ? { color: list.color } : null}
+                      />
+                    )}
+                    {list.name}
+                  </div>
+                )}
+              </div>
+              <div className={styles.headerRight}>
+                {(project.useStoryPoints && storyPointsTotal !== 0) ||
+                (showCardCount && Number.isFinite(totalCardCount)) ? (
+                  <div className={styles.headerMetrics}>
+                    {project.useStoryPoints && storyPointsTotal !== 0 && (
+                      <StoryPointsChip
+                        value={storyPointsTotal}
+                        size="tiny"
+                        className={styles.headerMetric}
+                      />
+                    )}
+                    {showCardCount && Number.isFinite(totalCardCount) && (
+                      <ListMetricChip
+                        filteredCount={filteredCardCount}
+                        totalCount={totalCardCount}
+                        className={styles.headerMetric}
+                      />
+                    )}
+                  </div>
+                ) : null}
+                {list.type !== ListTypes.ACTIVE && (
+                  <Icon
+                    name={ListTypeIcons[list.type]}
+                    className={classNames(
+                      styles.headerIcon,
+                      list.isPersisted && (canEdit || canArchiveCards) && styles.headerIconHidable,
+                    )}
+                  />
+                )}
+                {list.isPersisted &&
+                  (canEdit ? (
+                    <ActionsPopup listId={id} onNameEdit={handleNameEdit} onCardAdd={handleCardAdd}>
                       <Button className={styles.headerButton}>
-                        <Icon fitted name="archive" size="small" />
+                        <Icon fitted name="pencil" size="small" />
                       </Button>
-                    </ArchiveCardsPopup>
-                  )
-                ))}
-              {list.isPersisted && list.slug === 'ready-for-sprint' && isProjectManager && (
-                <StartSprintPopup>
-                  <Button className={styles.headerButton} title={t('action.startSprint_title')}>
-                    <Icon fitted name="play" size="small" />
-                  </Button>
-                </StartSprintPopup>
-              )}
+                    </ActionsPopup>
+                  ) : (
+                    canArchiveCards && (
+                      <ArchiveCardsPopup listId={id}>
+                        <Button className={styles.headerButton}>
+                          <Icon fitted name="archive" size="small" />
+                        </Button>
+                      </ArchiveCardsPopup>
+                    )
+                  ))}
+                {list.isPersisted && list.slug === 'ready-for-sprint' && isProjectManager && (
+                  <StartSprintPopup>
+                    <Button className={styles.headerButton} title={t('action.startSprint_title')}>
+                      <Icon fitted name="play" size="small" />
+                    </Button>
+                  </StartSprintPopup>
+                )}
+              </div>
             </div>
             <div ref={cardsWrapperRef} className={styles.cardsInnerWrapper}>
               <div className={styles.cardsOuterWrapper}>{cardsNode}</div>
             </div>
-            {!isAddCardOpened && canAddCard && (
+            {!isAddCardOpened && canAddCard && !isLimitBlocking && (
               <button
                 type="button"
-                disabled={!list.isPersisted}
+                disabled={!list.isPersisted || isLimitBlocking}
                 className={styles.addCardButton}
                 onClick={handleAddCardClick}
               >
                 <PlusMathIcon className={styles.addCardButtonIcon} />
                 <span className={styles.addCardButtonText}>
-                  {cardIds.length > 0 ? t('action.addAnotherCard') : t('action.addCard')}
+                  {filteredCardCount > 0 ? t('action.addAnotherCard') : t('action.addCard')}
                 </span>
               </button>
             )}
