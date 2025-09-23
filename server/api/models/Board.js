@@ -69,6 +69,11 @@ module.exports = {
       defaultsTo: false,
       columnName: 'always_display_card_creator',
     },
+    showCardCount: {
+      type: 'boolean',
+      defaultsTo: false,
+      columnName: 'show_card_count',
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
