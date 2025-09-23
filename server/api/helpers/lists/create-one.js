@@ -25,6 +25,10 @@ module.exports = {
   async fn(inputs) {
     const { values } = inputs;
 
+    if (_.isUndefined(values.cardLimit)) {
+      values.cardLimit = 0;
+    }
+
     const lists = await sails.helpers.boards.getFiniteListsById(values.board.id);
 
     const { position, repositions } = sails.helpers.utils.insertToPositionables(

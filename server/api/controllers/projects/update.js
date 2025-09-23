@@ -274,6 +274,20 @@ module.exports = {
     }
 
     if (!prevUseScrum && project.useScrum) {
+      const boards = await Board.qm.getByProjectId(project.id);
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const boardRecord of boards) {
+        // eslint-disable-next-line no-await-in-loop
+        await sails.helpers.boards.updateOne.with({
+          values: { showCardCount: false },
+          project,
+          record: boardRecord,
+          actorUser: currentUser,
+          request: this.req,
+        });
+      }
+
       await sails.helpers.projects.deleteScrumBoards.with({
         project,
         actorUser: currentUser,

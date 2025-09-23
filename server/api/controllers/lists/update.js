@@ -15,6 +15,7 @@ const Errors = {
     listNotFound: 'List not found',
   },
   CARD_TYPE_NOT_FOUND: { cardTypeNotFound: 'Card type not found' },
+  INVALID_CARD_LIMIT: { invalidCardLimit: 'Invalid card limit' },
 };
 
 module.exports = {
@@ -53,6 +54,9 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
+    cardLimit: {
+      type: 'ref',
+    },
   },
 
   exits: {
@@ -63,6 +67,7 @@ module.exports = {
       responseType: 'notFound',
     },
     cardTypeNotFound: { responseType: 'notFound' },
+    invalidCardLimit: { responseType: 'unprocessableEntity' },
   },
 
   async fn(inputs) {
@@ -99,7 +104,26 @@ module.exports = {
       'color',
       'defaultCardType',
       'defaultCardTypeId',
+      'cardLimit',
     ]);
+
+    if (!_.isUndefined(inputs.cardLimit)) {
+      if (inputs.cardLimit === null) {
+        throw Errors.INVALID_CARD_LIMIT;
+      }
+
+      if (_.isString(inputs.cardLimit) && inputs.cardLimit.trim() === '') {
+        throw Errors.INVALID_CARD_LIMIT;
+      }
+
+      const parsedCardLimit = Number(inputs.cardLimit);
+
+      if (!Number.isInteger(parsedCardLimit) || parsedCardLimit < 0) {
+        throw Errors.INVALID_CARD_LIMIT;
+      }
+
+      values.cardLimit = parsedCardLimit;
+    }
 
     if (values.defaultCardTypeId) {
       const cardType = await sails.helpers.cardTypes.getOrCreateForProject

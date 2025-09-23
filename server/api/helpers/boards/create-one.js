@@ -27,6 +27,10 @@ module.exports = {
   async fn(inputs) {
     const { values } = inputs;
 
+    if (values.project.useScrum || _.isUndefined(values.showCardCount)) {
+      values.showCardCount = false;
+    }
+
     const scoper = sails.helpers.projects.makeScoper.with({
       record: values.project,
     });
