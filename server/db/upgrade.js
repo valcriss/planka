@@ -238,6 +238,7 @@ const upgradeDatabase = async () => {
             default_card_type: Card.Types.PROJECT,
             limit_card_types_to_default_one: false,
             always_display_card_creator: false,
+            show_card_count: false,
           })),
         )
         .transacting(trx);
@@ -251,6 +252,7 @@ const upgradeDatabase = async () => {
             [List.Types.ARCHIVE, List.Types.TRASH].map((type) => ({
               type,
               board_id: board.id,
+              card_limit: 0,
               created_at: createdAt,
             })),
           ),
@@ -306,6 +308,7 @@ const upgradeDatabase = async () => {
               'updated_at',
             ]),
             type: List.Types.ACTIVE,
+            card_limit: 0,
           })),
         )
         .transacting(trx);
@@ -893,6 +896,29 @@ const upgradeFileAttachments = async () => {
     if (isV1) {
       console.log('Upgrading database...');
       await upgradeDatabase();
+    }
+
+    const addColumnIfNotExists =
+      sails.helpers.migrations && sails.helpers.migrations.addColumnIfNotExists;
+
+    if (addColumnIfNotExists) {
+      await addColumnIfNotExists.with({
+        knex,
+        tableName: 'board',
+        columnName: 'show_card_count',
+        columnDefinition: (table) => {
+          table.boolean('show_card_count').notNullable().defaultTo(false);
+        },
+      });
+
+      await addColumnIfNotExists.with({
+        knex,
+        tableName: 'list',
+        columnName: 'card_limit',
+        columnDefinition: (table) => {
+          table.integer('card_limit').notNullable().defaultTo(0);
+        },
+      });
     }
 
     console.log('Upgrading files...');

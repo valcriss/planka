@@ -87,6 +87,11 @@ module.exports = {
       model: 'CardType',
       columnName: 'default_card_type_id',
     },
+    cardLimit: {
+      type: 'number',
+      defaultsTo: 0,
+      columnName: 'card_limit',
+    },
     color: {
       type: 'string',
       custom: (value) => HEX_COLOR_REGEX.test(value) || COLORS.includes(value),
