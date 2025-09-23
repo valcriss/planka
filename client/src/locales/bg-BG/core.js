@@ -170,6 +170,9 @@ export default {
       users: 'Потребители',
       viewer: 'Зрител',
       writeComment: 'Напишете коментар...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -240,6 +243,7 @@ export default {
       unsubscribe: 'Отписване',
       uploadNewAvatar: 'Качване на нов аватар',
       uploadNewImage: 'Качване на ново изображение',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

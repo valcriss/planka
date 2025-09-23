@@ -147,6 +147,9 @@ export default {
       username: 'kullanıcı adı',
       users: 'kullanıcı',
       writeComment: 'Yorum yazın...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -210,6 +213,7 @@ export default {
       unsubscribe: 'Abonelikten çık',
       uploadNewAvatar: 'Yeni avatar yükle',
       uploadNewImage: 'Yeni resim yükle',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

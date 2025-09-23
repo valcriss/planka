@@ -148,6 +148,9 @@ export default {
       username: 'Používateľské meno',
       users: 'Používatelia',
       writeComment: 'Napísať komentár...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -212,6 +215,7 @@ export default {
       unsubscribe: 'Neodoberať',
       uploadNewAvatar: 'Nahrať nový avatar',
       uploadNewImage: 'Nahrať nový obrázok',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

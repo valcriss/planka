@@ -298,6 +298,9 @@ export default {
       visualTaskManagementWithLists: 'Візуальне управління завданнями за допомогою списків.',
       withoutBaseGroup: 'Без базової групи',
       writeComment: 'Написати коментар...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -411,6 +414,7 @@ export default {
       unsubscribe: 'Відписатися',
       uploadNewAvatar: 'Завантажити новий аватар',
       uploadNewImage: 'Завантажити нове зображення',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

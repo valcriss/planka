@@ -302,6 +302,9 @@ export default {
       visualTaskManagementWithLists: 'Визуальное управление задачами с помощью списков',
       withoutBaseGroup: 'Без основной группы',
       writeComment: 'Напишите комментарий...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -415,6 +418,7 @@ export default {
       unsubscribe: 'Отписаться',
       uploadNewAvatar: 'Загрузить новый аватар',
       uploadNewImage: 'Загрузить новое изображение',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

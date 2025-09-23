@@ -164,6 +164,9 @@ export default {
       users: 'Usuários',
       viewer: 'Visualizador',
       writeComment: 'Escreva um comentário...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -231,6 +234,7 @@ export default {
       unsubscribe: 'Cancelar inscrição',
       uploadNewAvatar: 'Enviar novo avatar',
       uploadNewImage: 'Enviar nova imagem',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

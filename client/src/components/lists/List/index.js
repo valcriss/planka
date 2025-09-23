@@ -5,6 +5,7 @@
 
 import List from './List';
 import EditDefaultCardTypeStep from './EditDefaultCardTypeStep';
+import EditCardLimitStep from './EditCardLimitStep';
 
 export default List;
-export { EditDefaultCardTypeStep };
+export { EditDefaultCardTypeStep, EditCardLimitStep };

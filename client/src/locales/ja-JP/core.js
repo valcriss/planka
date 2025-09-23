@@ -163,6 +163,9 @@ export default {
       users: 'ユーザー',
       viewer: 'ビューア',
       writeComment: 'コメントを書く…',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -230,6 +233,7 @@ export default {
       unsubscribe: '購読解除',
       uploadNewAvatar: '新しいアバターをアップロード',
       uploadNewImage: '新しい画像をアップロード',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

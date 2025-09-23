@@ -18,6 +18,7 @@ import EditColorStep from './EditColorStep';
 import SortStep from './SortStep';
 import SelectListTypeStep from '../SelectListTypeStep';
 import EditDefaultCardTypeStep from './EditDefaultCardTypeStep';
+import EditCardLimitStep from './EditCardLimitStep';
 import ConfirmationStep from '../../common/ConfirmationStep';
 import ArchiveCardsStep from '../../cards/ArchiveCardsStep';
 
@@ -26,6 +27,7 @@ import styles from './ActionsStep.module.scss';
 const StepTypes = {
   EDIT_TYPE: 'EDIT_TYPE',
   EDIT_COLOR: 'EDIT_COLOR',
+  EDIT_CARD_LIMIT: 'EDIT_CARD_LIMIT',
   SORT: 'SORT',
   EDIT_DEFAULT_CARD_TYPE: 'EDIT_DEFAULT_CARD_TYPE',
   ARCHIVE_CARDS: 'ARCHIVE_CARDS',
@@ -74,6 +76,10 @@ const ActionsStep = React.memo(({ listId, onNameEdit, onCardAdd, onClose }) => {
     openStep(StepTypes.EDIT_COLOR);
   }, [openStep]);
 
+  const handleEditCardLimitClick = useCallback(() => {
+    openStep(StepTypes.EDIT_CARD_LIMIT);
+  }, [openStep]);
+
   const handleEditDefaultCardTypeClick = useCallback(() => {
     openStep(StepTypes.EDIT_DEFAULT_CARD_TYPE);
   }, [openStep]);
@@ -106,6 +112,8 @@ const ActionsStep = React.memo(({ listId, onNameEdit, onCardAdd, onClose }) => {
         );
       case StepTypes.EDIT_COLOR:
         return <EditColorStep listId={listId} onBack={handleBack} onClose={onClose} />;
+      case StepTypes.EDIT_CARD_LIMIT:
+        return <EditCardLimitStep listId={listId} onBack={handleBack} onClose={onClose} />;
       case StepTypes.EDIT_DEFAULT_CARD_TYPE:
         return <EditDefaultCardTypeStep listId={listId} onBack={handleBack} onClose={onClose} />;
       case StepTypes.SORT:
@@ -152,6 +160,11 @@ const ActionsStep = React.memo(({ listId, onNameEdit, onCardAdd, onClose }) => {
           </Menu.Item>
           <Menu.Item className={styles.menuItem} onClick={handleEditDefaultCardTypeClick}>
             {t('action.editDefaultCardType', {
+              context: 'title',
+            })}
+          </Menu.Item>
+          <Menu.Item className={styles.menuItem} onClick={handleEditCardLimitClick}>
+            {t('action.editCardLimit', {
               context: 'title',
             })}
           </Menu.Item>

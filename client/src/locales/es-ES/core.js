@@ -318,6 +318,9 @@ export default {
       visualTaskManagementWithLists: 'Gestión visual de tareas con listas',
       withoutBaseGroup: 'Sin grupo base',
       writeComment: 'Escribir un comentario...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -426,6 +429,7 @@ export default {
       unsubscribe: 'Desuscribirse',
       uploadNewAvatar: 'Subir un nuevo avatar',
       uploadNewImage: 'Subir una nueva imagen',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

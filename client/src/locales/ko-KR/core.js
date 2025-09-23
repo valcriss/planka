@@ -168,6 +168,9 @@ export default {
       users: '사용자들',
       viewer: '뷰어',
       writeComment: '댓글 작성...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -240,6 +243,7 @@ export default {
       unsubscribe: '구독 취소',
       uploadNewAvatar: '새 아바타 업로드',
       uploadNewImage: '새 이미지 업로드',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };
