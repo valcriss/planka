@@ -37,6 +37,8 @@ export default {
         'All changes will be automatically saved<br />after connection restored.',
       alphabetically: 'Alphabetically',
       alwaysDisplayCardCreator: 'Always display card creator',
+      showCardCount: 'Show card count',
+      cardCountDisabledInScrum: 'Card count display is disabled when scrum is enabled.',
       archive: 'Archive',
       archiveCard_title: 'Archive Card',
       archiveCards_title: 'Archive Cards',

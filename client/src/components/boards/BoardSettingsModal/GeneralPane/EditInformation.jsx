@@ -4,7 +4,7 @@
  */
 
 import { dequal } from 'dequal';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Input } from 'semantic-ui-react';
@@ -23,9 +23,8 @@ const EditInformation = React.memo(() => {
   const project = useSelector((state) =>
     board ? selectors.selectProjectById(state, board.projectId) : null,
   );
-
-  const isScrumBoard =
-    board && project && project.useScrum && ['Backlog', 'Sprint'].includes(board.name);
+  const projectUsesScrum = Boolean(project?.useScrum);
+  const isScrumBoard = board && projectUsesScrum && ['Backlog', 'Sprint'].includes(board.name);
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
@@ -33,21 +32,50 @@ const EditInformation = React.memo(() => {
   const defaultData = useMemo(
     () => ({
       name: board.name,
+      showCardCount: projectUsesScrum ? false : board.showCardCount,
     }),
-    [board.name],
+    [board.name, board.showCardCount, projectUsesScrum],
   );
 
-  const [data, handleFieldChange] = useForm(() => ({
+  const [data, handleFieldChange, setData] = useForm(() => ({
     name: '',
+    showCardCount: false,
     ...defaultData,
   }));
+
+  useEffect(() => {
+    setData((prevData) => {
+      if (
+        prevData.name === defaultData.name &&
+        prevData.showCardCount === defaultData.showCardCount
+      ) {
+        return prevData;
+      }
+
+      return {
+        ...prevData,
+        ...defaultData,
+      };
+    });
+  }, [defaultData, setData]);
+
+  const handleShowCardCountChange = useCallback(
+    (_, { checked }) => {
+      setData((prevData) => ({
+        ...prevData,
+        showCardCount: checked,
+      }));
+    },
+    [setData],
+  );
 
   const cleanData = useMemo(
     () => ({
       ...data,
       name: data.name.trim(),
+      showCardCount: projectUsesScrum ? false : data.showCardCount,
     }),
-    [data],
+    [data, projectUsesScrum],
   );
 
   const [nameFieldRef, handleNameFieldRef] = useNestedRef('inputRef');
@@ -74,6 +102,17 @@ const EditInformation = React.memo(() => {
         onChange={handleFieldChange}
         disabled={isScrumBoard}
       />
+      <Form.Checkbox
+        name="showCardCount"
+        label={t('common.showCardCount')}
+        checked={projectUsesScrum ? false : data.showCardCount}
+        className={styles.checkboxField}
+        onChange={handleShowCardCountChange}
+        disabled={projectUsesScrum}
+      />
+      {projectUsesScrum && (
+        <div className={styles.helperText}>{t('common.cardCountDisabledInScrum')}</div>
+      )}
       <Button
         positive
         disabled={dequal(cleanData, defaultData) || isScrumBoard}
