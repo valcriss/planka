@@ -42,6 +42,9 @@ export default {
         'Toutes les modifications seront automatiquement enregistrées<br />une fois la connexion rétablie.',
       alphabetically: 'Alphabétique',
       alwaysDisplayCardCreator: 'Toujours afficher le créateur de la carte',
+      showCardCount: 'Afficher le nombre de cartes',
+      cardCountDisabledInScrum:
+        "L'affichage du nombre de cartes est désactivé lorsque Scrum est activé.",
       archive: 'Archiver',
       archiveCard_title: 'Archiver la carte',
       archiveCards_title: 'Cartes archivées',
