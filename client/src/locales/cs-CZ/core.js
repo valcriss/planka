@@ -296,6 +296,9 @@ export default {
       visualTaskManagementWithLists: 'Vizuální správa úkolů pomocí seznamů.',
       withoutBaseGroup: 'Bez základní skupiny',
       writeComment: 'Napsat komentář...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -409,6 +412,7 @@ export default {
       unsubscribe: 'Neodebírat',
       uploadNewAvatar: 'Nahrát nový avatar',
       uploadNewImage: 'Nahrát nový obrázek',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

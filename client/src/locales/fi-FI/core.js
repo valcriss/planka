@@ -322,6 +322,9 @@ export default {
       visualTaskManagementWithLists: 'Visuaalinen tehtävien hallinta listoilla.',
       withoutBaseGroup: 'Ilman perusryhmää',
       writeComment: 'Kirjoita kommentti...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -435,6 +438,7 @@ export default {
       unsubscribe: 'Peru tilaus',
       uploadNewAvatar: 'Lataa uusi avatar',
       uploadNewImage: 'Lataa uusi kuva',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

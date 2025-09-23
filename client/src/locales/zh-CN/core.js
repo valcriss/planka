@@ -155,6 +155,9 @@ export default {
       users: '用户',
       viewer: '视图',
       writeComment: '编写评论...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -223,6 +226,7 @@ export default {
       unsubscribe: '取消关注',
       uploadNewAvatar: '上传新头像',
       uploadNewImage: '上传图片',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

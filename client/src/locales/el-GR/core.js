@@ -340,6 +340,9 @@ export default {
       visualTaskManagementWithLists: 'Οπτική διαχείριση εργασιών με λίστες.',
       withoutBaseGroup: 'Χωρίς βασική ομάδα',
       writeComment: 'Γράψτε ένα σχόλιο...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -453,6 +456,7 @@ export default {
       unsubscribe: 'Απεγγραφή',
       uploadNewAvatar: 'Μεταφόρτωση νέου avatar',
       uploadNewImage: 'Μεταφόρτωση νέας εικόνας',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

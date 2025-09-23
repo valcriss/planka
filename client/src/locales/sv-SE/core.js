@@ -146,6 +146,9 @@ export default {
       username: 'Användarnamn',
       users: 'Användare',
       writeComment: 'Skriv en kommentar...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -210,6 +213,7 @@ export default {
       unsubscribe: 'Avprenumerera',
       uploadNewAvatar: 'Ladda upp ny avatar',
       uploadNewImage: 'Ladda upp ny bild',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

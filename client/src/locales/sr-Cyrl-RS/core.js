@@ -169,6 +169,9 @@ export default {
       users: 'Корисници',
       viewer: 'Прегледач',
       writeComment: 'Напиши коментар...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -239,6 +242,7 @@ export default {
       unsubscribe: 'Укини претплату',
       uploadNewAvatar: 'Постави нови аватар',
       uploadNewImage: 'Постави нову слику',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

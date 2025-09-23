@@ -143,6 +143,9 @@ export default {
       username: 'Foydalanuvchi nomi',
       users: 'Foydalanuvchilar',
       writeComment: 'Izoh yozish...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -206,6 +209,7 @@ export default {
       unsubscribe: 'Obunani bekor qilish',
       uploadNewAvatar: 'Yangi avatar yuklash',
       uploadNewImage: 'Yangi rasm yuklash',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

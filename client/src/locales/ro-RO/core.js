@@ -164,6 +164,9 @@ export default {
       users: 'Utilizatori',
       viewer: 'Vizualizator',
       writeComment: 'Scrie un comentariu...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -231,6 +234,7 @@ export default {
       unsubscribe: 'Dezabonați-vă',
       uploadNewAvatar: 'Încărcați un avatar nou',
       uploadNewImage: 'Încărcați o nouă imagine',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

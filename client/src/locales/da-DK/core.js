@@ -324,6 +324,9 @@ export default {
       visualTaskManagementWithLists: 'Visuel opgavestyring med lister',
       withoutBaseGroup: 'Uden standardgruppe',
       writeComment: 'Skriv en kommentar...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -437,6 +440,7 @@ export default {
       unsubscribe: 'Opsig abonnement',
       uploadNewAvatar: 'Tilføj nyt profilbillede',
       uploadNewImage: 'Tilføj nyt billede',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

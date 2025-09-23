@@ -322,6 +322,9 @@ export default {
       visualTaskManagementWithLists: 'Visual tööülesande haldamine nimekirjade abil.',
       withoutBaseGroup: 'Ilma põhiklassita',
       writeComment: 'Kirjuta kommentaar...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -435,6 +438,7 @@ export default {
       unsubscribe: 'Tühista tellimus',
       uploadNewAvatar: 'Laadi üles uus avatar',
       uploadNewImage: 'Laadi üles uus pilt',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

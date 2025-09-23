@@ -168,6 +168,9 @@ export default {
       users: 'Felhasználók',
       viewer: 'Néző',
       writeComment: 'Írjon egy megjegyzést...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -238,6 +241,7 @@ export default {
       unsubscribe: 'Leiratkozás',
       uploadNewAvatar: 'Új avatar feltöltése',
       uploadNewImage: 'Új kép feltöltése',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };

@@ -165,6 +165,9 @@ export default {
       users: 'المستخدمين',
       viewer: 'مشاهد',
       writeComment: 'اكتب تعليقاً...',
+      cardLimit: 'Card limit',
+      cardLimitPlaceholder: '0 for no limit',
+      editCardLimit_title: 'Edit Card Limit',
     },
 
     action: {
@@ -235,6 +238,7 @@ export default {
       unsubscribe: 'إلغاء الاشتراك',
       uploadNewAvatar: 'رفع صورة رمزية جديدة',
       uploadNewImage: 'رفع صورة جديدة',
+      editCardLimit_title: 'Edit Card Limit',
     },
   },
 };
