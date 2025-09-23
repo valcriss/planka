@@ -16,6 +16,7 @@
 - **Real-Time Updates**: Instant syncing across all users, no refresh needed
 - **Rich Markdown Support**: Write beautifully formatted card descriptions with a powerful markdown editor
 - **Flexible Notifications**: Get alerts through 100+ providers, fully customizable to your workflow
+- **Configurable List Counters**: Enable per-board list card counters to track filtered versus total cards at a glance; counters are automatically disabled when Scrum mode is active
 - **Seamless Authentication**: Single sign-on with OpenID Connect integration
 - **Multilingual & Easy to Translate**: Full internationalization support for a global audience
 - **Stable List Slugs**: Lists have optional `slug` identifiers for reliable API queries, unaffected by renaming
