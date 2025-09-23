@@ -49,6 +49,9 @@ module.exports = {
     isSubscribed: {
       type: 'boolean',
     },
+    showCardCount: {
+      type: 'boolean',
+    },
   },
 
   exits: {
@@ -85,6 +88,7 @@ module.exports = {
         'defaultCardTypeId',
         'limitCardTypesToDefaultOne',
         'alwaysDisplayCardCreator',
+        'showCardCount',
       );
     }
     if (isBoardMember) {
@@ -104,7 +108,12 @@ module.exports = {
       'limitCardTypesToDefaultOne',
       'alwaysDisplayCardCreator',
       'isSubscribed',
+      'showCardCount',
     ]);
+
+    if (!_.isUndefined(values.showCardCount)) {
+      values.showCardCount = project.useScrum ? false : values.showCardCount;
+    }
 
     if (values.defaultCardTypeId) {
       const cardType = await sails.helpers.cardTypes.getOrCreateForProject
