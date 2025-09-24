@@ -5,11 +5,13 @@
 
 import isEmail from 'validator/lib/isEmail';
 import React, { useCallback, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Message, Tab } from 'semantic-ui-react';
 
 import api from '../../../../api';
 import { Input } from '../../../../lib/custom-ui';
+import selectors from '../../../../selectors';
 
 import styles from './SystemPane.module.scss';
 
@@ -48,6 +50,7 @@ const SystemPane = React.memo(() => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const accessToken = useSelector(selectors.selectAccessToken);
 
   const handleEmailChange = useCallback((event, { value }) => {
     setEmail(value);
@@ -73,9 +76,16 @@ const SystemPane = React.memo(() => {
     setError(null);
 
     try {
-      const response = await api.testSmtp({
-        email: trimmedEmail,
-      });
+      const response = await api.testSmtp(
+        {
+          email: trimmedEmail,
+        },
+        accessToken
+          ? {
+              Authorization: `Bearer ${accessToken}`,
+            }
+          : undefined,
+      );
 
       setResult(response.item);
     } catch (err) {
@@ -83,7 +93,7 @@ const SystemPane = React.memo(() => {
     } finally {
       setIsSubmitting(false);
     }
-  }, [email]);
+  }, [accessToken, email]);
 
   const isEmailValid = isEmail(email.trim());
 
