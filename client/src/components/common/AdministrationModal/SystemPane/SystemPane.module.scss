@@ -1,0 +1,75 @@
+/*!
+ * Copyright (c) 2024 PLANKA Software GmbH
+ * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
+ */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+:global(#app) {
+  .wrapper {
+    border: none;
+    box-shadow: none;
+  }
+}
+
+.header {
+  margin: 0;
+  font-size: 1.28571429rem;
+  font-weight: 600;
+}
+
+.description {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 420px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.meta {
+  margin: 0.25rem 0 0;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.92857143rem;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section {
+  margin-top: 0.75rem;
+}
+
+.sectionTitle {
+  margin: 0 0 0.5rem;
+  font-size: 0.92857143rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.code {
+  margin: 0;
+  padding: 0.75rem;
+  border-radius: 0.28571429rem;
+  background: rgba(0, 0, 0, 0.03);
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 0.85714286rem;
+  line-height: 1.4;
+  overflow: auto;
+}

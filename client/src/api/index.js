@@ -35,6 +35,7 @@ import notifications from './notifications';
 import notificationServices from './notification-services';
 import repositories from './repositories';
 import sprints from './sprints';
+import system from './system';
 
 export { http, socket };
 
@@ -69,4 +70,5 @@ export default {
   ...notifications,
   ...notificationServices,
   ...repositories,
+  ...system,
 };
