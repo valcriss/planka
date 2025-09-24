@@ -14,6 +14,7 @@ import { useClosableModal } from '../../../hooks';
 import UsersPane from './UsersPane';
 import WebhooksPane from './WebhooksPane';
 import BaseCardTypesPane from './BaseCardTypesPane';
+import SystemPane from './SystemPane';
 
 import styles from './AdministrationModal.module.scss';
 
@@ -50,6 +51,12 @@ const AdministrationModal = React.memo(() => {
         context: 'title',
       }),
       render: () => <BaseCardTypesPane />,
+    },
+    {
+      menuItem: t('common.system', {
+        context: 'title',
+      }),
+      render: () => <SystemPane />,
     },
   ];
 
