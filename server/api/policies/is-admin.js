@@ -4,6 +4,10 @@
  */
 
 module.exports = async function isAuthenticated(req, res, proceed) {
+  if (!req.currentUser) {
+    return res.unauthorized('Access token is missing, invalid or expired');
+  }
+
   if (req.currentUser.role !== User.Roles.ADMIN) {
     return res.notFound(); // Forbidden
   }
