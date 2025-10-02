@@ -148,6 +148,14 @@ module.exports = {
       collection: 'Action',
       via: 'cardId',
     },
+    outgoingCardLinks: {
+      collection: 'CardLink',
+      via: 'cardId',
+    },
+    incomingCardLinks: {
+      collection: 'CardLink',
+      via: 'linkedCardId',
+    },
     sprints: {
       collection: 'Sprint',
       via: 'cardId',

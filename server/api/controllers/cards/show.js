@@ -68,9 +68,25 @@ module.exports = {
     const customFields = await CustomField.qm.getByCustomFieldGroupIds(customFieldGroupIds);
     const customFieldValues = await CustomFieldValue.qm.getByCardId(card.id);
 
+    const cardLinks = await CardLink.qm.getForCardId(card.id);
+
+    const linkedCardIds = new Set();
+    cardLinks.forEach((cardLink) => {
+      if (cardLink.cardId !== card.id) {
+        linkedCardIds.add(cardLink.cardId);
+      }
+
+      if (cardLink.linkedCardId !== card.id) {
+        linkedCardIds.add(cardLink.linkedCardId);
+      }
+    });
+
+    const linkedCards = linkedCardIds.size > 0 ? await Card.qm.getByIds([...linkedCardIds]) : [];
+
     return {
       item: card,
       included: {
+        cardLinks,
         cardMemberships,
         cardLabels,
         taskLists,
@@ -78,6 +94,7 @@ module.exports = {
         customFieldGroups,
         customFields,
         customFieldValues,
+        linkedCards,
         users: sails.helpers.users.presentMany(users, currentUser),
         attachments: sails.helpers.attachments.presentMany(attachments),
       },

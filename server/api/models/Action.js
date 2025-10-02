@@ -15,6 +15,8 @@ const Types = {
   MOVE_CARD: 'moveCard',
   ADD_MEMBER_TO_CARD: 'addMemberToCard',
   REMOVE_MEMBER_FROM_CARD: 'removeMemberFromCard',
+  ADD_CARD_LINK_TO_CARD: 'addCardLinkToCard',
+  REMOVE_CARD_LINK_FROM_CARD: 'removeCardLinkFromCard',
   COMPLETE_TASK: 'completeTask',
   UNCOMPLETE_TASK: 'uncompleteTask',
 };

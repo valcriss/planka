@@ -64,6 +64,7 @@ module.exports = {
 
     const cards = await Card.qm.getByListIds(finiteListIds);
     const cardIds = sails.helpers.utils.mapRecords(cards);
+    const cardLinks = cardIds.length > 0 ? await CardLink.qm.getForCardIds(cardIds) : [];
 
     const userIds = _.union(
       sails.helpers.utils.mapRecords(boardMemberships, 'userId'),
@@ -118,6 +119,7 @@ module.exports = {
         labels,
         lists,
         cards,
+        cardLinks,
         cardMemberships,
         cardLabels,
         taskLists,

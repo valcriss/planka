@@ -109,6 +109,23 @@ module.exports = {
     });
 
     const cardIds = sails.helpers.utils.mapRecords(cards);
+    const cardIdsSet = new Set(cardIds);
+
+    const cardLinks = cardIds.length > 0 ? await CardLink.qm.getForCardIds(cardIds) : [];
+
+    const extraCardIds = [];
+
+    cardLinks.forEach((cardLink) => {
+      if (!cardIdsSet.has(cardLink.cardId)) {
+        extraCardIds.push(cardLink.cardId);
+      }
+
+      if (!cardIdsSet.has(cardLink.linkedCardId)) {
+        extraCardIds.push(cardLink.linkedCardId);
+      }
+    });
+
+    const linkedCards = extraCardIds.length > 0 ? await Card.qm.getByIds(_.uniq(extraCardIds)) : [];
 
     const userIds = sails.helpers.utils.mapRecords(cards, 'creatorUserId', true, true);
     const users = await User.qm.getByIds(userIds);
@@ -149,6 +166,7 @@ module.exports = {
     return {
       items: cards,
       included: {
+        cardLinks,
         cardMemberships,
         cardLabels,
         taskLists,
@@ -156,6 +174,7 @@ module.exports = {
         customFieldGroups,
         customFields,
         customFieldValues,
+        linkedCards,
         users: sails.helpers.users.presentMany(users, currentUser),
         attachments: sails.helpers.attachments.presentMany(attachments),
       },
