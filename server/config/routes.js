@@ -160,6 +160,8 @@ module.exports.routes = {
   'DELETE /api/cards/:cardId/card-memberships/userId::userId': 'card-memberships/delete',
   'POST /api/cards/:cardId/card-labels': 'card-labels/create',
   'DELETE /api/cards/:cardId/card-labels/labelId::labelId': 'card-labels/delete',
+  'POST /api/cards/:cardId/card-links': 'card-links/create',
+  'DELETE /api/card-links/:id': 'card-links/delete',
 
   'POST /api/cards/:cardId/task-lists': 'task-lists/create',
   'GET /api/task-lists/:id': 'task-lists/show',
@@ -198,6 +200,7 @@ module.exports.routes = {
   'DELETE /api/comments/:id': 'comments/delete',
 
   'GET /api/boards/:boardId/actions': 'actions/index-in-board',
+  'GET /api/boards/:boardId/card-links/search': 'card-links/search',
   'GET /api/cards/:cardId/actions': 'actions/index-in-card',
 
   'GET /api/notifications': 'notifications/index',

@@ -93,6 +93,8 @@ module.exports = {
     return {
       item: nextCard,
       included: {
+        cardLinks: [],
+        linkedCards: [],
         cardMemberships,
         cardLabels,
         taskLists,
