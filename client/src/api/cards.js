@@ -9,6 +9,7 @@ import socket from './socket';
 import { transformAttachment } from './attachments';
 import { transformActivity } from './activities';
 import { transformNotification } from './notifications';
+import { transformCardLink } from './card-links';
 
 /* Transformers */
 
@@ -69,6 +70,12 @@ const getCards = (listId, data, headers) =>
     included: {
       ...body.included,
       attachments: body.included.attachments.map(transformAttachment),
+      ...(body.included.cardLinks && {
+        cardLinks: body.included.cardLinks.map(transformCardLink),
+      }),
+      ...(body.included.linkedCards && {
+        linkedCards: body.included.linkedCards.map(transformCard),
+      }),
     },
   }));
 
@@ -85,6 +92,12 @@ const getCard = (id, headers) =>
     included: {
       ...body.included,
       attachments: body.included.attachments.map(transformAttachment),
+      ...(body.included.cardLinks && {
+        cardLinks: body.included.cardLinks.map(transformCardLink),
+      }),
+      ...(body.included.linkedCards && {
+        linkedCards: body.included.linkedCards.map(transformCard),
+      }),
     },
   }));
 
@@ -95,6 +108,12 @@ const getCardByProjectCodeAndNumber = (projectCode, number, headers) =>
     included: {
       ...body.included,
       attachments: body.included.attachments.map(transformAttachment),
+      ...(body.included.cardLinks && {
+        cardLinks: body.included.cardLinks.map(transformCardLink),
+      }),
+      ...(body.included.linkedCards && {
+        linkedCards: body.included.linkedCards.map(transformCard),
+      }),
     },
   }));
 
@@ -111,6 +130,12 @@ const duplicateCard = (id, data, headers) =>
     included: {
       ...body.included,
       attachments: body.included.attachments.map(transformAttachment),
+      ...(body.included.cardLinks && {
+        cardLinks: body.included.cardLinks.map(transformCardLink),
+      }),
+      ...(body.included.linkedCards && {
+        linkedCards: body.included.linkedCards.map(transformCard),
+      }),
     },
   }));
 
@@ -121,6 +146,12 @@ const readCardNotifications = (id, headers) =>
     included: {
       ...body.included,
       notifications: body.included.notifications.map(transformNotification),
+      ...(body.included.cardLinks && {
+        cardLinks: body.included.cardLinks.map(transformCardLink),
+      }),
+      ...(body.included.linkedCards && {
+        linkedCards: body.included.linkedCards.map(transformCard),
+      }),
     },
   }));
 
@@ -139,6 +170,12 @@ const makeHandleCardsUpdate = (next) => (body) => {
     included: body.included && {
       ...omit(body.included, 'actions'),
       activities: body.included.actions.map(transformActivity),
+      ...(body.included.cardLinks && {
+        cardLinks: body.included.cardLinks.map(transformCardLink),
+      }),
+      ...(body.included.linkedCards && {
+        linkedCards: body.included.linkedCards.map(transformCard),
+      }),
     },
   });
 };

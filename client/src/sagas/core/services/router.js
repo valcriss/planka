@@ -104,6 +104,10 @@ export function* handleLocationChange() {
   let labels;
   let lists;
   let cards;
+  let cardLinks1;
+  let cardLinks2;
+  let linkedCards1;
+  let linkedCards2;
   let cardMemberships1;
   let cardMemberships2;
   let cardLabels1;
@@ -155,6 +159,7 @@ export function* handleLocationChange() {
                 labels,
                 lists,
                 cards,
+                cardLinks: cardLinks1,
                 users: users1,
                 cardMemberships: cardMemberships1,
                 cardLabels: cardLabels1,
@@ -205,6 +210,8 @@ export function* handleLocationChange() {
               customFieldGroups: customFieldGroups1,
               customFields: customFields1,
               customFieldValues: customFieldValues1,
+              cardLinks: cardLinks1,
+              linkedCards: linkedCards1,
             },
           } = yield call(
             request,
@@ -236,6 +243,7 @@ export function* handleLocationChange() {
                 labels,
                 lists,
                 cards,
+                cardLinks: cardLinks2,
                 users: users2,
                 cardMemberships: cardMemberships2,
                 cardLabels: cardLabels2,
@@ -305,7 +313,8 @@ export function* handleLocationChange() {
       boardMemberships,
       labels,
       lists,
-      mergeRecords(card && [card], cards),
+      mergeRecords(card && [card], cards, linkedCards1, linkedCards2),
+      mergeRecords(cardLinks1, cardLinks2) || [],
       mergeRecords(cardMemberships1, cardMemberships2),
       mergeRecords(cardLabels1, cardLabels2),
       mergeRecords(taskLists1, taskLists2),

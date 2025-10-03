@@ -308,6 +308,12 @@ export default class extends BaseModel {
       case ActionTypes.CARD_CREATE_HANDLE:
         Card.upsert(payload.card);
 
+        if (payload.linkedCards) {
+          payload.linkedCards.forEach((linkedCard) => {
+            Card.upsert(linkedCard);
+          });
+        }
+
         payload.cardMemberships.forEach(({ cardId, userId }) => {
           Card.withId(cardId).users.add(userId);
         });
@@ -346,6 +352,12 @@ export default class extends BaseModel {
           Card.upsert(payload.card);
         }
 
+        if (payload.linkedCards) {
+          payload.linkedCards.forEach((linkedCard) => {
+            Card.upsert(linkedCard);
+          });
+        }
+
         if (payload.cardMemberships) {
           payload.cardMemberships.forEach(({ cardId, userId }) => {
             Card.withId(cardId).users.add(userId);
@@ -368,6 +380,12 @@ export default class extends BaseModel {
 
         const cardModel = Card.upsert(payload.card);
 
+        if (payload.linkedCards) {
+          payload.linkedCards.forEach((linkedCard) => {
+            Card.upsert(linkedCard);
+          });
+        }
+
         payload.cardMemberships.forEach(({ userId }) => {
           cardModel.users.add(userId);
         });
@@ -380,6 +398,12 @@ export default class extends BaseModel {
       }
       case ActionTypes.CARD_DUPLICATE__FAILURE:
         Card.withId(payload.localId).deleteWithRelated();
+
+        break;
+      case ActionTypes.CARD_LINKS_SEARCH__SUCCESS:
+        payload.cards.forEach((card) => {
+          Card.upsert(card);
+        });
 
         break;
       case ActionTypes.CARD_DELETE:
@@ -475,6 +499,14 @@ export default class extends BaseModel {
     return this.notifications.filter({
       isRead: false,
     });
+  }
+
+  getOutgoingCardLinksQuerySet() {
+    return this.outgoingCardLinks.orderBy(['createdAt', 'id.length', 'id']);
+  }
+
+  getIncomingCardLinksQuerySet() {
+    return this.incomingCardLinks.orderBy(['createdAt', 'id.length', 'id']);
   }
 
   getShownOnFrontOfCardTaskListsModelArray() {
@@ -623,6 +655,8 @@ export default class extends BaseModel {
   deleteClearable() {
     this.users.clear();
     this.labels.clear();
+    this.outgoingCardLinks.delete();
+    this.incomingCardLinks.delete();
   }
 
   deleteRelated() {

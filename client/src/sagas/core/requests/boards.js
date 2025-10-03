@@ -23,6 +23,8 @@ export function* fetchBoardByCurrentPath() {
   let labels;
   let lists;
   let cards;
+  let cardLinks1;
+  let cardLinks2;
   let cardMemberships1;
   let cardMemberships2;
   let cardLabels1;
@@ -39,6 +41,8 @@ export function* fetchBoardByCurrentPath() {
   let customFields2;
   let customFieldValues1;
   let customFieldValues2;
+  let linkedCards1;
+  let linkedCards2;
   let epics;
 
   if (pathsMatch) {
@@ -67,6 +71,8 @@ export function* fetchBoardByCurrentPath() {
           customFieldGroups: customFieldGroups1,
           customFields: customFields1,
           customFieldValues: customFieldValues1,
+          cardLinks: cardLinks1,
+          linkedCards: linkedCards1,
         },
       } = yield call(
         request,
@@ -85,6 +91,7 @@ export function* fetchBoardByCurrentPath() {
           labels,
           lists,
           cards,
+          cardLinks: cardLinks2,
           users: users2,
           cardMemberships: cardMemberships2,
           cardLabels: cardLabels2,
@@ -114,7 +121,7 @@ export function* fetchBoardByCurrentPath() {
     boardMemberships,
     labels,
     lists,
-    cards,
+    cards: mergeRecords(cards, linkedCards1, linkedCards2),
     project: projects[0],
     users: mergeRecords(users1, users2),
     cardMemberships: mergeRecords(cardMemberships1, cardMemberships2),
@@ -125,6 +132,7 @@ export function* fetchBoardByCurrentPath() {
     customFieldGroups: mergeRecords(customFieldGroups1, customFieldGroups2),
     customFields: mergeRecords(customFields1, customFields2),
     customFieldValues: mergeRecords(customFieldValues1, customFieldValues2),
+    cardLinks: mergeRecords(cardLinks1, cardLinks2) || [],
     epics,
   };
 }
