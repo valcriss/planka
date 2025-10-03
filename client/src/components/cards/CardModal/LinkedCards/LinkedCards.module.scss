@@ -1,0 +1,138 @@
+/*!
+ * Copyright (c) 2024 PLANKA Software GmbH
+ * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
+ */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.list {
+  border: 1px solid rgba(9, 30, 66, 0.13);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.listRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px 48px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+
+  &:not(:first-child) {
+    border-top: 1px solid rgba(9, 30, 66, 0.13);
+  }
+
+  @media (width < 540px) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    gap: 6px;
+  }
+}
+
+.cardButton {
+  background: none;
+  border: none;
+  color: #17394d;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  white-space: normal;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}
+
+.typeCell {
+  color: #6b808c;
+  font-size: 13px;
+  line-height: 18px;
+
+  @media (width < 540px) {
+    order: 3;
+  }
+}
+
+.actionsCell {
+  display: flex;
+  justify-content: flex-end;
+
+  @media (width < 540px) {
+    order: 2;
+    justify-content: flex-start;
+  }
+}
+
+.removeButton {
+  box-shadow: none !important;
+}
+
+.removeButtonActive {
+  opacity: 0.6;
+}
+
+.empty {
+  border: 1px dashed rgba(9, 30, 66, 0.25);
+  border-radius: 4px;
+  color: #6b808c;
+  font-size: 13px;
+  padding: 12px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.formField {
+  flex: 1 1 240px;
+  position: relative;
+}
+
+.searchMenu {
+  background: #fff;
+  border: 1px solid rgba(9, 30, 66, 0.13) !important;
+  border-radius: 4px;
+  box-shadow: 0 6px 18px rgba(9, 30, 66, 0.2);
+  left: 0;
+  margin-top: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+  position: absolute;
+  right: 0;
+  z-index: 5;
+}
+
+.menuItemPrimary {
+  color: #17394d;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.menuItemSecondary {
+  color: #6b808c;
+  font-size: 12px;
+  line-height: 16px;
+  margin-top: 2px;
+}
+
+.typeDropdown {
+  min-width: 160px;
+}
+
+@media (width < 540px) {
+  .typeDropdown {
+    min-width: 140px;
+  }
+}
