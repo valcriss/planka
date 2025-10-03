@@ -38,6 +38,7 @@ import ListsStep from '../../../lists/ListsStep';
 import Attachments from '../../../attachments/Attachments';
 import AddAttachmentStep from '../../../attachments/AddAttachmentStep';
 import AddCustomFieldGroupStep from '../../../custom-field-groups/AddCustomFieldGroupStep';
+import LinkedCards from '../LinkedCards';
 
 import styles from './StoryContent.module.scss';
 
@@ -63,6 +64,13 @@ const StoryContent = React.memo(({ onClose }) => {
   const userIds = useSelector(selectors.selectUserIdsForCurrentCard);
   const labelIds = useSelector(selectors.selectLabelIdsForCurrentCard);
   const attachmentIds = useSelector(selectors.selectAttachmentIdsForCurrentCard);
+  const hasLinkedCards = useSelector((state) => {
+    if (selectors.selectOutgoingCardLinksByCardId(state, card.id).length > 0) {
+      return true;
+    }
+
+    return selectors.selectIncomingCardLinksByCardId(state, card.id).length > 0;
+  });
 
   const imageAttachmentIdsExceptCover = useSelector(
     selectors.selectImageAttachmentIdsExceptCoverForCurrentCard,
@@ -100,6 +108,7 @@ const StoryContent = React.memo(({ onClose }) => {
     canUseLabels,
     canAddAttachment,
     canAddCustomFieldGroup,
+    canManageLinkedCards,
   } = useSelector((state) => {
     const boardMembership = selectors.selectCurrentUserMembershipForCurrentBoard(state);
 
@@ -128,6 +137,7 @@ const StoryContent = React.memo(({ onClose }) => {
         canUseLabels: false,
         canAddAttachment: false,
         canAddCustomFieldGroup: false,
+        canManageLinkedCards: false,
       };
     }
 
@@ -147,6 +157,7 @@ const StoryContent = React.memo(({ onClose }) => {
       canUseLabels: isEditor,
       canAddAttachment: isEditor,
       canAddCustomFieldGroup: isEditor,
+      canManageLinkedCards: isEditor,
     };
   }, shallowEqual);
 
@@ -505,6 +516,17 @@ const StoryContent = React.memo(({ onClose }) => {
                       ))}
                     </div>
                   )}
+                </div>
+              </div>
+            )}
+            {(hasLinkedCards || canManageLinkedCards) && (
+              <div className={styles.contentModule}>
+                <div className={styles.moduleWrapper}>
+                  <Icon name="linkify" className={styles.moduleIcon} />
+                  <LinkedCards
+                    canEdit={canManageLinkedCards}
+                    headerClassName={styles.moduleHeader}
+                  />
                 </div>
               </div>
             )}

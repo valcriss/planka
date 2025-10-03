@@ -11,12 +11,7 @@ import { selectPath } from './router';
 import { selectCurrentUserId } from './users';
 import { buildCustomFieldValueId } from '../models/CustomFieldValue';
 import { isLocalId } from '../utils/local-id';
-
-const CardLinkInverseTypeMap = {
-  relatesTo: 'relatesTo',
-  blocks: 'blockedBy',
-  duplicates: 'duplicatedBy',
-};
+import { CardLinkInverseTypeMap } from '../constants/CardLinkTypes';
 
 export const makeSelectCardById = () =>
   createSelector(
