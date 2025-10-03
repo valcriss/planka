@@ -36,7 +36,7 @@ module.exports = {
     type: {
       type: 'string',
       required: true,
-      isIn: Object.values(CardLink.Types),
+      isIn: CardLink.CreatableTypes,
     },
   },
 

@@ -280,13 +280,23 @@ export default {
       sortList_title: 'Sort List',
       stopwatch: 'Stopwatch',
       story: 'Story',
+      /* Translators: Header shown above the linked cards section in the card modal. */
       linkedCards: 'Linked cards',
+      /* Translators: Helper text shown when no linked cards exist yet. */
       noLinkedCards: 'No linked cards yet.',
+      /* Translators: Labels for each relationship option available when linking cards. */
       cardLinkTypes: {
-        relatesTo: 'Relates to',
+        /* Translators: Indicates that the cards are loosely connected. */
+        related: 'Related',
+        /* Translators: Indicates that this card blocks progress on the linked card. */
         blocks: 'Blocks',
+        /* Translators: Indicates that this card is blocked by the linked card. */
         blockedBy: 'Blocked by',
+        /* Translators: Indicates that this card depends on the linked card. */
+        dependsOn: 'Depends on',
+        /* Translators: Indicates that the cards duplicate each other. */
         duplicates: 'Duplicates',
+        /* Translators: Indicates that this card is duplicated by the linked card. */
         duplicatedBy: 'Duplicated by',
       },
       type: 'Type',
@@ -327,6 +337,17 @@ export default {
       userMarkedTaskIncompleteOnCard:
         '<0>{{user}}</0> marked {{task}} incomplete on <4>{{card}}</4>',
       userMarkedTaskIncompleteOnThisCard: '<0>{{user}}</0> marked {{task}} incomplete on this card',
+      /* Translators: Activity log entry when a user links one card to another. */
+      userLinkedCardToCard:
+        '<0>{{user}}</0> linked <2>{{linkedCard}}</2> to <6>{{card}}</6> as {{type}}',
+      /* Translators: Activity log entry when a user links another card to the current card. */
+      userLinkedCardToThisCard: '<0>{{user}}</0> linked {{linkedCard}} to this card as {{type}}',
+      /* Translators: Activity log entry when a user removes a relationship between two cards. */
+      userRemovedCardLinkFromCard:
+        '<0>{{user}}</0> removed the {{type}} link between <2>{{linkedCard}}</2> and <6>{{card}}</6>',
+      /* Translators: Activity log entry when a user removes a relationship from the current card. */
+      userRemovedCardLinkFromThisCard:
+        '<0>{{user}}</0> removed the {{type}} link between this card and {{linkedCard}}',
       userMentionedYouInCommentOnCard:
         '<0>{{user}}</0> mentioned you in a comment «{{comment}}» on <2>{{card}}</2>',
       userMovedCardFromListToList:

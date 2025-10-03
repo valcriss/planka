@@ -11,13 +11,19 @@
  */
 
 const Types = {
-  RELATES_TO: 'relatesTo',
+  RELATED: 'relatesTo',
   BLOCKS: 'blocks',
+  BLOCKED_BY: 'blockedBy',
+  DEPENDS_ON: 'dependsOn',
   DUPLICATES: 'duplicates',
+  DUPLICATED_BY: 'duplicatedBy',
 };
+
+const CreatableTypes = [Types.RELATED, Types.BLOCKS, Types.DEPENDS_ON, Types.DUPLICATES];
 
 module.exports = {
   Types,
+  CreatableTypes,
 
   attributes: {
     type: {

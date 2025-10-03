@@ -13,7 +13,7 @@ import { Comment } from 'semantic-ui-react';
 import selectors from '../../../selectors';
 import Paths from '../../../constants/Paths';
 import { StaticUserIds } from '../../../constants/StaticUsers';
-import { ActivityTypes } from '../../../constants/Enums';
+import { ActivityTypes, CardLinkTypeTranslationKeys } from '../../../constants/Enums';
 import TimeAgo from '../../common/TimeAgo';
 import UserAvatar from '../../users/UserAvatar';
 
@@ -33,11 +33,29 @@ const Item = React.memo(({ id }) => {
   const project = useSelector((state) =>
     board ? selectProjectById(state, board.projectId) : null,
   );
+  const linkedCard = useSelector((state) =>
+    activity.data.linkedCard ? selectCardById(state, activity.data.linkedCard.id) : null,
+  );
+  const linkedBoard = useSelector((state) =>
+    linkedCard ? selectBoardById(state, linkedCard.boardId) : null,
+  );
+  const linkedProject = useSelector((state) =>
+    linkedBoard ? selectProjectById(state, linkedBoard.projectId) : null,
+  );
 
   const cardPath =
     project && card
       ? Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number)
       : `/cards/${activity.cardId}`;
+  let linkedCardPath = null;
+  if (linkedProject && linkedCard) {
+    linkedCardPath = Paths.CARDS.replace(':projectCode', linkedProject.code).replace(
+      ':number',
+      linkedCard.number,
+    );
+  } else if (activity.data.linkedCard) {
+    linkedCardPath = `/cards/${activity.data.linkedCard.id}`;
+  }
 
   const [t] = useTranslation();
 
@@ -49,6 +67,7 @@ const Item = React.memo(({ id }) => {
       : user.name;
 
   const cardName = card ? card.name : activity.data.card.name;
+  const linkedCardName = linkedCard?.name ?? activity.data.linkedCard?.name ?? '';
 
   let contentNode;
   switch (activity.type) {
@@ -205,6 +224,70 @@ const Item = React.memo(({ id }) => {
       );
 
       break;
+    case ActivityTypes.ADD_CARD_LINK_TO_CARD: {
+      const { type } = activity.data;
+      const typeKey = CardLinkTypeTranslationKeys[type];
+      const typeLabel = typeKey ? t(typeKey) : type;
+      const linkedNode = linkedCardPath ? (
+        <Link to={linkedCardPath}>{linkedCardName}</Link>
+      ) : (
+        <span>{linkedCardName}</span>
+      );
+
+      contentNode = (
+        <Trans
+          i18nKey="common.userLinkedCardToCard"
+          values={{
+            user: userName,
+            linkedCard: linkedCardName,
+            card: cardName,
+            type: typeLabel,
+          }}
+        >
+          <span className={styles.author}>{userName}</span>
+          {' linked '}
+          {linkedNode}
+          {' to '}
+          <Link to={cardPath}>{cardName}</Link>
+          {' as '}
+          {typeLabel}
+        </Trans>
+      );
+
+      break;
+    }
+    case ActivityTypes.REMOVE_CARD_LINK_FROM_CARD: {
+      const { type } = activity.data;
+      const typeKey = CardLinkTypeTranslationKeys[type];
+      const typeLabel = typeKey ? t(typeKey) : type;
+      const linkedNode = linkedCardPath ? (
+        <Link to={linkedCardPath}>{linkedCardName}</Link>
+      ) : (
+        <span>{linkedCardName}</span>
+      );
+
+      contentNode = (
+        <Trans
+          i18nKey="common.userRemovedCardLinkFromCard"
+          values={{
+            user: userName,
+            linkedCard: linkedCardName,
+            card: cardName,
+            type: typeLabel,
+          }}
+        >
+          <span className={styles.author}>{userName}</span>
+          {' removed the '}
+          {typeLabel}
+          {' link between '}
+          {linkedNode}
+          {' and '}
+          <Link to={cardPath}>{cardName}</Link>
+        </Trans>
+      );
+
+      break;
+    }
     default:
       contentNode = null;
   }
