@@ -94,11 +94,47 @@ export const AttachmentTypes = {
   LINK: 'link',
 };
 
+export const CardLinkTypes = {
+  RELATED: 'relatesTo',
+  BLOCKS: 'blocks',
+  BLOCKED_BY: 'blockedBy',
+  DEPENDS_ON: 'dependsOn',
+  DUPLICATES: 'duplicates',
+  DUPLICATED_BY: 'duplicatedBy',
+};
+
+export const CardLinkCreatableTypes = [
+  CardLinkTypes.RELATED,
+  CardLinkTypes.BLOCKS,
+  CardLinkTypes.DEPENDS_ON,
+  CardLinkTypes.DUPLICATES,
+];
+
+export const CardLinkInverseTypeMap = {
+  [CardLinkTypes.RELATED]: CardLinkTypes.RELATED,
+  [CardLinkTypes.BLOCKS]: CardLinkTypes.BLOCKED_BY,
+  [CardLinkTypes.DUPLICATES]: CardLinkTypes.DUPLICATED_BY,
+  [CardLinkTypes.DEPENDS_ON]: CardLinkTypes.BLOCKS,
+  [CardLinkTypes.BLOCKED_BY]: CardLinkTypes.BLOCKS,
+  [CardLinkTypes.DUPLICATED_BY]: CardLinkTypes.DUPLICATES,
+};
+
+export const CardLinkTypeTranslationKeys = {
+  [CardLinkTypes.RELATED]: 'common.cardLinkTypes.related',
+  [CardLinkTypes.BLOCKS]: 'common.cardLinkTypes.blocks',
+  [CardLinkTypes.BLOCKED_BY]: 'common.cardLinkTypes.blockedBy',
+  [CardLinkTypes.DEPENDS_ON]: 'common.cardLinkTypes.dependsOn',
+  [CardLinkTypes.DUPLICATES]: 'common.cardLinkTypes.duplicates',
+  [CardLinkTypes.DUPLICATED_BY]: 'common.cardLinkTypes.duplicatedBy',
+};
+
 export const ActivityTypes = {
   CREATE_CARD: 'createCard',
   MOVE_CARD: 'moveCard',
   ADD_MEMBER_TO_CARD: 'addMemberToCard',
   REMOVE_MEMBER_FROM_CARD: 'removeMemberFromCard',
+  ADD_CARD_LINK_TO_CARD: 'addCardLinkToCard',
+  REMOVE_CARD_LINK_FROM_CARD: 'removeCardLinkFromCard',
   COMPLETE_TASK: 'completeTask',
   UNCOMPLETE_TASK: 'uncompleteTask',
 };

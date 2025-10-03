@@ -11,7 +11,7 @@ import { selectPath } from './router';
 import { selectCurrentUserId } from './users';
 import { buildCustomFieldValueId } from '../models/CustomFieldValue';
 import { isLocalId } from '../utils/local-id';
-import { CardLinkInverseTypeMap } from '../constants/CardLinkTypes';
+import { CardLinkInverseTypeMap } from '../constants/Enums';
 
 export const makeSelectCardById = () =>
   createSelector(

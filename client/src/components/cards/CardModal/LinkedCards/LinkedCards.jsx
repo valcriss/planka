@@ -17,7 +17,7 @@ import {
   CardLinkCreatableTypes,
   CardLinkTypeTranslationKeys,
   CardLinkTypes,
-} from '../../../../constants/CardLinkTypes';
+} from '../../../../constants/Enums';
 
 import LinkedCardItem from './LinkedCardItem';
 import styles from './LinkedCards.module.scss';
@@ -32,7 +32,7 @@ const LinkedCards = React.memo(({ canEdit, className, headerClassName }) => {
   const [searchValue, setSearchValue] = useState('');
   const [selectedCardId, setSelectedCardId] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [type, setType] = useState(CardLinkTypes.RELATES_TO);
+  const [type, setType] = useState(CardLinkTypes.RELATED);
 
   const card = useSelector(selectors.selectCurrentCard);
   const board = useSelector(selectors.selectCurrentBoard);

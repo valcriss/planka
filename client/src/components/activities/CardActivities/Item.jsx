@@ -11,7 +11,7 @@ import { Comment } from 'semantic-ui-react';
 
 import selectors from '../../../selectors';
 import { StaticUserIds } from '../../../constants/StaticUsers';
-import { ActivityTypes } from '../../../constants/Enums';
+import { ActivityTypes, CardLinkTypeTranslationKeys } from '../../../constants/Enums';
 import TimeAgo from '../../common/TimeAgo';
 import UserAvatar from '../../users/UserAvatar';
 
@@ -170,6 +170,54 @@ const Item = React.memo(({ id }) => {
       );
 
       break;
+    case ActivityTypes.ADD_CARD_LINK_TO_CARD: {
+      const { linkedCard, type } = activity.data;
+      const typeKey = CardLinkTypeTranslationKeys[type];
+      const typeLabel = typeKey ? t(typeKey) : type;
+
+      contentNode = (
+        <Trans
+          i18nKey="common.userLinkedCardToThisCard"
+          values={{
+            user: userName,
+            linkedCard: linkedCard.name,
+            type: typeLabel,
+          }}
+        >
+          <span className={styles.author}>{userName}</span>
+          {' linked '}
+          {linkedCard.name}
+          {' to this card as '}
+          {typeLabel}
+        </Trans>
+      );
+
+      break;
+    }
+    case ActivityTypes.REMOVE_CARD_LINK_FROM_CARD: {
+      const { linkedCard, type } = activity.data;
+      const typeKey = CardLinkTypeTranslationKeys[type];
+      const typeLabel = typeKey ? t(typeKey) : type;
+
+      contentNode = (
+        <Trans
+          i18nKey="common.userRemovedCardLinkFromThisCard"
+          values={{
+            user: userName,
+            linkedCard: linkedCard.name,
+            type: typeLabel,
+          }}
+        >
+          <span className={styles.author}>{userName}</span>
+          {' removed the '}
+          {typeLabel}
+          {' link between this card and '}
+          {linkedCard.name}
+        </Trans>
+      );
+
+      break;
+    }
     default:
       contentNode = null;
   }
