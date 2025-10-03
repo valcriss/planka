@@ -12,6 +12,12 @@ import { selectCurrentUserId } from './users';
 import { buildCustomFieldValueId } from '../models/CustomFieldValue';
 import { isLocalId } from '../utils/local-id';
 
+const CardLinkInverseTypeMap = {
+  relatesTo: 'relatesTo',
+  blocks: 'blockedBy',
+  duplicates: 'duplicatedBy',
+};
+
 export const makeSelectCardById = () =>
   createSelector(
     orm,
@@ -227,6 +233,48 @@ export const makeSelectShownOnFrontOfCardCustomFieldValueIdsByCardId = () =>
 
 export const selectShownOnFrontOfCardCustomFieldValueIdsByCardId =
   makeSelectShownOnFrontOfCardCustomFieldValueIdsByCardId();
+
+export const makeSelectOutgoingCardLinksByCardId = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ Card }, id) => {
+      const cardModel = Card.withId(id);
+
+      if (!cardModel) {
+        return [];
+      }
+
+      return cardModel.getOutgoingCardLinksQuerySet().toRefArray();
+    },
+  );
+
+export const selectOutgoingCardLinksByCardId = makeSelectOutgoingCardLinksByCardId();
+
+export const makeSelectIncomingCardLinksByCardId = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ Card }, id) => {
+      const cardModel = Card.withId(id);
+
+      if (!cardModel) {
+        return [];
+      }
+
+      return cardModel
+        .getIncomingCardLinksQuerySet()
+        .toRefArray()
+        .map((cardLink) => ({
+          ...cardLink,
+          cardId: cardModel.id,
+          linkedCardId: cardLink.cardId,
+          type: CardLinkInverseTypeMap[cardLink.type] || cardLink.type,
+        }));
+    },
+  );
+
+export const selectIncomingCardLinksByCardId = makeSelectIncomingCardLinksByCardId();
 
 export const makeSelectNotificationsByCardId = () =>
   createSelector(

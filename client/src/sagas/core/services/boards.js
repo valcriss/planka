@@ -99,6 +99,7 @@ export function* fetchBoard(id) {
   let labels;
   let lists;
   let cards;
+  let cardLinks;
   let cardMemberships;
   let cardLabels;
   let taskLists;
@@ -118,6 +119,7 @@ export function* fetchBoard(id) {
         labels,
         lists,
         cards,
+        cardLinks,
         cardMemberships,
         cardLabels,
         taskLists,
@@ -142,6 +144,7 @@ export function* fetchBoard(id) {
       labels,
       lists,
       cards,
+      cardLinks,
       cardMemberships,
       cardLabels,
       taskLists,

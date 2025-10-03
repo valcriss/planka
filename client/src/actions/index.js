@@ -22,6 +22,7 @@ import labels from './labels';
 import epics from './epics';
 import lists from './lists';
 import cards from './cards';
+import cardLinks from './card-links';
 import taskLists from './task-lists';
 import tasks from './tasks';
 import attachments from './attachments';
@@ -53,6 +54,7 @@ export default {
   ...epics,
   ...lists,
   ...cards,
+  ...cardLinks,
   ...taskLists,
   ...tasks,
   ...attachments,

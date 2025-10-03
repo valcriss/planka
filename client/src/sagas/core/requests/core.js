@@ -50,6 +50,7 @@ export function* fetchCore() {
   let labels;
   let lists;
   let cards1;
+  let cardLinks;
   let cardMemberships;
   let cardLabels;
   let taskLists;
@@ -77,6 +78,7 @@ export function* fetchCore() {
       projects: projects2,
       boardMemberships: boardMemberships2,
       cards: cards1,
+      cardLinks,
       customFields: customFields2,
       epics,
     } = yield call(fetchBoardByCurrentPath));
@@ -128,6 +130,7 @@ export function* fetchCore() {
     projects: mergeRecords(projects1, projects2),
     boardMemberships: mergeRecords(boardMemberships1, boardMemberships2),
     cards: mergeRecords(card && [card], cards1),
+    cardLinks: cardLinks || [],
     customFields: mergeRecords(customFields1, customFields2),
     notificationServices: mergeRecords(notificationServices1, notificationServices2),
     epics,

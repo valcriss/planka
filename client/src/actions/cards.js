@@ -15,6 +15,7 @@ const fetchCards = (listId) => ({
 fetchCards.success = (
   listId,
   cards,
+  cardLinks,
   users,
   cardMemberships,
   cardLabels,
@@ -29,6 +30,7 @@ fetchCards.success = (
   payload: {
     listId,
     cards,
+    cardLinks,
     users,
     cardMemberships,
     cardLabels,
@@ -83,6 +85,8 @@ createCard.failure = (localId, error) => ({
 
 const handleCardCreate = (
   card,
+  cardLinks,
+  linkedCards,
   users,
   cardMemberships,
   cardLabels,
@@ -96,6 +100,8 @@ const handleCardCreate = (
   type: ActionTypes.CARD_CREATE_HANDLE,
   payload: {
     card,
+    cardLinks,
+    linkedCards,
     users,
     cardMemberships,
     cardLabels,
@@ -134,6 +140,8 @@ updateCard.failure = (id, error) => ({
 const handleCardUpdate = (
   card,
   isFetched,
+  cardLinks,
+  linkedCards,
   users,
   cardMemberships,
   cardLabels,
@@ -148,6 +156,8 @@ const handleCardUpdate = (
   payload: {
     card,
     isFetched,
+    cardLinks,
+    linkedCards,
     users,
     cardMemberships,
     cardLabels,
@@ -172,6 +182,8 @@ const duplicateCard = (id, localId, data) => ({
 duplicateCard.success = (
   localId,
   card,
+  cardLinks,
+  linkedCards,
   cardMemberships,
   cardLabels,
   taskLists,
@@ -185,6 +197,8 @@ duplicateCard.success = (
   payload: {
     localId,
     card,
+    cardLinks,
+    linkedCards,
     cardMemberships,
     cardLabels,
     taskLists,

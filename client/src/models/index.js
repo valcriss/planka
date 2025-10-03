@@ -17,6 +17,7 @@ import Label from './Label';
 import Epic from './Epic';
 import List from './List';
 import Card from './Card';
+import CardLink from './CardLink';
 import TaskList from './TaskList';
 import Task from './Task';
 import Attachment from './Attachment';
@@ -43,6 +44,7 @@ export {
   Epic,
   List,
   Card,
+  CardLink,
   TaskList,
   Task,
   Attachment,

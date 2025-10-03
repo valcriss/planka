@@ -194,6 +194,12 @@ export default class extends BaseModel {
 
         break;
       }
+      case ActionTypes.CARD_LINKS_SEARCH__SUCCESS:
+        payload.lists.forEach((list) => {
+          List.upsert(list);
+        });
+
+        break;
       default:
     }
   }

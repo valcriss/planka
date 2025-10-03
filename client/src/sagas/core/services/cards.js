@@ -11,6 +11,7 @@ import request from '../request';
 import selectors from '../../../selectors';
 import actions from '../../../actions';
 import api from '../../../api';
+import mergeRecords from '../../../utils/merge-records';
 import { createLocalId } from '../../../utils/local-id';
 import { isListArchiveOrTrash, isListFinite } from '../../../utils/record-helpers';
 import ActionTypes from '../../../constants/ActionTypes';
@@ -81,14 +82,19 @@ export function* fetchCards(listId) {
         customFieldGroups,
         customFields,
         customFieldValues,
+        cardLinks,
+        linkedCards,
       },
     },
   } = response;
 
+  const mergedCards = mergeRecords(cards, linkedCards);
+
   yield put(
     actions.fetchCards.success(
       listId,
-      cards,
+      mergedCards,
+      cardLinks || [],
       users,
       cardMemberships,
       cardLabels,
@@ -187,6 +193,8 @@ export function* handleCardCreate(card) {
   let customFieldGroups;
   let customFields;
   let customFieldValues;
+  let cardLinks;
+  let linkedCards;
 
   try {
     ({
@@ -201,6 +209,8 @@ export function* handleCardCreate(card) {
         customFieldGroups,
         customFields,
         customFieldValues,
+        cardLinks,
+        linkedCards,
       },
     } = yield call(request, api.getCard, card.id));
   } catch {
@@ -210,6 +220,8 @@ export function* handleCardCreate(card) {
   yield put(
     actions.handleCardCreate(
       card,
+      cardLinks || [],
+      linkedCards || [],
       users,
       cardMemberships,
       cardLabels,
@@ -288,6 +300,8 @@ export function* handleCardUpdate(card) {
   let customFieldGroups;
   let customFields;
   let customFieldValues;
+  let cardLinks;
+  let linkedCards;
 
   if (fetch) {
     try {
@@ -303,6 +317,8 @@ export function* handleCardUpdate(card) {
           customFieldGroups,
           customFields,
           customFieldValues,
+          cardLinks,
+          linkedCards,
         },
       } = yield call(request, api.getCard, card.id));
     } catch {
@@ -314,6 +330,8 @@ export function* handleCardUpdate(card) {
     actions.handleCardUpdate(
       card,
       fetch,
+      cardLinks || [],
+      linkedCards || [],
       users,
       cardMemberships,
       cardLabels,
@@ -442,6 +460,8 @@ export function* duplicateCard(id, data) {
   let customFieldGroups;
   let customFields;
   let customFieldValues;
+  let cardLinks;
+  let linkedCards;
 
   try {
     ({
@@ -455,6 +475,8 @@ export function* duplicateCard(id, data) {
         customFieldGroups,
         customFields,
         customFieldValues,
+        cardLinks,
+        linkedCards,
       },
     } = yield call(request, api.duplicateCard, id, nextData));
   } catch (error) {
@@ -476,6 +498,8 @@ export function* duplicateCard(id, data) {
     actions.duplicateCard.success(
       localId,
       card,
+      cardLinks || [],
+      linkedCards || [],
       cardMemberships,
       cardLabels,
       taskLists,
