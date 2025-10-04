@@ -342,6 +342,25 @@ export default {
       stopwatch: 'Minuteur',
       story: 'Story',
       storyPoints: 'Story points',
+      /* Translators: Header shown above the linked cards section in the card modal. */
+      linkedCards: 'Cartes liées',
+      /* Translators: Helper text shown when no linked cards exist yet. */
+      noLinkedCards: 'Pas encore de cartes liées.',
+      /* Translators: Labels for each relationship option available when linking cards. */
+      cardLinkTypes: {
+        /* Translators: Indicates that the cards are loosely connected. */
+        related: 'En relation',
+        /* Translators: Indicates that this card blocks progress on the linked card. */
+        blocks: 'Bloque',
+        /* Translators: Indicates that this card is blocked by the linked card. */
+        blockedBy: 'Bloqué par',
+        /* Translators: Indicates that this card depends on the linked card. */
+        dependsOn: 'Dépend de',
+        /* Translators: Indicates that the cards duplicate each other. */
+        duplicates: 'Duplique',
+        /* Translators: Indicates that this card is duplicated by the linked card. */
+        duplicatedBy: 'Dupliqué par',
+      },
       subscribeToCardWhenCommenting: 'S’abonner à la carte lors de la rédaction d’un commentaire',
       subscribeToMyOwnCardsByDefault: "M'abonner à mes propres cartes par défaut",
       taskActions_title: 'Actions de tâche',
