@@ -10,7 +10,9 @@ import { Router } from 'react-router-dom';
 
 import { handleLocationChange } from './actions';
 
-function ReduxRouter({ children, history, selector, basename }) {
+const defaultSelector = ({ router }) => router;
+
+function ReduxRouter({ children, history, selector = defaultSelector, basename = undefined }) {
   const state = useSelector(selector);
   const dispatch = useDispatch();
 
@@ -39,13 +41,8 @@ function ReduxRouter({ children, history, selector, basename }) {
 ReduxRouter.propTypes = {
   children: PropTypes.element.isRequired,
   history: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-  selector: PropTypes.func,
-  basename: PropTypes.string,
-};
-
-ReduxRouter.defaultProps = {
-  selector: ({ router }) => router,
-  basename: undefined,
+  selector: PropTypes.func, // eslint-disable-line react/require-default-props
+  basename: PropTypes.string, // eslint-disable-line react/require-default-props
 };
 
 export default ReduxRouter;
