@@ -20,7 +20,7 @@
   grid-template-columns: minmax(0, 1fr) 160px 48px;
   align-items: center;
   gap: 12px;
-  padding: 8px 12px;
+  padding: 0px 0px 0px 12px;
 
   &:not(:first-child) {
     border-top: 1px solid rgba(9, 30, 66, 0.13);
@@ -64,6 +64,7 @@
 .actionsCell {
   display: flex;
   justify-content: flex-end;
+  padding: 5px 0;
 
   @media (width < 540px) {
     order: 2;
@@ -72,6 +73,10 @@
 }
 
 .removeButton {
+  box-shadow: none !important;
+  height: 22px;
+  padding-top: 0.5rem !important;
+  border: none !important;
   box-shadow: none !important;
 }
 
@@ -101,7 +106,7 @@
 }
 
 .searchMenu {
-  background: #fff;
+  background-color: #ffffff !important;
   border: 1px solid rgba(9, 30, 66, 0.13) !important;
   border-radius: 4px;
   box-shadow: 0 6px 18px rgba(9, 30, 66, 0.2);
@@ -125,6 +130,7 @@
   font-size: 12px;
   line-height: 16px;
   margin-top: 2px;
+  cursor: pointer;
 }
 
 .typeDropdown {
