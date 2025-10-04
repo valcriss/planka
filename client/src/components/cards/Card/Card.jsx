@@ -25,7 +25,7 @@ import ActionsStep from './ActionsStep';
 import styles from './Card.module.scss';
 import globalStyles from '../../../styles.module.scss';
 
-const Card = React.memo(({ id, isInline }) => {
+const Card = React.memo(({ id, isInline = false }) => {
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
   const selectIsCardWithIdRecent = useMemo(() => selectors.makeSelectIsCardWithIdRecent(), []);
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
@@ -154,11 +154,7 @@ const Card = React.memo(({ id, isInline }) => {
 
 Card.propTypes = {
   id: PropTypes.string.isRequired,
-  isInline: PropTypes.bool,
-};
-
-Card.defaultProps = {
-  isInline: false,
+  isInline: PropTypes.bool, // eslint-disable-line react/require-default-props
 };
 
 export default Card;

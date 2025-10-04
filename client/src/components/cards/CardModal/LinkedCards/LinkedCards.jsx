@@ -7,6 +7,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { dequal } from 'dequal';
 import { useTranslation } from 'react-i18next';
 import { Button, Dropdown, Input, Menu } from 'semantic-ui-react';
 
@@ -25,7 +26,7 @@ import styles from './LinkedCards.module.scss';
 const MIN_SEARCH_LENGTH = 2;
 const SEARCH_DEBOUNCE_IN_MS = 250;
 
-const LinkedCards = React.memo(({ canEdit, className, headerClassName }) => {
+const LinkedCards = React.memo(({ canEdit = false, className = null, headerClassName }) => {
   const dispatch = useDispatch();
   const [t] = useTranslation();
 
@@ -61,21 +62,26 @@ const LinkedCards = React.memo(({ canEdit, className, headerClassName }) => {
 
   const cardNamesById = useSelector(selectors.selectCardNamesById, shallowEqual);
 
-  const { searchState, searchResults } = useSelector((state) => {
-    const nextSearchState = selectors.selectCardLinkSearchByCardId(state, card.id);
-    const cards = (nextSearchState.cardIds || [])
-      .map((id) => selectCardById(state, id))
-      .filter(Boolean)
-      .map((cardItem) => ({
-        ...cardItem,
-        list: cardItem.listId ? selectListById(state, cardItem.listId) : null,
-      }));
+  const selectSearchData = useMemo(
+    () => (state) => {
+      const nextSearchState = selectors.selectCardLinkSearchByCardId(state, card.id);
+      const cards = (nextSearchState.cardIds || [])
+        .map((id) => selectCardById(state, id))
+        .filter(Boolean)
+        .map((cardItem) => ({
+          ...cardItem,
+          list: cardItem.listId ? selectListById(state, cardItem.listId) : null,
+        }));
 
-    return {
-      searchState: nextSearchState,
-      searchResults: cards,
-    };
-  }, shallowEqual);
+      return {
+        searchState: nextSearchState,
+        searchResults: cards,
+      };
+    },
+    [card.id, selectCardById, selectListById],
+  );
+
+  const { searchState, searchResults } = useSelector(selectSearchData, dequal);
 
   const isCreatePending = useSelector((state) =>
     selectors.selectIsCardLinkCreateInProgressForCardId(state, card.id),
@@ -291,14 +297,9 @@ const LinkedCards = React.memo(({ canEdit, className, headerClassName }) => {
 });
 
 LinkedCards.propTypes = {
-  canEdit: PropTypes.bool,
-  className: PropTypes.string,
+  canEdit: PropTypes.bool, // eslint-disable-line react/require-default-props
+  className: PropTypes.string, // eslint-disable-line react/require-default-props
   headerClassName: PropTypes.string.isRequired,
-};
-
-LinkedCards.defaultProps = {
-  canEdit: false,
-  className: null,
 };
 
 export default LinkedCards;
