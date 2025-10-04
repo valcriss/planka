@@ -11,6 +11,7 @@ import entryActions from '../../../entry-actions';
 import { BoardViews } from '../../../constants/Enums';
 import GridView from './GridView';
 import ListView from './ListView';
+import CalendarView from './CalendarView';
 
 const FiniteContent = React.memo(() => {
   const board = useSelector(selectors.selectCurrentBoard);
@@ -34,6 +35,10 @@ const FiniteContent = React.memo(() => {
       break;
     case BoardViews.LIST:
       View = ListView;
+
+      break;
+    case BoardViews.CALENDAR:
+      View = CalendarView;
 
       break;
     default:

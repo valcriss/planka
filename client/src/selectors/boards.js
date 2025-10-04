@@ -423,6 +423,39 @@ export const selectFilteredCardIdsForCurrentBoard = createSelector(
   },
 );
 
+// Cartes filtrées du board courant, regroupées par jour (clé: YYYY-MM-DD) sur la base de dueDate
+// Ne retourne que les cartes avec une dueDate définie.
+export const selectFilteredCardsGroupedByDueDayForCurrentBoard = createSelector(
+  orm,
+  (state) => selectPath(state).boardId,
+  ({ Board }, id) => {
+    if (!id) {
+      return id;
+    }
+
+    const boardModel = Board.withId(id);
+    if (!boardModel) {
+      return boardModel;
+    }
+
+    const result = {};
+    boardModel.getFilteredCardsModelArray().forEach((cardModel) => {
+      const { dueDate } = cardModel.ref;
+      if (!dueDate) return;
+      // dueDate peut être string ISO ou Date selon ingestion; normaliser
+      const dateObj = dueDate instanceof Date ? dueDate : new Date(dueDate);
+      if (Number.isNaN(dateObj.getTime())) return;
+      const key = dateObj.toISOString().slice(0, 10); // YYYY-MM-DD
+      if (!result[key]) {
+        result[key] = [];
+      }
+      result[key].push(cardModel.id);
+    });
+
+    return result; // { '2025-10-04': ['c1','c2'], ... }
+  },
+);
+
 export const selectCustomFieldGroupIdsForCurrentBoard = createSelector(
   orm,
   (state) => selectPath(state).boardId,
@@ -556,6 +589,7 @@ export default {
   makeSelectListIdByTypeByBoardId,
   selectAvailableListsForCurrentBoard,
   selectFilteredCardIdsForCurrentBoard,
+  selectFilteredCardsGroupedByDueDayForCurrentBoard,
   makeSelectListIdBySlugForCurrentBoard,
   selectListIdBySlugForCurrentBoard,
   makeSelectBoardIdByProjectIdAndSlug,
