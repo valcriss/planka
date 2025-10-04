@@ -300,10 +300,14 @@ const parseDateValue = (value, { date1904 }) => {
       return null;
     }
 
-    let parsedMoment = moment(trimmed, moment.ISO_8601, true);
+    // Interpret date/time strings without explicit timezone as UTC to avoid
+    // environment-dependent local timezone shifts (e.g., 1h offset in tests).
+    // Using moment.utc ensures '01/02/2024 15:30' becomes 2024-02-01T15:30:00.000Z
+    // instead of being converted from local time to UTC.
+    let parsedMoment = moment.utc(trimmed, moment.ISO_8601, true);
 
     if (!parsedMoment.isValid()) {
-      parsedMoment = moment(trimmed, DATE_FORMATS, true);
+      parsedMoment = moment.utc(trimmed, DATE_FORMATS, true);
     }
 
     if (parsedMoment.isValid()) {

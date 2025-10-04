@@ -10,6 +10,7 @@ const Errors = {
     boardNotFound: 'Board not found',
   },
   CARD_TYPE_NOT_FOUND: { cardTypeNotFound: 'Card type not found' },
+  NOT_ENOUGH_RIGHTS: { notEnoughRights: 'Not enough rights' },
 };
 
 module.exports = {
