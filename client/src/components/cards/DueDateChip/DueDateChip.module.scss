@@ -53,8 +53,15 @@
 
   /* Statuses */
 
-  .wrapperDueSoon {
-    background: #f2711c;
+  // Veille (jaune)
+  .wrapperDueTomorrow {
+    background: #fbbd08; // semantic yellow
+    color: #fff;
+  }
+
+  // Jour J (orange)
+  .wrapperDueToday {
+    background: #f2711c; // semantic orange
     color: #fff;
   }
 

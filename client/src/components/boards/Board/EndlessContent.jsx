@@ -11,6 +11,7 @@ import entryActions from '../../../entry-actions';
 import { BoardViews } from '../../../constants/Enums';
 import GridView from './GridView';
 import ListView from './ListView';
+import CalendarView from './CalendarView';
 
 const EndlessContent = React.memo(() => {
   const board = useSelector(selectors.selectCurrentBoard);
@@ -46,6 +47,10 @@ const EndlessContent = React.memo(() => {
       break;
     case BoardViews.LIST:
       View = ListView;
+
+      break;
+    case BoardViews.CALENDAR:
+      View = CalendarView; // Même placeholder; pourra être désactivé plus tard si nécessaire
 
       break;
     default:

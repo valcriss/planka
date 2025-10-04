@@ -21,8 +21,13 @@ const Sizes = {
   MEDIUM: 'medium',
 };
 
+// Nouveaux statuts:
+// - dueTomorrow: la veille de la date d'échéance (badge jaune)
+// - dueToday: le jour de l'échéance (badge orange)
+// - overdue: après la date (badge rouge)
 const Statuses = {
-  DUE_SOON: 'dueSoon',
+  DUE_TOMORROW: 'dueTomorrow',
+  DUE_TODAY: 'dueToday',
   OVERDUE: 'overdue',
 };
 
@@ -39,7 +44,11 @@ const FULL_DATE_FORMAT_BY_SIZE = {
 };
 
 const STATUS_ICON_PROPS_BY_STATUS = {
-  [Statuses.DUE_SOON]: {
+  [Statuses.DUE_TOMORROW]: {
+    name: 'hourglass start',
+    color: 'yellow',
+  },
+  [Statuses.DUE_TODAY]: {
     name: 'hourglass half',
     color: 'orange',
   },
@@ -50,14 +59,31 @@ const STATUS_ICON_PROPS_BY_STATUS = {
 };
 
 const getStatus = (date) => {
-  const secondsLeft = Math.floor((date.getTime() - new Date().getTime()) / 1000);
+  const now = new Date();
+  const target = date;
 
-  if (secondsLeft <= 0) {
+  // On normalise pour comparer les jours civils
+  const y = (d) => d.getFullYear();
+  const m = (d) => d.getMonth();
+  const day = (d) => d.getDate();
+
+  const isSameDay = y(now) === y(target) && m(now) === m(target) && day(now) === day(target);
+
+  // Créer un objet date pour 'demain' (jour civil suivant)
+  const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const isTomorrow =
+    y(tomorrow) === y(target) && m(tomorrow) === m(target) && day(tomorrow) === day(target);
+
+  if (date.getTime() < now.getTime()) {
     return Statuses.OVERDUE;
   }
 
-  if (secondsLeft <= 24 * 60 * 60) {
-    return Statuses.DUE_SOON;
+  if (isSameDay) {
+    return Statuses.DUE_TODAY;
+  }
+
+  if (isTomorrow) {
+    return Statuses.DUE_TOMORROW;
   }
 
   return null;
