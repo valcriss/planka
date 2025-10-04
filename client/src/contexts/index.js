@@ -4,5 +4,6 @@
  */
 
 import ClosableContext from './ClosableContext';
+import { CardHighlightContext, CardHighlightProvider } from './CardHighlightContext.jsx';
 
-export { ClosableContext }; // eslint-disable-line import/prefer-default-export
+export { ClosableContext, CardHighlightContext, CardHighlightProvider };

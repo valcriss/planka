@@ -53,6 +53,7 @@
     border-radius: 3px;
     box-shadow: 0 1px 0 #ccc;
     position: relative;
+    transition: opacity 160ms ease;
 
     &:hover {
       background: #f5f6f7;
@@ -62,6 +63,10 @@
         opacity: 1;
       }
     }
+  }
+
+  .wrapperDimmed {
+    opacity: 0.18;
   }
 
   .wrapperRecent:not(:hover) {

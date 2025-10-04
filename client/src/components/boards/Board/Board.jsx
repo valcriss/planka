@@ -17,6 +17,7 @@ import BoardActivitiesModal from '../../activities/BoardActivitiesModal';
 import SprintStatisticsModal from '../../sprints/SprintStatisticsModal';
 import SprintBanner from '../SprintBanner';
 import styles from './Board.module.scss';
+import { CardHighlightProvider } from '../../../contexts';
 
 const Board = React.memo(() => {
   const board = useSelector(selectors.selectCurrentBoard);
@@ -62,9 +63,11 @@ const Board = React.memo(() => {
 
   return (
     <div className={styles.wrapper}>
-      {project && project.useScrum && board.name === 'Sprint' && <SprintBanner />}
-      <Content />
-      {modalNode}
+      <CardHighlightProvider>
+        {project && project.useScrum && board.name === 'Sprint' && <SprintBanner />}
+        <Content />
+        {modalNode}
+      </CardHighlightProvider>
     </div>
   );
 });
