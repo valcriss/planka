@@ -4,10 +4,11 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Popup } from 'semantic-ui-react';
 
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
@@ -26,32 +27,29 @@ import EpicChip from '../../epics/EpicChip';
 
 import styles from './ProjectContent.module.scss';
 
-const ProjectContent = React.memo(({ cardId }) => {
+const ProjectContent = React.memo(({ cardId, isBlocked = false }) => {
+  const [t] = useTranslation();
+  // Selector factories (memoized once per component instance)
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
   const selectUserIdsByCardId = useMemo(() => selectors.makeSelectUserIdsByCardId(), []);
   const selectLabelIdsByCardId = useMemo(() => selectors.makeSelectLabelIdsByCardId(), []);
-
   const selectShownOnFrontOfCardTaskListIdsByCardId = useMemo(
     () => selectors.makeSelectShownOnFrontOfCardTaskListIdsByCardId(),
     [],
   );
-
   const selectAttachmentsTotalByCardId = useMemo(
     () => selectors.makeSelectAttachmentsTotalByCardId(),
     [],
   );
-
   const selectShownOnFrontOfCardCustomFieldValueIdsByCardId = useMemo(
     () => selectors.makeSelectShownOnFrontOfCardCustomFieldValueIdsByCardId(),
     [],
   );
-
   const selectNotificationsTotalByCardId = useMemo(
     () => selectors.makeSelectNotificationsTotalByCardId(),
     [],
   );
-
   const selectAttachmentById = useMemo(() => selectors.makeSelectAttachmentById(), []);
 
   const card = useSelector((state) => selectCardById(state, cardId));
@@ -164,6 +162,19 @@ const ProjectContent = React.memo(({ cardId }) => {
     <div className={styles.wrapper}>
       <div className={styles.nameRow}>
         <div className={classNames(styles.name, isInClosedList && styles.nameClosed)}>
+          {/* Blocked icon inline before title */}
+          {isBlocked && (
+            <Popup
+              content={t('common.blockedTooltip')}
+              trigger={
+                <Icon
+                  name="stop circle"
+                  className={styles.blockedIcon}
+                  style={{ color: '#db2828' }}
+                />
+              }
+            />
+          )}
           {(() => {
             const iconName = (cardType && cardType.icon) || CardTypeIcons[card.type];
             return iconName ? (
@@ -288,6 +299,6 @@ const ProjectContent = React.memo(({ cardId }) => {
 
 ProjectContent.propTypes = {
   cardId: PropTypes.string.isRequired,
+  isBlocked: PropTypes.bool,
 };
-
 export default ProjectContent;

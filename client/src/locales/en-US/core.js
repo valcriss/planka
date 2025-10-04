@@ -349,6 +349,7 @@ export default {
         /* Translators: Indicates that this card is duplicated by the linked card. */
         duplicatedBy: 'Duplicated by',
       },
+      blockedTooltip: 'This card is blocked by another unfinished card',
       type: 'Type',
       noResults: 'No results',
       subscribeToCardWhenCommenting: 'Subscribe to card when commenting',
@@ -431,6 +432,9 @@ export default {
       smtpConfiguration: 'SMTP configuration',
       smtpResponse: 'SMTP response',
       smtpDebugInformation: 'Debug information',
+      cardLinkCreateHelp: 'Choose a relationship; the inverse shows on the other card.',
+      cardLinkAlreadyExistsWithSelected: 'A link already exists with this card.',
+      cardLinkDuplicateDirection: 'The opposite directional link already exists.',
     },
 
     action: {
@@ -451,6 +455,7 @@ export default {
       addTaskList: 'Add task list',
       addEpic: 'Add epic',
       addLinkedCard: 'Add linked card',
+      addLinkedCardTitle: 'Add Linked Card',
       addToCard: 'Add to card',
       addUser: 'Add user',
       addWebhook: 'Add webhook',
@@ -566,6 +571,14 @@ export default {
       uploadNewAvatar: 'Upload new avatar',
       uploadNewImage: 'Upload new image',
       editCardLimit_title: 'Edit Card Limit',
+      cardLinkCreateOptions: {
+        related: 'Is related to the other card',
+        blocks: 'This card blocks the other card',
+        blockedBy: 'This card is blocked by the other card',
+        dependsOn: 'This card depends on the other card',
+        duplicates: 'This card duplicates the other card',
+        duplicatedBy: 'This card is duplicated by the other card',
+      },
     },
   },
 };

@@ -19,7 +19,7 @@ import styles from './Attachments.module.scss';
 
 const INITIALLY_VISIBLE = 4;
 
-const Attachments = React.memo(({ hideImagesWhenNotAllVisible }) => {
+const Attachments = React.memo(({ hideImagesWhenNotAllVisible = false }) => {
   const attachments = useSelector(selectors.selectAttachmentsForCurrentCard);
 
   const [t] = useTranslation();
@@ -111,10 +111,6 @@ const Attachments = React.memo(({ hideImagesWhenNotAllVisible }) => {
 
 Attachments.propTypes = {
   hideImagesWhenNotAllVisible: PropTypes.bool,
-};
-
-Attachments.defaultProps = {
-  hideImagesWhenNotAllVisible: false,
 };
 
 export default Attachments;

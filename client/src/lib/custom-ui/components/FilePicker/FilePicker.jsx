@@ -8,39 +8,41 @@ import PropTypes from 'prop-types';
 
 import styles from './FilePicker.module.css';
 
-const FilePicker = React.memo(({ children, accept, multiple, onSelect }) => {
-  const fieldRef = useRef(null);
+const FilePicker = React.memo(
+  ({ children, accept = undefined, multiple = undefined, onSelect }) => {
+    const fieldRef = useRef(null);
 
-  const handleTriggerClick = useCallback(() => {
-    fieldRef.current.click();
-  }, []);
+    const handleTriggerClick = useCallback(() => {
+      fieldRef.current.click();
+    }, []);
 
-  const handleFieldChange = useCallback(
-    ({ target }) => {
-      onSelect(multiple ? [...target.files] : target.files[0]);
-      target.value = null; // eslint-disable-line no-param-reassign
-    },
-    [multiple, onSelect],
-  );
+    const handleFieldChange = useCallback(
+      ({ target }) => {
+        onSelect(multiple ? [...target.files] : target.files[0]);
+        target.value = null; // eslint-disable-line no-param-reassign
+      },
+      [multiple, onSelect],
+    );
 
-  const tigger = React.cloneElement(children, {
-    onClick: handleTriggerClick,
-  });
+    const tigger = React.cloneElement(children, {
+      onClick: handleTriggerClick,
+    });
 
-  return (
-    <>
-      {tigger}
-      <input
-        ref={fieldRef}
-        type="file"
-        accept={accept}
-        multiple={multiple}
-        className={styles.field}
-        onChange={handleFieldChange}
-      />
-    </>
-  );
-});
+    return (
+      <>
+        {tigger}
+        <input
+          ref={fieldRef}
+          type="file"
+          accept={accept}
+          multiple={multiple}
+          className={styles.field}
+          onChange={handleFieldChange}
+        />
+      </>
+    );
+  },
+);
 
 FilePicker.propTypes = {
   children: PropTypes.element.isRequired,
@@ -48,10 +50,4 @@ FilePicker.propTypes = {
   multiple: PropTypes.bool,
   onSelect: PropTypes.func.isRequired,
 };
-
-FilePicker.defaultProps = {
-  accept: undefined,
-  multiple: undefined,
-};
-
 export default FilePicker;

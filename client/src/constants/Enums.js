@@ -108,6 +108,9 @@ export const CardLinkCreatableTypes = [
   CardLinkTypes.BLOCKS,
   CardLinkTypes.DEPENDS_ON,
   CardLinkTypes.DUPLICATES,
+  // Newly added inverse types to allow selecting direction explicitly
+  CardLinkTypes.BLOCKED_BY,
+  CardLinkTypes.DUPLICATED_BY,
 ];
 
 export const CardLinkInverseTypeMap = {
@@ -126,6 +129,16 @@ export const CardLinkTypeTranslationKeys = {
   [CardLinkTypes.DEPENDS_ON]: 'common.cardLinkTypes.dependsOn',
   [CardLinkTypes.DUPLICATES]: 'common.cardLinkTypes.duplicates',
   [CardLinkTypes.DUPLICATED_BY]: 'common.cardLinkTypes.duplicatedBy',
+};
+
+// More explicit labels for creation context (directional phrasing)
+export const CardLinkTypeCreationTranslationKeys = {
+  [CardLinkTypes.RELATED]: 'common.cardLinkCreateOptions.related',
+  [CardLinkTypes.BLOCKS]: 'common.cardLinkCreateOptions.blocks',
+  [CardLinkTypes.BLOCKED_BY]: 'common.cardLinkCreateOptions.blockedBy',
+  [CardLinkTypes.DEPENDS_ON]: 'common.cardLinkCreateOptions.dependsOn',
+  [CardLinkTypes.DUPLICATES]: 'common.cardLinkCreateOptions.duplicates',
+  [CardLinkTypes.DUPLICATED_BY]: 'common.cardLinkCreateOptions.duplicatedBy',
 };
 
 export const ActivityTypes = {

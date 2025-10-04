@@ -37,6 +37,9 @@ const Card = React.memo(({ id, isInline = false }) => {
   const board = useSelector((state) => selectBoardById(state, card.boardId));
   const project = useSelector((state) => selectProjectById(state, board.projectId));
 
+  // Use non-factory selector (memoized internally by orm) to avoid missing factory export errors
+  const isBlocked = useSelector((state) => selectors.selectIsCardBlockedById(state, id));
+
   const isHighlightedAsRecent = useSelector((state) => {
     const { turnOffRecentCardHighlighting } = selectors.selectCurrentUser(state);
 
@@ -126,7 +129,7 @@ const Card = React.memo(({ id, isInline = false }) => {
             )}
             onClick={handleClick}
           >
-            <Content cardId={id} />
+            <Content cardId={id} isBlocked={isBlocked} />
             {colorLineNode}
           </div>
           {canUseActions && (
@@ -144,7 +147,7 @@ const Card = React.memo(({ id, isInline = false }) => {
             list.type === ListTypes.CLOSED && styles.contentDisabled,
           )}
         >
-          <Content cardId={id} />
+          <Content cardId={id} isBlocked={isBlocked} />
           {colorLineNode}
         </span>
       )}
@@ -154,7 +157,7 @@ const Card = React.memo(({ id, isInline = false }) => {
 
 Card.propTypes = {
   id: PropTypes.string.isRequired,
-  isInline: PropTypes.bool, // eslint-disable-line react/require-default-props
+  isInline: PropTypes.bool,
 };
 
 export default Card;

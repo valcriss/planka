@@ -19,7 +19,7 @@ const Languages = {
   MARKDOWN: 'markdown',
 };
 
-const ContentViewer = React.memo(({ src, filename, className }) => {
+const ContentViewer = React.memo(({ src, filename, className = undefined }) => {
   const [content, setContent] = useState(null);
 
   const frameStyles = useMemo(
@@ -102,10 +102,6 @@ ContentViewer.propTypes = {
   src: PropTypes.string.isRequired,
   filename: PropTypes.string.isRequired,
   className: PropTypes.string,
-};
-
-ContentViewer.defaultProps = {
-  className: undefined,
 };
 
 export default ContentViewer;

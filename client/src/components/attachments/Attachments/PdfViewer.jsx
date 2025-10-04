@@ -9,7 +9,7 @@ import classNames from 'classnames';
 
 import styles from './PdfViewer.module.scss';
 
-const PdfViewer = React.memo(({ src, className }) => (
+const PdfViewer = React.memo(({ src, className = undefined }) => (
   // eslint-disable-next-line jsx-a11y/iframe-has-title
   <iframe src={src} type="application/pdf" className={classNames(styles.wrapper, className)} />
 ));
@@ -17,10 +17,6 @@ const PdfViewer = React.memo(({ src, className }) => (
 PdfViewer.propTypes = {
   src: PropTypes.string.isRequired,
   className: PropTypes.string,
-};
-
-PdfViewer.defaultProps = {
-  className: undefined,
 };
 
 export default PdfViewer;

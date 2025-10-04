@@ -21,7 +21,7 @@ import TimeAgo from '../../common/TimeAgo';
 
 import styles from './ItemContent.module.scss';
 
-const ItemContent = React.forwardRef(({ id, onOpen }, ref) => {
+const ItemContent = React.forwardRef(({ id, onOpen = undefined }, ref) => {
   const selectAttachmentById = useMemo(() => selectors.makeSelectAttachmentById(), []);
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
 
@@ -169,10 +169,6 @@ const ItemContent = React.forwardRef(({ id, onOpen }, ref) => {
 ItemContent.propTypes = {
   id: PropTypes.string.isRequired,
   onOpen: PropTypes.func,
-};
-
-ItemContent.defaultProps = {
-  onOpen: undefined,
 };
 
 export default React.memo(ItemContent);

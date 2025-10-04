@@ -64,7 +64,14 @@ const getStatus = (date) => {
 };
 
 const DueDateChip = React.memo(
-  ({ value, size, isDisabled, withStatus, withStatusIcon, onClick }) => {
+  ({
+    value,
+    size = Sizes.MEDIUM,
+    isDisabled = false,
+    withStatus,
+    withStatusIcon = false,
+    onClick,
+  }) => {
     const [t] = useTranslation();
     const forceUpdate = useForceUpdate();
 
@@ -138,13 +145,6 @@ DueDateChip.propTypes = {
   withStatus: PropTypes.bool.isRequired,
   withStatusIcon: PropTypes.bool,
   onClick: PropTypes.func,
-};
-
-DueDateChip.defaultProps = {
-  size: Sizes.MEDIUM,
-  isDisabled: false,
-  withStatusIcon: false,
-  onClick: undefined,
 };
 
 export default DueDateChip;

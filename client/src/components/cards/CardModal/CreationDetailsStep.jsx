@@ -16,7 +16,7 @@ import UserAvatar from '../../users/UserAvatar';
 
 import styles from './CreationDetailsStep.module.scss';
 
-const CreationDetailsStep = React.memo(({ userId }) => {
+const CreationDetailsStep = React.memo(({ userId = undefined }) => {
   const selectUserById = useMemo(() => selectors.makeSelectUserById(), []);
 
   const card = useSelector(selectors.selectCurrentCard);
@@ -51,10 +51,6 @@ const CreationDetailsStep = React.memo(({ userId }) => {
 
 CreationDetailsStep.propTypes = {
   userId: PropTypes.string,
-};
-
-CreationDetailsStep.defaultProps = {
-  userId: undefined,
 };
 
 export default CreationDetailsStep;

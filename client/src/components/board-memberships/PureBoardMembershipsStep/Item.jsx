@@ -14,7 +14,7 @@ import UserAvatar from '../../users/UserAvatar';
 
 import styles from './Item.module.scss';
 
-const Item = React.memo(({ id, isActive, onUserSelect, onUserDeselect }) => {
+const Item = React.memo(({ id, isActive, onUserSelect, onUserDeselect = undefined }) => {
   const selectBoardMembershipById = useMemo(() => selectors.makeSelectBoardMembershipById(), []);
   const selectUserById = useMemo(() => selectors.makeSelectUserById(), []);
 
@@ -53,10 +53,6 @@ Item.propTypes = {
   isActive: PropTypes.bool.isRequired,
   onUserSelect: PropTypes.func.isRequired,
   onUserDeselect: PropTypes.func,
-};
-
-Item.defaultProps = {
-  onUserDeselect: undefined,
 };
 
 export default Item;

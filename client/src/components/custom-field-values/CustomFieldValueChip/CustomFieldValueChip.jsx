@@ -19,7 +19,7 @@ const Sizes = {
   MEDIUM: 'medium',
 };
 
-const CustomFieldValueChip = React.memo(({ id, size, onClick }) => {
+const CustomFieldValueChip = React.memo(({ id, size = Sizes.MEDIUM, onClick = undefined }) => {
   const selectCustomFieldValueById = useMemo(() => selectors.makeSelectCustomFieldValueById(), []);
   const selectCustomFieldById = useMemo(() => selectors.makeSelectCustomFieldById(), []);
 
@@ -61,11 +61,6 @@ CustomFieldValueChip.propTypes = {
   id: PropTypes.string.isRequired,
   size: PropTypes.oneOf(Object.values(Sizes)),
   onClick: PropTypes.func,
-};
-
-CustomFieldValueChip.defaultProps = {
-  size: Sizes.MEDIUM,
-  onClick: undefined,
 };
 
 export default CustomFieldValueChip;

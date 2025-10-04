@@ -4,10 +4,11 @@
  */
 
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Popup } from 'semantic-ui-react';
 
 import selectors from '../../../selectors';
 import markdownToText from '../../../utils/markdown-to-text';
@@ -19,26 +20,24 @@ import EpicChip from '../../epics/EpicChip';
 
 import styles from './StoryContent.module.scss';
 
-const StoryContent = React.memo(({ cardId }) => {
+const StoryContent = React.memo(({ cardId, isBlocked = false }) => {
+  const [t] = useTranslation();
+  // Selector factories (memoized once per component instance)
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
   const selectLabelIdsByCardId = useMemo(() => selectors.makeSelectLabelIdsByCardId(), []);
-
   const selectAttachmentsTotalByCardId = useMemo(
     () => selectors.makeSelectAttachmentsTotalByCardId(),
     [],
   );
-
   const selectShownOnFrontOfCardCustomFieldValueIdsByCardId = useMemo(
     () => selectors.makeSelectShownOnFrontOfCardCustomFieldValueIdsByCardId(),
     [],
   );
-
   const selectNotificationsTotalByCardId = useMemo(
     () => selectors.makeSelectNotificationsTotalByCardId(),
     [],
   );
-
   const selectAttachmentById = useMemo(() => selectors.makeSelectAttachmentById(), []);
 
   const card = useSelector((state) => selectCardById(state, cardId));
@@ -113,6 +112,18 @@ const StoryContent = React.memo(({ cardId }) => {
         )}
         <div className={styles.nameRow}>
           <div className={classNames(styles.name, isInClosedList && styles.nameClosed)}>
+            {isBlocked && (
+              <Popup
+                content={t('common.blockedTooltip')}
+                trigger={
+                  <Icon
+                    name="stop circle"
+                    className={styles.blockedIcon}
+                    style={{ color: '#db2828' }}
+                  />
+                }
+              />
+            )}
             {card.name}
           </div>
           {project.useStoryPoints && card.storyPoints !== 0 && (
@@ -168,6 +179,6 @@ const StoryContent = React.memo(({ cardId }) => {
 
 StoryContent.propTypes = {
   cardId: PropTypes.string.isRequired,
+  isBlocked: PropTypes.bool,
 };
-
 export default StoryContent;

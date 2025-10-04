@@ -9,7 +9,7 @@ import classNames from 'classnames';
 
 import styles from './ListMetricChip.module.scss';
 
-const ListMetricChip = React.memo(({ filteredCount, totalCount, className }) => {
+const ListMetricChip = React.memo(({ filteredCount = null, totalCount, className = undefined }) => {
   const displayValue = useMemo(() => {
     const total = Number.isFinite(totalCount) ? totalCount : 0;
 
@@ -27,11 +27,6 @@ ListMetricChip.propTypes = {
   filteredCount: PropTypes.number,
   totalCount: PropTypes.number.isRequired,
   className: PropTypes.string,
-};
-
-ListMetricChip.defaultProps = {
-  filteredCount: null,
-  className: undefined,
 };
 
 export default ListMetricChip;

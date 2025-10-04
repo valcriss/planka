@@ -3,21 +3,32 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Icon, Popup } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import history from '../../../../history';
+import { getCardLinkTypeIcon, getCardLinkTypeIconColor } from '../../../../constants/CardLinkIcons';
 import selectors from '../../../../selectors';
 import Paths from '../../../../constants/Paths';
 
 import styles from './LinkedCards.module.scss';
 
 const LinkedCardItem = React.memo(
-  ({ cardLinkId, linkedCardId, name, typeLabel, canEdit, onRemove, isRemoving, removeLabel }) => {
+  ({
+    cardLinkId,
+    linkedCardId,
+    name = null,
+    typeLabel,
+    type,
+    canEdit,
+    onRemove,
+    isRemoving = false,
+    removeLabel,
+  }) => {
     const [t] = useTranslation();
     const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
     const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
@@ -56,18 +67,61 @@ const LinkedCardItem = React.memo(
       onRemove(cardLinkId);
     }, [cardLinkId, onRemove]);
 
+    const iconName = getCardLinkTypeIcon(type);
+    const iconColor = getCardLinkTypeIconColor(type);
+
+    // Truncation detection for card name
+    const nameRef = useRef(null);
+    const [isTruncated, setIsTruncated] = useState(false);
+
+    const checkTruncation = useCallback(() => {
+      if (nameRef.current) {
+        const truncated = nameRef.current.scrollWidth > nameRef.current.clientWidth;
+        setIsTruncated(truncated);
+      }
+    }, []);
+
+    useEffect(() => {
+      checkTruncation();
+      // Also re-check on window resize
+      window.addEventListener('resize', checkTruncation);
+      return () => window.removeEventListener('resize', checkTruncation);
+    }, [checkTruncation, displayName]);
+
+    const nameButton = (
+      <button
+        type="button"
+        ref={nameRef}
+        className={styles.cardButton}
+        onClick={handleOpen}
+        onMouseEnter={checkTruncation}
+      >
+        {displayName}
+      </button>
+    );
+
     return (
       <div className={styles.listRow}>
-        <button type="button" className={styles.cardButton} onClick={handleOpen}>
-          {displayName}
-        </button>
-        <div className={styles.typeCell}>{typeLabel}</div>
+        <div className={styles.typeCell}>
+          <Icon name={iconName} color={iconColor} className={styles.typeIcon} />
+          <span className={styles.typeLabel}>{typeLabel}</span>
+          {isTruncated ? (
+            <Popup
+              position="top center"
+              content={displayName}
+              size="tiny"
+              trigger={nameButton}
+              hideOnScroll
+            />
+          ) : (
+            nameButton
+          )}
+        </div>
         <div className={styles.actionsCell}>
           {canEdit && (
             <Button
               basic
               icon
-              negative
               size="mini"
               className={classNames(styles.removeButton, {
                 [styles.removeButtonActive]: isRemoving,
@@ -91,15 +145,11 @@ LinkedCardItem.propTypes = {
   linkedCardId: PropTypes.string.isRequired,
   name: PropTypes.string,
   typeLabel: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   canEdit: PropTypes.bool.isRequired,
   onRemove: PropTypes.func.isRequired,
   isRemoving: PropTypes.bool,
   removeLabel: PropTypes.string.isRequired,
-};
-
-LinkedCardItem.defaultProps = {
-  name: null,
-  isRemoving: false,
 };
 
 export default LinkedCardItem;

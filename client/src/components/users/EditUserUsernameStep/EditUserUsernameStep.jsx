@@ -42,171 +42,168 @@ const createMessage = (error) => {
   }
 };
 
-const EditUserUsernameStep = React.memo(({ id, withPasswordConfirmation, onBack, onClose }) => {
-  const selectUserById = useMemo(() => selectors.makeSelectUserById(), []);
+const EditUserUsernameStep = React.memo(
+  ({ id, withPasswordConfirmation = false, onBack = undefined, onClose }) => {
+    const selectUserById = useMemo(() => selectors.makeSelectUserById(), []);
 
-  const {
-    username,
-    usernameUpdateForm: { data: defaultData, isSubmitting, error },
-  } = useSelector((state) => selectUserById(state, id));
+    const {
+      username,
+      usernameUpdateForm: { data: defaultData, isSubmitting, error },
+    } = useSelector((state) => selectUserById(state, id));
 
-  const dispatch = useDispatch();
-  const [t] = useTranslation();
-  const wasSubmitting = usePrevious(isSubmitting);
+    const dispatch = useDispatch();
+    const [t] = useTranslation();
+    const wasSubmitting = usePrevious(isSubmitting);
 
-  const [data, handleFieldChange, setData] = useForm({
-    username: '',
-    currentPassword: '',
-    ...defaultData,
-  });
+    const [data, handleFieldChange, setData] = useForm({
+      username: '',
+      currentPassword: '',
+      ...defaultData,
+    });
 
-  const message = useMemo(() => createMessage(error), [error]);
-  const [focusCurrentPasswordFieldState, focusCurrentPasswordField] = useToggle();
+    const message = useMemo(() => createMessage(error), [error]);
+    const [focusCurrentPasswordFieldState, focusCurrentPasswordField] = useToggle();
 
-  const [usernameFieldRef, handleUsernameFieldRef] = useNestedRef('inputRef');
-  const [currentPasswordFieldRef, handleCurrentPasswordFieldRef] = useNestedRef('inputRef');
+    const [usernameFieldRef, handleUsernameFieldRef] = useNestedRef('inputRef');
+    const [currentPasswordFieldRef, handleCurrentPasswordFieldRef] = useNestedRef('inputRef');
 
-  const handleSubmit = useCallback(() => {
-    const cleanData = {
-      ...data,
-      username: data.username.trim() || null,
-    };
+    const handleSubmit = useCallback(() => {
+      const cleanData = {
+        ...data,
+        username: data.username.trim() || null,
+      };
 
-    if (!cleanData.username || !isUsername(cleanData.username)) {
-      usernameFieldRef.current.select();
-      return;
-    }
-
-    if (cleanData.username === username) {
-      onClose();
-      return;
-    }
-
-    if (withPasswordConfirmation) {
-      if (!cleanData.currentPassword) {
-        currentPasswordFieldRef.current.focus();
+      if (!cleanData.username || !isUsername(cleanData.username)) {
+        usernameFieldRef.current.select();
         return;
       }
-    } else {
-      delete cleanData.currentPassword;
-    }
 
-    dispatch(entryActions.updateUserUsername(id, cleanData));
-  }, [
-    id,
-    withPasswordConfirmation,
-    onClose,
-    username,
-    dispatch,
-    data,
-    usernameFieldRef,
-    currentPasswordFieldRef,
-  ]);
+      if (cleanData.username === username) {
+        onClose();
+        return;
+      }
 
-  const handleMessageDismiss = useCallback(() => {
-    dispatch(entryActions.clearUserUsernameUpdateError(id));
-  }, [id, dispatch]);
-
-  useEffect(() => {
-    usernameFieldRef.current.focus({
-      preventScroll: true,
-    });
-  }, [usernameFieldRef]);
-
-  useDidUpdate(() => {
-    if (wasSubmitting && !isSubmitting) {
-      if (error) {
-        switch (error.message) {
-          case 'Username already in use':
-            usernameFieldRef.current.select();
-
-            break;
-          case 'Invalid current password':
-            setData((prevData) => ({
-              ...prevData,
-              currentPassword: '',
-            }));
-            focusCurrentPasswordField();
-
-            break;
-          default:
+      if (withPasswordConfirmation) {
+        if (!cleanData.currentPassword) {
+          currentPasswordFieldRef.current.focus();
+          return;
         }
       } else {
-        onClose();
+        delete cleanData.currentPassword;
       }
-    }
-  }, [isSubmitting, wasSubmitting, error, onClose]);
 
-  useDidUpdate(() => {
-    currentPasswordFieldRef.current.focus();
-  }, [focusCurrentPasswordFieldState]);
+      dispatch(entryActions.updateUserUsername(id, cleanData));
+    }, [
+      id,
+      withPasswordConfirmation,
+      onClose,
+      username,
+      dispatch,
+      data,
+      usernameFieldRef,
+      currentPasswordFieldRef,
+    ]);
 
-  return (
-    <>
-      <Popup.Header onBack={onBack}>
-        {t('common.editUsername', {
-          context: 'title',
-        })}
-      </Popup.Header>
-      <Popup.Content>
-        {message && (
-          <Message
-            {...{
-              [message.type]: true,
-            }}
-            visible
-            content={t(message.content)}
-            onDismiss={handleMessageDismiss}
-          />
-        )}
-        <Form onSubmit={handleSubmit}>
-          <div className={styles.text}>{t('common.newUsername')}</div>
-          <Input
-            fluid
-            ref={handleUsernameFieldRef}
-            name="username"
-            value={data.username}
-            placeholder={username}
-            maxLength={16}
-            className={styles.field}
-            onChange={handleFieldChange}
-          />
-          {withPasswordConfirmation && (
-            <>
-              <div className={styles.text}>{t('common.currentPassword')}</div>
-              <Input.Password
-                fluid
-                ref={handleCurrentPasswordFieldRef}
-                name="currentPassword"
-                value={data.currentPassword}
-                maxLength={256}
-                className={styles.field}
-                onChange={handleFieldChange}
-              />
-            </>
+    const handleMessageDismiss = useCallback(() => {
+      dispatch(entryActions.clearUserUsernameUpdateError(id));
+    }, [id, dispatch]);
+
+    useEffect(() => {
+      usernameFieldRef.current.focus({
+        preventScroll: true,
+      });
+    }, [usernameFieldRef]);
+
+    useDidUpdate(() => {
+      if (wasSubmitting && !isSubmitting) {
+        if (error) {
+          switch (error.message) {
+            case 'Username already in use':
+              usernameFieldRef.current.select();
+
+              break;
+            case 'Invalid current password':
+              setData((prevData) => ({
+                ...prevData,
+                currentPassword: '',
+              }));
+              focusCurrentPasswordField();
+
+              break;
+            default:
+          }
+        } else {
+          onClose();
+        }
+      }
+    }, [isSubmitting, wasSubmitting, error, onClose]);
+
+    useDidUpdate(() => {
+      currentPasswordFieldRef.current.focus();
+    }, [focusCurrentPasswordFieldState]);
+
+    return (
+      <>
+        <Popup.Header onBack={onBack}>
+          {t('common.editUsername', {
+            context: 'title',
+          })}
+        </Popup.Header>
+        <Popup.Content>
+          {message && (
+            <Message
+              {...{
+                [message.type]: true,
+              }}
+              visible
+              content={t(message.content)}
+              onDismiss={handleMessageDismiss}
+            />
           )}
-          <Button
-            positive
-            content={t('action.save')}
-            loading={isSubmitting}
-            disabled={isSubmitting}
-          />
-        </Form>
-      </Popup.Content>
-    </>
-  );
-});
+          <Form onSubmit={handleSubmit}>
+            <div className={styles.text}>{t('common.newUsername')}</div>
+            <Input
+              fluid
+              ref={handleUsernameFieldRef}
+              name="username"
+              value={data.username}
+              placeholder={username}
+              maxLength={16}
+              className={styles.field}
+              onChange={handleFieldChange}
+            />
+            {withPasswordConfirmation && (
+              <>
+                <div className={styles.text}>{t('common.currentPassword')}</div>
+                <Input.Password
+                  fluid
+                  ref={handleCurrentPasswordFieldRef}
+                  name="currentPassword"
+                  value={data.currentPassword}
+                  maxLength={256}
+                  className={styles.field}
+                  onChange={handleFieldChange}
+                />
+              </>
+            )}
+            <Button
+              positive
+              content={t('action.save')}
+              loading={isSubmitting}
+              disabled={isSubmitting}
+            />
+          </Form>
+        </Popup.Content>
+      </>
+    );
+  },
+);
 
 EditUserUsernameStep.propTypes = {
   id: PropTypes.string.isRequired,
   withPasswordConfirmation: PropTypes.bool,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-EditUserUsernameStep.defaultProps = {
-  withPasswordConfirmation: false,
-  onBack: undefined,
 };
 
 export default EditUserUsernameStep;

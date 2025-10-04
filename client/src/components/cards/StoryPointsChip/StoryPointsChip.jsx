@@ -11,7 +11,7 @@ const Sizes = {
   MEDIUM: 'medium',
 };
 
-const StoryPointsChip = React.memo(({ value, size, className }) => (
+const StoryPointsChip = React.memo(({ value, size = Sizes.MEDIUM, className = undefined }) => (
   <span className={classNames(styles.wrapper, styles[`wrapper${upperFirst(size)}`], className)}>
     {value}
   </span>
@@ -21,11 +21,6 @@ StoryPointsChip.propTypes = {
   value: PropTypes.number.isRequired,
   size: PropTypes.oneOf(Object.values(Sizes)),
   className: PropTypes.string,
-};
-
-StoryPointsChip.defaultProps = {
-  size: Sizes.MEDIUM,
-  className: undefined,
 };
 
 export default StoryPointsChip;

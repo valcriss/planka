@@ -14,7 +14,16 @@ import SelectCardType from './SelectCardType';
 import entryActions from '../../entry-actions';
 
 const SelectCardTypeStep = React.memo(
-  ({ projectId, defaultValue, title, withButton, buttonContent, onSelect, onBack, onClose }) => {
+  ({
+    projectId = undefined,
+    defaultValue = undefined,
+    title = 'common.selectType',
+    withButton = false,
+    buttonContent = 'action.selectType',
+    onSelect,
+    onBack = undefined,
+    onClose,
+  }) => {
     const [t] = useTranslation();
     const dispatch = useDispatch();
     const [value, setValue] = useState(defaultValue);
@@ -76,15 +85,6 @@ SelectCardTypeStep.propTypes = {
   onSelect: PropTypes.func.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-SelectCardTypeStep.defaultProps = {
-  projectId: undefined,
-  defaultValue: undefined,
-  title: 'common.selectType',
-  withButton: false,
-  buttonContent: 'action.selectType',
-  onBack: undefined,
 };
 
 export default SelectCardTypeStep;

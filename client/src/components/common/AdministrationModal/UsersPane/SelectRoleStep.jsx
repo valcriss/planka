@@ -22,7 +22,15 @@ const DESCRIPTION_BY_ROLE = {
 };
 
 const SelectRoleStep = React.memo(
-  ({ defaultValue, title, withButton, buttonContent, onSelect, onBack, onClose }) => {
+  ({
+    defaultValue,
+    title = 'common.selectRole',
+    withButton = false,
+    buttonContent = 'action.selectRole',
+    onSelect,
+    onBack = undefined,
+    onClose,
+  }) => {
     const [t] = useTranslation();
     const [value, setValue] = useState(defaultValue);
 
@@ -94,13 +102,6 @@ SelectRoleStep.propTypes = {
   onSelect: PropTypes.func.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-SelectRoleStep.defaultProps = {
-  title: 'common.selectRole',
-  withButton: false,
-  buttonContent: 'action.selectRole',
-  onBack: undefined,
 };
 
 export default SelectRoleStep;

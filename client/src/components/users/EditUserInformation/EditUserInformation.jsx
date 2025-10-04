@@ -17,7 +17,7 @@ import { useForm, useNestedRef } from '../../../hooks';
 
 import styles from './EditUserInformation.module.scss';
 
-const EditUserInformation = React.memo(({ id, onUpdate }) => {
+const EditUserInformation = React.memo(({ id, onUpdate = undefined }) => {
   const selectUserById = useMemo(() => selectors.makeSelectUserById(), []);
 
   const user = useSelector((state) => selectUserById(state, id));
@@ -107,10 +107,6 @@ const EditUserInformation = React.memo(({ id, onUpdate }) => {
 EditUserInformation.propTypes = {
   id: PropTypes.string.isRequired,
   onUpdate: PropTypes.func,
-};
-
-EditUserInformation.defaultProps = {
-  onUpdate: undefined,
 };
 
 export default EditUserInformation;

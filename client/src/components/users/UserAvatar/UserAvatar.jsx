@@ -45,7 +45,14 @@ const getColor = (name) => {
 };
 
 const UserAvatar = React.memo(
-  ({ id, size, isDisabled, withCreatorIndicator, className, onClick }) => {
+  ({
+    id = undefined,
+    size = Sizes.MEDIUM,
+    isDisabled = false,
+    withCreatorIndicator = false,
+    className = undefined,
+    onClick = undefined,
+  }) => {
     const selectUserById = useMemo(() => selectors.makeSelectUserById(), []);
 
     const user = useSelector((state) => selectUserById(state, id));
@@ -99,15 +106,6 @@ UserAvatar.propTypes = {
   withCreatorIndicator: PropTypes.bool,
   className: PropTypes.string,
   onClick: PropTypes.func,
-};
-
-UserAvatar.defaultProps = {
-  id: undefined,
-  size: Sizes.MEDIUM,
-  isDisabled: false,
-  withCreatorIndicator: false,
-  className: undefined,
-  onClick: undefined,
 };
 
 export default UserAvatar;

@@ -9,7 +9,7 @@ import { Button, Popup as SemanticUIPopup } from 'semantic-ui-react';
 
 import styles from './PopupHeader.module.css';
 
-const PopupHeader = React.memo(({ children, onBack }) => (
+const PopupHeader = React.memo(({ children, onBack = undefined }) => (
   <SemanticUIPopup.Header className={styles.wrapper}>
     {onBack && <Button icon="angle left" onClick={onBack} className={styles.backButton} />}
     <div className={styles.content}>{children}</div>
@@ -21,8 +21,6 @@ PopupHeader.propTypes = {
   onBack: PropTypes.func,
 };
 
-PopupHeader.defaultProps = {
-  onBack: undefined,
-};
+// defaultProps removed in favor of parameter default
 
 export default PopupHeader;

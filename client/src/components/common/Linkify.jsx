@@ -14,7 +14,7 @@ import { CardTypeIcons } from '../../constants/Icons';
 import history from '../../history';
 import selectors from '../../selectors';
 
-const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
+const Linkify = React.memo(({ children, linkStopPropagation = false, ...props }) => {
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
   const selectCardByProjectCodeAndNumber = useMemo(
     () => selectors.makeSelectCardByProjectCodeAndNumber(),
@@ -153,10 +153,6 @@ const Linkify = React.memo(({ children, linkStopPropagation, ...props }) => {
 Linkify.propTypes = {
   children: PropTypes.string.isRequired,
   linkStopPropagation: PropTypes.bool,
-};
-
-Linkify.defaultProps = {
-  linkStopPropagation: false,
 };
 
 export default Linkify;

@@ -185,6 +185,13 @@
     padding: 6px 0 0;
   }
 
+  .titleRow {
+    display: flex;
+    align-items: center;
+    gap: 0; // rely on blockedIcon margin
+    flex-wrap: nowrap;
+  }
+
   .headerKey {
     color: #6b808c;
     font-size: 12px;
@@ -194,6 +201,10 @@
   .headerWrapper {
     margin: 12px 48px 12px 56px;
     position: relative;
+  }
+
+  .blockedIcon {
+    margin-right: 4px;
   }
 
   .hidable {

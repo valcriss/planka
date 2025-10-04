@@ -13,7 +13,7 @@ import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
 import SelectCardType from '../../../cards/SelectCardType';
 
-const EditDefaultCardTypeStep = React.memo(({ listId, onBack, onClose }) => {
+const EditDefaultCardTypeStep = React.memo(({ listId, onBack = undefined, onClose }) => {
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
   const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
 
@@ -62,10 +62,6 @@ EditDefaultCardTypeStep.propTypes = {
   listId: PropTypes.string.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-EditDefaultCardTypeStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default EditDefaultCardTypeStep;

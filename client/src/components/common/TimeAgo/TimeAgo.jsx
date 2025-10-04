@@ -11,7 +11,7 @@ import ReactTimeAgo from 'react-time-ago';
 import getDateFormat from '../../../utils/get-date-format';
 import ExpirableTime from './ExpirableTime';
 
-const TimeAgo = React.memo(({ date, withExpiration }) => {
+const TimeAgo = React.memo(({ date, withExpiration = false }) => {
   const [t, i18n] = useTranslation();
 
   const verboseDateFormatter = useCallback(
@@ -37,10 +37,6 @@ const TimeAgo = React.memo(({ date, withExpiration }) => {
 TimeAgo.propTypes = {
   date: PropTypes.instanceOf(Date).isRequired,
   withExpiration: PropTypes.bool,
-};
-
-TimeAgo.defaultProps = {
-  withExpiration: false,
 };
 
 export default TimeAgo;

@@ -20,7 +20,7 @@ const Sizes = {
   LARGE: 'large',
 };
 
-const NameField = React.memo(({ defaultValue, size, onUpdate }) => {
+const NameField = React.memo(({ defaultValue, size = Sizes.MEDIUM, onUpdate }) => {
   const prevDefaultValue = usePrevious(defaultValue);
   const [value, handleChange, setValue] = useField(defaultValue);
   const [blurFieldState, blurField] = useToggle();
@@ -96,10 +96,6 @@ NameField.propTypes = {
   defaultValue: PropTypes.string.isRequired,
   size: PropTypes.oneOf(Object.values(Sizes)),
   onUpdate: PropTypes.func.isRequired,
-};
-
-NameField.defaultProps = {
-  size: Sizes.MEDIUM,
 };
 
 export default NameField;

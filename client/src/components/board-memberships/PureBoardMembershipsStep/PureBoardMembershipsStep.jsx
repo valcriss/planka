@@ -17,13 +17,13 @@ import styles from './PureBoardMembershipsStep.module.scss';
 const PureBoardMembershipsStep = React.memo(
   ({
     items,
-    currentUserIds,
-    title,
-    clearButtonContent,
+    currentUserIds = [],
+    title = 'common.members',
+    clearButtonContent = 'action.clear',
     onUserSelect,
-    onUserDeselect,
-    onClear,
-    onBack,
+    onUserDeselect = undefined,
+    onClear = undefined,
+    onBack = undefined,
   }) => {
     const [t] = useTranslation();
     const [search, handleSearchChange] = useField('');
@@ -102,15 +102,6 @@ PureBoardMembershipsStep.propTypes = {
   onUserDeselect: PropTypes.func,
   onClear: PropTypes.func,
   onBack: PropTypes.func,
-};
-
-PureBoardMembershipsStep.defaultProps = {
-  currentUserIds: [],
-  title: 'common.members',
-  clearButtonContent: 'action.clear',
-  onUserDeselect: undefined,
-  onClear: undefined,
-  onBack: undefined,
 };
 
 export default PureBoardMembershipsStep;

@@ -17,7 +17,7 @@ import { useForm } from '../../../hooks';
 import styles from './AddCustomFieldGroupStep.module.scss';
 import CustomFieldGroupEditor from '../CustomFieldGroupEditor/CustomFieldGroupEditor';
 
-const AddCustomFieldGroupStep = React.memo(({ onCreate, onBack, onClose }) => {
+const AddCustomFieldGroupStep = React.memo(({ onCreate, onBack = undefined, onClose }) => {
   const baseCustomFieldGroups = useSelector(selectors.selectBaseCustomFieldGroupsForCurrentProject);
 
   const [t] = useTranslation();
@@ -136,10 +136,6 @@ AddCustomFieldGroupStep.propTypes = {
   onCreate: PropTypes.func.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-AddCustomFieldGroupStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default AddCustomFieldGroupStep;

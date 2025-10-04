@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { Button } from 'semantic-ui-react';
 import { Input, Popup } from '../../../lib/custom-ui';
 
@@ -30,7 +30,7 @@ const StepTypes = {
   EDIT_CUSTOM_FIELD: 'EDIT_CUSTOM_FIELD',
 };
 
-const UnbasedContent = React.memo(({ id, onBack }) => {
+const UnbasedContent = React.memo(({ id, onBack = undefined }) => {
   const selectCustomFielGroupdById = useMemo(() => selectors.makeSelectCustomFieldGroupById(), []);
 
   const customFieldGroup = useSelector((state) => selectCustomFielGroupdById(state, id));
@@ -219,10 +219,6 @@ const UnbasedContent = React.memo(({ id, onBack }) => {
 UnbasedContent.propTypes = {
   id: PropTypes.string.isRequired,
   onBack: PropTypes.func,
-};
-
-UnbasedContent.defaultProps = {
-  onBack: undefined,
 };
 
 export default UnbasedContent;

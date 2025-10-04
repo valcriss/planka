@@ -7,7 +7,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-import { Draggable } from 'react-beautiful-dnd';
+import { Draggable } from '@hello-pangea/dnd';
 
 import selectors from '../../../selectors';
 import { BoardMembershipRoles } from '../../../constants/Enums';
@@ -15,7 +15,7 @@ import Card from '../Card';
 
 import styles from './DraggableCard.module.scss';
 
-const DraggableCard = React.memo(({ id, index, className, ...props }) => {
+const DraggableCard = React.memo(({ id, index, className = undefined, ...props }) => {
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
 
   const card = useSelector((state) => selectCardById(state, id));
@@ -50,10 +50,6 @@ DraggableCard.propTypes = {
   id: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   className: PropTypes.string,
-};
-
-DraggableCard.defaultProps = {
-  className: undefined,
 };
 
 export default DraggableCard;

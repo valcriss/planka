@@ -23,7 +23,7 @@ const StepTypes = {
   DELETE: 'DELETE',
 };
 
-const CardTypeStep = React.memo(({ id, onBack, onClose }) => {
+const CardTypeStep = React.memo(({ id, onBack = undefined, onClose }) => {
   const selectCardTypeById = useMemo(() => selectors.makeSelectCardTypeById(), []);
   const cardType = useSelector((state) => selectCardTypeById(state, id));
   const dispatch = useDispatch();
@@ -185,10 +185,6 @@ CardTypeStep.propTypes = {
   id: PropTypes.string.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-CardTypeStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default CardTypeStep;

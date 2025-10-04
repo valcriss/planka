@@ -12,7 +12,7 @@ import ConfirmationStep from '../../../common/ConfirmationStep';
 
 import styles from './Image.module.scss';
 
-const Image = React.memo(({ url, isActive, onSelect, onDeselect, onDelete }) => {
+const Image = React.memo(({ url, isActive, onSelect, onDeselect, onDelete = undefined }) => {
   const handleClick = useCallback(() => {
     if (isActive) {
       onDeselect();
@@ -67,10 +67,6 @@ Image.propTypes = {
   onSelect: PropTypes.func.isRequired,
   onDeselect: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
-};
-
-Image.defaultProps = {
-  onDelete: undefined,
 };
 
 export default Image;

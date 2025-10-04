@@ -9,14 +9,14 @@ import classNames from 'classnames';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Gallery, Item as GalleryItem } from 'react-photoswipe-gallery';
-import { Button, Grid, Icon } from 'semantic-ui-react';
+import { Button, Grid, Icon, Popup } from 'semantic-ui-react';
 import { useDidUpdate } from '../../../../lib/hooks';
 
 import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
 import { usePopupInClosableContext } from '../../../../hooks';
 import { isUsableMarkdownElement } from '../../../../utils/element-helpers';
-import { BoardMembershipRoles, ListTypes } from '../../../../constants/Enums';
+import { BoardMembershipRoles, ListTypes, CardLinkTypes } from '../../../../constants/Enums';
 import { CardTypeIcons } from '../../../../constants/Icons';
 import { ClosableContext } from '../../../../contexts';
 import Thumbnail from './Thumbnail';
@@ -341,6 +341,24 @@ const StoryContent = React.memo(({ onClose }) => {
   const MoveCardPopup = usePopupInClosableContext(MoveCardStep);
   const ConfirmationPopup = usePopupInClosableContext(ConfirmationStep);
 
+  const isBlocked = useSelector((state) => {
+    const outgoing = selectors.selectOutgoingCardLinksByCardId(state, card.id);
+    const incoming = selectors.selectIncomingCardLinksByCardId(state, card.id);
+    const links = [...outgoing, ...incoming];
+    for (let i = 0; i < links.length; i += 1) {
+      const link = links[i];
+      if (link.type === CardLinkTypes.BLOCKED_BY) {
+        const blockingCard = selectors.selectCardById(state, link.linkedCardId);
+        if (!blockingCard) continue; // eslint-disable-line no-continue
+        const blockingList = selectors.selectListById(state, blockingCard.listId);
+        if (blockingList && blockingList.type !== ListTypes.CLOSED) {
+          return true;
+        }
+      }
+    }
+    return false;
+  });
+
   return (
     <Grid className={styles.wrapper}>
       <Grid.Row className={styles.headerPadding}>
@@ -352,11 +370,25 @@ const StoryContent = React.memo(({ onClose }) => {
               style={cardType && cardType.color ? { color: cardType.color } : undefined}
             />
             <div className={styles.headerTitleWrapper}>
-              {canEditName ? (
-                <NameField defaultValue={card.name} size="large" onUpdate={handleNameUpdate} />
-              ) : (
-                <div className={styles.headerTitle}>{card.name}</div>
-              )}
+              <div className={styles.titleRow}>
+                {isBlocked && (
+                  <Popup
+                    content={t('common.blockedTooltip')}
+                    trigger={
+                      <Icon
+                        name="stop circle"
+                        className={styles.blockedIcon}
+                        style={{ color: '#db2828' }}
+                      />
+                    }
+                  />
+                )}
+                {canEditName ? (
+                  <NameField defaultValue={card.name} size="large" onUpdate={handleNameUpdate} />
+                ) : (
+                  <div className={styles.headerTitle}>{card.name}</div>
+                )}
+              </div>
               {isTeamProject && (
                 <div className={styles.headerKey}>
                   {project.code}-{card.number}

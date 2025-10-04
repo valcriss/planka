@@ -23,7 +23,14 @@ const DESCRIPTION_BY_ROLE = {
 };
 
 const SelectPermissionsStep = React.memo(
-  ({ boardMembership, title, buttonContent, onSelect, onBack, onClose }) => {
+  ({
+    boardMembership = undefined,
+    title = 'common.selectPermissions',
+    buttonContent = 'action.selectPermissions',
+    onSelect,
+    onBack,
+    onClose,
+  }) => {
     const [t] = useTranslation();
 
     const defaultData = useMemo(
@@ -111,12 +118,6 @@ SelectPermissionsStep.propTypes = {
   onSelect: PropTypes.func.isRequired,
   onBack: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-};
-
-SelectPermissionsStep.defaultProps = {
-  boardMembership: undefined,
-  title: 'common.selectPermissions',
-  buttonContent: 'action.selectPermissions',
 };
 
 export default SelectPermissionsStep;

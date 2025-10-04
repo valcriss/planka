@@ -20,7 +20,7 @@ const DESCRIPTION_BY_TYPE = {
   [CardTypes.STORY]: 'common.referenceDataAndKnowledgeStorage',
 };
 
-const SelectCardType = React.memo(({ projectId, value, onSelect }) => {
+const SelectCardType = React.memo(({ projectId = undefined, value = undefined, onSelect }) => {
   const [t] = useTranslation();
   const selectCardTypeIdsByProjectId = useMemo(
     () => selectors.makeSelectCardTypeIdsByProjectId(),
@@ -89,11 +89,6 @@ SelectCardType.propTypes = {
   projectId: PropTypes.string,
   value: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
-};
-
-SelectCardType.defaultProps = {
-  projectId: undefined,
-  value: undefined,
 };
 
 export default SelectCardType;

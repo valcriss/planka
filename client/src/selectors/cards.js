@@ -11,7 +11,7 @@ import { selectPath } from './router';
 import { selectCurrentUserId } from './users';
 import { buildCustomFieldValueId } from '../models/CustomFieldValue';
 import { isLocalId } from '../utils/local-id';
-import { CardLinkInverseTypeMap } from '../constants/Enums';
+import { CardLinkInverseTypeMap, ListTypes, CardLinkTypes } from '../constants/Enums';
 
 export const makeSelectCardById = () =>
   createSelector(
@@ -323,6 +323,42 @@ export const makeSelectIsCardWithIdRecent = () =>
 
 export const selectIsCardWithIdRecent = makeSelectIsCardWithIdRecent();
 
+export const makeSelectIsCardBlockedById = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ Card, List }, id) => {
+      const cardModel = Card.withId(id);
+      if (!cardModel) {
+        return false;
+      }
+      const outgoing = cardModel.getOutgoingCardLinksQuerySet().toRefArray();
+      const incoming = cardModel
+        .getIncomingCardLinksQuerySet()
+        .toRefArray()
+        .map((link) => ({
+          ...link,
+          linkedCardId: link.cardId,
+          type: CardLinkInverseTypeMap[link.type] || link.type,
+        }));
+      const all = [...outgoing, ...incoming];
+      for (let i = 0; i < all.length; i += 1) {
+        const link = all[i];
+        if (link.type === CardLinkTypes.BLOCKED_BY) {
+          const blockingCard = Card.withId(link.linkedCardId);
+          if (!blockingCard) continue; // eslint-disable-line no-continue
+          const blockingList = List.withId(blockingCard.listId);
+          if (blockingList && blockingList.type !== ListTypes.CLOSED) {
+            return true;
+          }
+        }
+      }
+      return false;
+    },
+  );
+
+export const selectIsCardBlockedById = makeSelectIsCardBlockedById();
+
 export const selectIsCardWithIdAvailableForCurrentUser = createSelector(
   orm,
   (_, id) => id,
@@ -583,6 +619,8 @@ export default {
   makeSelectIsCardWithIdRecent,
   selectIsCardWithIdRecent,
   selectIsCardWithIdAvailableForCurrentUser,
+  makeSelectIsCardBlockedById,
+  selectIsCardBlockedById,
   selectCurrentCard,
   selectUserIdsForCurrentCard,
   selectLabelIdsForCurrentCard,

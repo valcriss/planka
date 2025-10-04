@@ -15,7 +15,7 @@ const Sizes = {
   MEDIUM: 'medium',
 };
 
-const EpicChip = React.memo(({ id, size }) => {
+const EpicChip = React.memo(({ id, size = Sizes.MEDIUM }) => {
   const selectEpicById = useMemo(() => selectors.makeSelectEpicById(), []);
   const epic = useSelector((state) => selectEpicById(state, id));
 
@@ -39,10 +39,6 @@ const EpicChip = React.memo(({ id, size }) => {
 EpicChip.propTypes = {
   id: PropTypes.string.isRequired,
   size: PropTypes.oneOf(Object.values(Sizes)),
-};
-
-EpicChip.defaultProps = {
-  size: Sizes.MEDIUM,
 };
 
 export default EpicChip;

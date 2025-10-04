@@ -16,7 +16,7 @@ import ConfirmationStep from '../../../common/ConfirmationStep';
 
 import styles from './Item.module.scss';
 
-const Item = React.memo(({ id, isBase }) => {
+const Item = React.memo(({ id, isBase = false }) => {
   const selectById = useMemo(
     () => (isBase ? selectors.makeSelectBaseCardTypeById() : selectors.makeSelectCardTypeById()),
     [isBase],
@@ -69,10 +69,6 @@ const Item = React.memo(({ id, isBase }) => {
 Item.propTypes = {
   id: PropTypes.string.isRequired,
   isBase: PropTypes.bool,
-};
-
-Item.defaultProps = {
-  isBase: false,
 };
 
 export default Item;

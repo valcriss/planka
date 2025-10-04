@@ -19,7 +19,15 @@ const Types = {
   DUPLICATED_BY: 'duplicatedBy',
 };
 
-const CreatableTypes = [Types.RELATED, Types.BLOCKS, Types.DEPENDS_ON, Types.DUPLICATES];
+// Extended to allow users to explicitly pick either direction of asymmetric relationships
+const CreatableTypes = [
+  Types.RELATED,
+  Types.BLOCKS,
+  Types.DEPENDS_ON,
+  Types.DUPLICATES,
+  Types.BLOCKED_BY,
+  Types.DUPLICATED_BY,
+];
 
 module.exports = {
   Types,

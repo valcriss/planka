@@ -21,7 +21,7 @@ const Sizes = {
   MEDIUM: 'medium',
 };
 
-const LabelChip = React.memo(({ id, size, onClick }) => {
+const LabelChip = React.memo(({ id, size = Sizes.MEDIUM, onClick = undefined }) => {
   const selectLabelById = useMemo(() => selectors.makeSelectLabelById(), []);
 
   const label = useSelector((state) => selectLabelById(state, id));
@@ -60,11 +60,6 @@ LabelChip.propTypes = {
   id: PropTypes.string.isRequired,
   size: PropTypes.oneOf(Object.values(Sizes)),
   onClick: PropTypes.func,
-};
-
-LabelChip.defaultProps = {
-  size: Sizes.MEDIUM,
-  onClick: undefined,
 };
 
 export default LabelChip;

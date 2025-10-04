@@ -19,62 +19,64 @@ const Sizes = {
   MEDIUM: 'medium',
 };
 
-const StopwatchChip = React.memo(({ value, as, size, isDisabled, onClick }) => {
-  const prevStartedAt = usePrevious(value.startedAt);
-  const forceUpdate = useForceUpdate();
+const StopwatchChip = React.memo(
+  ({ value, as = 'button', size = Sizes.MEDIUM, isDisabled = false, onClick }) => {
+    const prevStartedAt = usePrevious(value.startedAt);
+    const forceUpdate = useForceUpdate();
 
-  const intervalRef = useRef(null);
+    const intervalRef = useRef(null);
 
-  const onStart = useCallback(() => {
-    intervalRef.current = setInterval(() => {
-      forceUpdate();
-    }, 1000);
-  }, [forceUpdate]);
+    const onStart = useCallback(() => {
+      intervalRef.current = setInterval(() => {
+        forceUpdate();
+      }, 1000);
+    }, [forceUpdate]);
 
-  const onStop = useCallback(() => {
-    clearInterval(intervalRef.current);
-  }, []);
+    const onStop = useCallback(() => {
+      clearInterval(intervalRef.current);
+    }, []);
 
-  useEffect(() => {
-    if (prevStartedAt) {
-      if (!value.startedAt) {
-        onStop();
+    useEffect(() => {
+      if (prevStartedAt) {
+        if (!value.startedAt) {
+          onStop();
+        }
+      } else if (value.startedAt) {
+        onStart();
       }
-    } else if (value.startedAt) {
-      onStart();
-    }
-  }, [value.startedAt, prevStartedAt, onStart, onStop]);
+    }, [value.startedAt, prevStartedAt, onStart, onStop]);
 
-  useEffect(
-    () => () => {
-      onStop();
-    },
-    [onStop],
-  );
+    useEffect(
+      () => () => {
+        onStop();
+      },
+      [onStop],
+    );
 
-  const contentNode = (
-    <span
-      className={classNames(
-        styles.wrapper,
-        styles[`wrapper${upperFirst(size)}`],
-        value.startedAt && styles.wrapperActive,
-        onClick && styles.wrapperHoverable,
-      )}
-    >
-      {formatStopwatch(value)}
-    </span>
-  );
+    const contentNode = (
+      <span
+        className={classNames(
+          styles.wrapper,
+          styles[`wrapper${upperFirst(size)}`],
+          value.startedAt && styles.wrapperActive,
+          onClick && styles.wrapperHoverable,
+        )}
+      >
+        {formatStopwatch(value)}
+      </span>
+    );
 
-  const ElementType = as;
+    const ElementType = as;
 
-  return onClick ? (
-    <ElementType type="button" disabled={isDisabled} className={styles.button} onClick={onClick}>
-      {contentNode}
-    </ElementType>
-  ) : (
-    contentNode
-  );
-});
+    return onClick ? (
+      <ElementType type="button" disabled={isDisabled} className={styles.button} onClick={onClick}>
+        {contentNode}
+      </ElementType>
+    ) : (
+      contentNode
+    );
+  },
+);
 
 StopwatchChip.propTypes = {
   value: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -82,13 +84,6 @@ StopwatchChip.propTypes = {
   size: PropTypes.oneOf(Object.values(Sizes)),
   isDisabled: PropTypes.bool,
   onClick: PropTypes.func,
-};
-
-StopwatchChip.defaultProps = {
-  as: 'button',
-  size: Sizes.MEDIUM,
-  isDisabled: false,
-  onClick: undefined,
 };
 
 export default StopwatchChip;

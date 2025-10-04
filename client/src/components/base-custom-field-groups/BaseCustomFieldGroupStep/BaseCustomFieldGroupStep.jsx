@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { Button } from 'semantic-ui-react';
 import { Input, Popup } from '../../../lib/custom-ui';
 
@@ -30,7 +30,7 @@ const StepTypes = {
   EDIT_CUSTOM_FIELD: 'EDIT_CUSTOM_FIELD',
 };
 
-const BaseCustomFieldGroupStep = React.memo(({ id, onBack, onClose }) => {
+const BaseCustomFieldGroupStep = React.memo(({ id, onBack = undefined, onClose }) => {
   const selectBaseCustomFieldGroupById = useMemo(
     () => selectors.makeSelectBaseCustomFieldGroupById(),
     [],
@@ -225,10 +225,6 @@ BaseCustomFieldGroupStep.propTypes = {
   id: PropTypes.string.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-BaseCustomFieldGroupStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default BaseCustomFieldGroupStep;

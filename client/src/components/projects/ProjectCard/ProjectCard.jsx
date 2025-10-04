@@ -27,7 +27,15 @@ const Sizes = {
 };
 
 const ProjectCard = React.memo(
-  ({ id, size, isActive, withDescription, withTypeIndicator, withFavoriteButton, className }) => {
+  ({
+    id,
+    size = Sizes.LARGE,
+    isActive = undefined,
+    withDescription = false,
+    withTypeIndicator = false,
+    withFavoriteButton = false,
+    className,
+  }) => {
     const selectProjectById = useMemo(() => selectors.makeSelectProjectById(), []);
 
     const selectFirstBoardIdByProjectId = useMemo(
@@ -178,14 +186,6 @@ ProjectCard.propTypes = {
   withTypeIndicator: PropTypes.bool,
   withFavoriteButton: PropTypes.bool,
   className: PropTypes.string.isRequired,
-};
-
-ProjectCard.defaultProps = {
-  size: Sizes.LARGE,
-  isActive: undefined,
-  withDescription: false,
-  withTypeIndicator: false,
-  withFavoriteButton: false,
 };
 
 export default ProjectCard;

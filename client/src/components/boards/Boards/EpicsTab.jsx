@@ -7,7 +7,7 @@ import Paths from '../../../constants/Paths';
 
 import itemStyles from './Item.module.scss';
 
-const EpicsTab = React.memo(({ name, code, isActive }) => (
+const EpicsTab = React.memo(({ name, code, isActive = false }) => (
   <div className={itemStyles.wrapper}>
     <div className={classNames(itemStyles.tab, isActive && itemStyles.tabActive)}>
       <Link to={Paths.PROJECT_EPICS.replace(':code', code)} className={itemStyles.link}>
@@ -21,10 +21,6 @@ EpicsTab.propTypes = {
   name: PropTypes.string.isRequired,
   code: PropTypes.string.isRequired,
   isActive: PropTypes.bool,
-};
-
-EpicsTab.defaultProps = {
-  isActive: false,
 };
 
 export default EpicsTab;

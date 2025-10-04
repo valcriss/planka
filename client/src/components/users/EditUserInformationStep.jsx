@@ -10,7 +10,7 @@ import { Popup } from '../../lib/custom-ui';
 
 import EditUserInformation from './EditUserInformation';
 
-const EditUserInformationStep = React.memo(({ id, onBack, onClose }) => {
+const EditUserInformationStep = React.memo(({ id, onBack = undefined, onClose }) => {
   const [t] = useTranslation();
 
   const handleUpdate = useCallback(() => {
@@ -35,10 +35,6 @@ EditUserInformationStep.propTypes = {
   id: PropTypes.string.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-EditUserInformationStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default EditUserInformationStep;

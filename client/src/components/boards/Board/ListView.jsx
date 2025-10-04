@@ -20,7 +20,13 @@ import PlusMathIcon from '../../../assets/images/plus-math-icon.svg?react';
 import styles from './ListView.module.scss';
 
 const ListView = React.memo(
-  ({ cardIds, isCardsFetching, isAllCardsFetched, onCardsFetch, onCardCreate }) => {
+  ({
+    cardIds,
+    isCardsFetching = undefined,
+    isAllCardsFetched = undefined,
+    onCardsFetch = undefined,
+    onCardCreate = undefined,
+  }) => {
     const canAddCard = useSelector((state) => {
       const boardMembership = selectors.selectCurrentUserMembershipForCurrentBoard(state);
       return !!boardMembership && boardMembership.role === BoardMembershipRoles.EDITOR;
@@ -95,13 +101,6 @@ ListView.propTypes = {
   isAllCardsFetched: PropTypes.bool,
   onCardsFetch: PropTypes.func,
   onCardCreate: PropTypes.func,
-};
-
-ListView.defaultProps = {
-  isCardsFetching: undefined,
-  isAllCardsFetched: undefined,
-  onCardsFetch: undefined,
-  onCardCreate: undefined,
 };
 
 export default ListView;

@@ -102,6 +102,17 @@
     padding-bottom: 20px;
   }
 
+  .blockedIcon {
+    margin-right: 4px;
+  }
+
+  .titleRow {
+    display: flex;
+    align-items: center;
+    gap: 0; // rely on blockedIcon margin
+    flex-wrap: nowrap;
+  }
+
   .cursorPointer {
     cursor: pointer;
   }

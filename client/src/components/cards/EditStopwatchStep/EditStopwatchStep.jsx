@@ -43,7 +43,7 @@ const createData = (stopwatch) => {
   };
 };
 
-const EditStopwatchStep = React.memo(({ cardId, onBack, onClose }) => {
+const EditStopwatchStep = React.memo(({ cardId, onBack = undefined, onClose }) => {
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
 
   const defaultValue = useSelector((state) => selectCardById(state, cardId).stopwatch);
@@ -205,10 +205,6 @@ EditStopwatchStep.propTypes = {
   cardId: PropTypes.string.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-EditStopwatchStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default EditStopwatchStep;

@@ -19,7 +19,16 @@ const ButtonTypes = {
 };
 
 const ConfirmationStep = React.memo(
-  ({ title, content, buttonType, buttonContent, typeValue, typeContent, onConfirm, onBack }) => {
+  ({
+    title,
+    content,
+    buttonType = ButtonTypes.NEGATIVE,
+    buttonContent,
+    typeValue = undefined,
+    typeContent = undefined,
+    onConfirm,
+    onBack = undefined,
+  }) => {
     const [t] = useTranslation();
 
     const [data, handleFieldChange] = useForm({
@@ -101,13 +110,6 @@ ConfirmationStep.propTypes = {
   typeContent: PropTypes.string,
   onConfirm: PropTypes.func.isRequired,
   onBack: PropTypes.func,
-};
-
-ConfirmationStep.defaultProps = {
-  buttonType: ButtonTypes.NEGATIVE,
-  typeValue: undefined,
-  typeContent: undefined,
-  onBack: undefined,
 };
 
 export default ConfirmationStep;

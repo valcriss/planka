@@ -19,7 +19,7 @@ const Sizes = {
   MEDIUM: 'medium',
 };
 
-const BaseCustomFieldGroupChip = React.memo(({ id, size, onClick }) => {
+const BaseCustomFieldGroupChip = React.memo(({ id, size = Sizes.MEDIUM, onClick = undefined }) => {
   const selectBaseCustomFieldGroupById = useMemo(
     () => selectors.makeSelectBaseCustomFieldGroupById(),
     [],
@@ -58,11 +58,6 @@ BaseCustomFieldGroupChip.propTypes = {
   id: PropTypes.string.isRequired,
   size: PropTypes.oneOf(Object.values(Sizes)),
   onClick: PropTypes.func,
-};
-
-BaseCustomFieldGroupChip.defaultProps = {
-  size: Sizes.MEDIUM,
-  onClick: undefined,
 };
 
 export default BaseCustomFieldGroupChip;

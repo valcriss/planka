@@ -12,7 +12,7 @@ import { handleLocationChange } from './actions';
 
 const defaultSelector = ({ router }) => router;
 
-function ReduxRouter({ children, history, selector = defaultSelector, basename = undefined }) {
+function ReduxRouter({ children, history, selector = defaultSelector, basename }) {
   const state = useSelector(selector);
   const dispatch = useDispatch();
 
@@ -41,8 +41,8 @@ function ReduxRouter({ children, history, selector = defaultSelector, basename =
 ReduxRouter.propTypes = {
   children: PropTypes.element.isRequired,
   history: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-  selector: PropTypes.func, // eslint-disable-line react/require-default-props
-  basename: PropTypes.string, // eslint-disable-line react/require-default-props
+  selector: PropTypes.func,
+  basename: PropTypes.string,
 };
 
 export default ReduxRouter;

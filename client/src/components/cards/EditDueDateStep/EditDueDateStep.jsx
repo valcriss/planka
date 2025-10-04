@@ -19,7 +19,7 @@ import parseTime from '../../../utils/parse-time';
 
 import styles from './EditDueDateStep.module.scss';
 
-const EditDueDateStep = React.memo(({ cardId, onBack, onClose }) => {
+const EditDueDateStep = React.memo(({ cardId, onBack = undefined, onClose }) => {
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
 
   const defaultValue = useSelector((state) => selectCardById(state, cardId).dueDate);
@@ -179,10 +179,6 @@ EditDueDateStep.propTypes = {
   cardId: PropTypes.string.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-EditDueDateStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default EditDueDateStep;

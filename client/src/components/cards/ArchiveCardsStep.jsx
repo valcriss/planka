@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import entryActions from '../../entry-actions';
 import ConfirmationStep from '../common/ConfirmationStep';
 
-const ArchiveCardsStep = React.memo(({ listId, onBack, onClose }) => {
+const ArchiveCardsStep = React.memo(({ listId, onBack = undefined, onClose }) => {
   const dispatch = useDispatch();
 
   const handleConfirm = useCallback(() => {
@@ -33,10 +33,6 @@ ArchiveCardsStep.propTypes = {
   listId: PropTypes.string.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-ArchiveCardsStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default ArchiveCardsStep;

@@ -349,18 +349,19 @@ export default {
       /* Translators: Labels for each relationship option available when linking cards. */
       cardLinkTypes: {
         /* Translators: Indicates that the cards are loosely connected. */
-        related: 'En relation',
+        related: 'Cette carte est en lien avec la carte',
         /* Translators: Indicates that this card blocks progress on the linked card. */
-        blocks: 'Bloque',
+        blocks: 'Cette carte bloque la carte',
         /* Translators: Indicates that this card is blocked by the linked card. */
-        blockedBy: 'Bloqué par',
+        blockedBy: 'Cette carte est bloquée par la carte',
         /* Translators: Indicates that this card depends on the linked card. */
-        dependsOn: 'Dépend de',
+        dependsOn: 'Cette carte dépend de la carte',
         /* Translators: Indicates that the cards duplicate each other. */
-        duplicates: 'Duplique',
+        duplicates: 'Cette carte duplique la carte',
         /* Translators: Indicates that this card is duplicated by the linked card. */
-        duplicatedBy: 'Dupliqué par',
+        duplicatedBy: 'Cette carte est dupliquée par la carte',
       },
+      blockedTooltip: 'Cette carte est bloquée par une autre carte non terminée',
       subscribeToCardWhenCommenting: 'S’abonner à la carte lors de la rédaction d’un commentaire',
       subscribeToMyOwnCardsByDefault: "M'abonner à mes propres cartes par défaut",
       taskActions_title: 'Actions de tâche',
@@ -432,6 +433,11 @@ export default {
       smtpConfiguration: 'Configuration SMTP',
       smtpResponse: 'Réponse SMTP',
       smtpDebugInformation: 'Informations de diagnostic',
+      cardLinkCreateHelp:
+        'Choisissez un type de relation ; le sens inverse est affiché sur l’autre carte.',
+      cardLinkAlreadyExistsWithSelected:
+        'Une liaison existe déjà avec cette carte (dans un sens ou dans l’autre).',
+      cardLinkDuplicateDirection: 'La liaison directionnelle opposée existe déjà.',
     },
     action: {
       activateUser: 'Activer l’utilisateur',
@@ -450,6 +456,8 @@ export default {
       addTask: 'Ajouter une tâche',
       addTaskList: 'Ajouter une liste de tâches',
       addEpic: 'Ajouter une épopée',
+      addLinkedCard: 'Ajouter',
+      addLinkedCardTitle: 'Ajouter une carte liée',
       addToCard: 'Ajouter à la carte',
       addUser: 'Ajouter un utilisateur',
       addWebhook: 'Ajouter un webhook',
@@ -565,6 +573,15 @@ export default {
       uploadNewAvatar: 'Télécharger un nouvel avatar',
       uploadNewImage: 'Télécharger une nouvelle image',
       editCardLimit_title: 'Modifier la limite de cartes',
+      // Libellés spécifiques pour la sélection du type de liaison (direction explicite)
+      cardLinkCreateOptions: {
+        related: 'Est en relation avec une autre carte',
+        blocks: 'Cette carte bloque l’autre carte',
+        blockedBy: 'Cette carte est bloquée par l’autre carte',
+        dependsOn: 'Cette carte dépend de l’autre carte',
+        duplicates: 'Cette carte duplique l’autre carte',
+        duplicatedBy: 'Cette carte est dupliquée par l’autre carte',
+      },
     },
   },
 };

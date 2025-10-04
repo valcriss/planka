@@ -58,7 +58,16 @@ const fileUploadHandler = async (file) => {
 
 const MarkdownEditor = React.forwardRef(
   (
-    { defaultValue, defaultMode, isError, onChange, onSubmit, onCancel, onModeChange, ...props },
+    {
+      defaultValue,
+      defaultMode = EditorModes.WYSIWYG,
+      isError = false,
+      onChange,
+      onSubmit,
+      onCancel,
+      onModeChange = undefined,
+      ...props
+    },
     ref,
   ) => {
     const wrapperRef = useRef(null);
@@ -169,12 +178,6 @@ MarkdownEditor.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onModeChange: PropTypes.func,
-};
-
-MarkdownEditor.defaultProps = {
-  defaultMode: EditorModes.WYSIWYG,
-  isError: false,
-  onModeChange: undefined,
 };
 
 export default React.memo(MarkdownEditor);

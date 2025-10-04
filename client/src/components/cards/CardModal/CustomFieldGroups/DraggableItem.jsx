@@ -7,7 +7,7 @@ import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Draggable } from 'react-beautiful-dnd';
+import { Draggable } from '@hello-pangea/dnd';
 
 import classNames from 'classnames';
 import selectors from '../../../../selectors';
@@ -17,7 +17,7 @@ import Item from './Item';
 
 import styles from './DraggableItem.module.scss';
 
-const DraggableItem = React.memo(({ id, index, className, ...props }) => {
+const DraggableItem = React.memo(({ id, index, className = undefined, ...props }) => {
   const selectCustomFieldGroupById = useMemo(() => selectors.makeSelectCustomFieldGroupById(), []);
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
 
@@ -67,10 +67,6 @@ DraggableItem.propTypes = {
   id: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   className: PropTypes.string,
-};
-
-DraggableItem.defaultProps = {
-  className: undefined,
 };
 
 export default DraggableItem;

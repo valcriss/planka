@@ -21,7 +21,13 @@ import PlusMathIcon from '../../../assets/images/plus-math-icon.svg?react';
 import styles from './GridView.module.scss';
 
 const GridView = React.memo(
-  ({ cardIds, isCardsFetching, isAllCardsFetched, onCardsFetch, onCardCreate }) => {
+  ({
+    cardIds,
+    isCardsFetching = undefined,
+    isAllCardsFetched = undefined,
+    onCardsFetch = undefined,
+    onCardCreate = undefined,
+  }) => {
     const canAddCard = useSelector((state) => {
       const boardMembership = selectors.selectCurrentUserMembershipForCurrentBoard(state);
       return !!boardMembership && boardMembership.role === BoardMembershipRoles.EDITOR;
@@ -97,13 +103,6 @@ GridView.propTypes = {
   isAllCardsFetched: PropTypes.bool,
   onCardsFetch: PropTypes.func,
   onCardCreate: PropTypes.func,
-};
-
-GridView.defaultProps = {
-  isCardsFetching: undefined,
-  isAllCardsFetched: undefined,
-  onCardsFetch: undefined,
-  onCardCreate: undefined,
 };
 
 export default GridView;

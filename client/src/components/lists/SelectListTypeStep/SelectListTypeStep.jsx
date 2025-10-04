@@ -20,7 +20,15 @@ const DESCRIPTION_BY_TYPE = {
 };
 
 const SelectListTypeStep = React.memo(
-  ({ defaultValue, title, withButton, buttonContent, onSelect, onBack, onClose }) => {
+  ({
+    defaultValue,
+    title = 'common.selectType',
+    withButton = false,
+    buttonContent = 'action.selectType',
+    onSelect,
+    onBack = undefined,
+    onClose,
+  }) => {
     const [t] = useTranslation();
     const [value, setValue] = useState(defaultValue);
 
@@ -87,13 +95,6 @@ SelectListTypeStep.propTypes = {
   onSelect: PropTypes.func.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-SelectListTypeStep.defaultProps = {
-  title: 'common.selectType',
-  withButton: false,
-  buttonContent: 'action.selectType',
-  onBack: undefined,
 };
 
 export default SelectListTypeStep;

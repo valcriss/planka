@@ -13,7 +13,7 @@ import WEBHOOK_EVENTS from '../../../constants/WebhookEvents';
 
 import styles from './Editor.module.scss';
 
-const Editor = React.forwardRef(({ data, isReadOnly, onFieldChange }, ref) => {
+const Editor = React.forwardRef(({ data, isReadOnly = false, onFieldChange }, ref) => {
   const [t] = useTranslation();
 
   const [nameFieldRef, handleNameFieldRef] = useNestedRef('inputRef');
@@ -143,10 +143,6 @@ Editor.propTypes = {
   data: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   isReadOnly: PropTypes.bool,
   onFieldChange: PropTypes.func.isRequired,
-};
-
-Editor.defaultProps = {
-  isReadOnly: false,
 };
 
 export default React.memo(Editor);

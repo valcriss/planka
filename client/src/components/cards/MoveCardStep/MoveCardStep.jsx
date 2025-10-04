@@ -16,7 +16,7 @@ import { useForm } from '../../../hooks';
 
 import styles from './MoveCardStep.module.scss';
 
-const MoveCardStep = React.memo(({ id, onBack, onClose }) => {
+const MoveCardStep = React.memo(({ id, onBack = undefined, onClose }) => {
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
   const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
 
@@ -173,10 +173,6 @@ MoveCardStep.propTypes = {
   id: PropTypes.string.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-MoveCardStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default MoveCardStep;

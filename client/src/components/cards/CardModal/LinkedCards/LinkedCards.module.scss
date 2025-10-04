@@ -9,6 +9,38 @@
   gap: 12px;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerTitle {
+  flex: 1 1 auto;
+  font-weight: 600;
+}
+
+.addButton {
+  padding: 2px !important;
+  min-width: 0 !important;
+  height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #17394d !important;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: rgba(9, 30, 66, 0.06) !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
 .list {
   border: 1px solid rgba(9, 30, 66, 0.13);
   border-radius: 4px;
@@ -17,7 +49,7 @@
 
 .listRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 160px 48px;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
   padding: 0px 0px 0px 12px;
@@ -27,9 +59,8 @@
   }
 
   @media (width < 540px) {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto;
-    gap: 6px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
   }
 }
 
@@ -39,11 +70,16 @@
   color: #17394d;
   cursor: pointer;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 18px;
+  /* align with typeCell for vertical centering */
   margin: 0;
   padding: 0;
   text-align: left;
-  white-space: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1 1 auto;
+  min-width: 0;
 
   &:hover,
   &:focus {
@@ -55,16 +91,39 @@
   color: #6b808c;
   font-size: 13px;
   line-height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 
   @media (width < 540px) {
     order: 3;
   }
 }
 
+.typeLabel {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.typeIcon {
+  flex: 0 0 auto;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  /* avoid extra vertical space */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
 .actionsCell {
   display: flex;
   justify-content: flex-end;
   padding: 5px 0;
+  width: auto;
 
   @media (width < 540px) {
     order: 2;
@@ -75,6 +134,7 @@
 .removeButton {
   box-shadow: none !important;
   height: 22px;
+  color: #6b808c;
   padding-top: 0.5rem !important;
   border: none !important;
   box-shadow: none !important;
@@ -95,9 +155,9 @@
 
 .form {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
-  align-items: stretch;
+  align-items: center;
 }
 
 .formField {
@@ -133,12 +193,87 @@
   cursor: pointer;
 }
 
-.typeDropdown {
-  min-width: 160px;
-}
+.searchMenuItem {
+  cursor: pointer !important;
+  user-select: none;
 
-@media (width < 540px) {
-  .typeDropdown {
-    min-width: 140px;
+  &:hover {
+    background: rgba(9, 30, 66, 0.06) !important;
   }
 }
+
+.searchMenuItemActive {
+  background: rgba(9, 30, 66, 0.06) !important;
+}
+
+/* Type dropdown specific single-line items */
+.typeMenu {
+  position: static !important;
+  /* override .searchMenu absolute */
+  left: auto !important;
+  right: auto !important;
+  width: max-content !important;
+  /* expand to fit longest item */
+  min-width: 100%;
+  /* at least trigger width via portal container */
+  display: inline-block !important;
+
+  .item {
+    white-space: nowrap !important;
+    /* force une seule ligne */
+    display: flex !important;
+    align-items: center;
+    /* suppression overflow/ellipsis pour affichage complet */
+  }
+}
+
+.typeDropdown {
+  min-width: 300px;
+}
+
+.typeSelectorWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
+.infoIcon {
+  color: #6b808c !important;
+  cursor: pointer;
+  align-self: center;
+
+  &:hover {
+    color: #17394d !important;
+  }
+}
+
+.hiddenMeasure {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  left: -9999px;
+  top: -9999px;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.popupContent {
+  max-width: 260px;
+  font-size: 12px;
+  line-height: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.typeWarning {
+  font-size: 11px;
+  line-height: 14px;
+  color: #b04632;
+  /* warning red */
+  white-space: nowrap;
+}
+
+/* Optionally, for very small viewports we could reduce, but requirement says at least 300px */

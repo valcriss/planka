@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { Button } from 'semantic-ui-react';
 import { Input, Popup } from '../../../lib/custom-ui';
 
@@ -26,7 +26,7 @@ const StepTypes = {
   EDIT: 'EDIT',
 };
 
-const CustomFieldGroupsStep = React.memo(({ onBack }) => {
+const CustomFieldGroupsStep = React.memo(({ onBack = undefined }) => {
   const customFieldGroups = useSelector(selectors.selectCustomFieldGroupsForCurrentBoard);
 
   const dispatch = useDispatch();
@@ -182,10 +182,6 @@ const CustomFieldGroupsStep = React.memo(({ onBack }) => {
 
 CustomFieldGroupsStep.propTypes = {
   onBack: PropTypes.func,
-};
-
-CustomFieldGroupsStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default CustomFieldGroupsStep;

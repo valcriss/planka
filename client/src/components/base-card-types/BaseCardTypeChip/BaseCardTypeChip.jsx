@@ -20,7 +20,7 @@ const Sizes = {
   MEDIUM: 'medium',
 };
 
-const BaseCardTypeChip = React.memo(({ id, size, onClick }) => {
+const BaseCardTypeChip = React.memo(({ id, size = Sizes.MEDIUM, onClick = undefined }) => {
   const selectBaseCardTypeById = useMemo(() => selectors.makeSelectBaseCardTypeById(), []);
 
   const baseCardType = useSelector((state) => selectBaseCardTypeById(state, id));
@@ -58,11 +58,6 @@ BaseCardTypeChip.propTypes = {
   id: PropTypes.string.isRequired,
   size: PropTypes.oneOf(Object.values(Sizes)),
   onClick: PropTypes.func,
-};
-
-BaseCardTypeChip.defaultProps = {
-  size: Sizes.MEDIUM,
-  onClick: undefined,
 };
 
 export default BaseCardTypeChip;

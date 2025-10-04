@@ -18,7 +18,7 @@ import CustomFieldGroupStep from '../../../custom-field-groups/CustomFieldGroupS
 
 import styles from './Item.module.scss';
 
-const Item = React.memo(({ id, dragHandleProps }) => {
+const Item = React.memo(({ id, dragHandleProps = undefined }) => {
   const selectCustomFieldGroupById = useMemo(() => selectors.makeSelectCustomFieldGroupById(), []);
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
 
@@ -68,10 +68,6 @@ const Item = React.memo(({ id, dragHandleProps }) => {
 Item.propTypes = {
   id: PropTypes.string.isRequired,
   dragHandleProps: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-};
-
-Item.defaultProps = {
-  dragHandleProps: undefined,
 };
 
 export default Item;

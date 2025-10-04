@@ -15,7 +15,7 @@ import { useForm } from '../../../hooks';
 import LABEL_COLORS from '../../../constants/LabelColors';
 import Editor from './Editor';
 
-const AddStep = React.memo(({ cardId, defaultData, onBack }) => {
+const AddStep = React.memo(({ cardId = undefined, defaultData, onBack }) => {
   const dispatch = useDispatch();
   const [t] = useTranslation();
 
@@ -61,10 +61,6 @@ AddStep.propTypes = {
   cardId: PropTypes.string,
   defaultData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   onBack: PropTypes.func.isRequired,
-};
-
-AddStep.defaultProps = {
-  cardId: undefined,
 };
 
 export default AddStep;

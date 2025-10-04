@@ -11,7 +11,7 @@ import selectors from '../../../selectors';
 import UnbasedContent from './UnbasedContent';
 import EditCustomFieldGroupStep from '../EditCustomFieldGroupStep';
 
-const CustomFieldGroupStep = React.memo(({ id, onBack, onClose }) => {
+const CustomFieldGroupStep = React.memo(({ id, onBack = undefined, onClose }) => {
   const selectCustomFielGroupdById = useMemo(() => selectors.makeSelectCustomFieldGroupById(), []);
 
   const customFieldGroup = useSelector((state) => selectCustomFielGroupdById(state, id));
@@ -34,10 +34,6 @@ CustomFieldGroupStep.propTypes = {
   id: PropTypes.string.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-CustomFieldGroupStep.defaultProps = {
-  onBack: undefined,
 };
 
 export default CustomFieldGroupStep;

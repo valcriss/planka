@@ -21,7 +21,7 @@ export default (initialClosableValue) => {
 
   const ClosableModal = useMemo(() => {
     // eslint-disable-next-line no-shadow
-    const ClosableModal = React.memo(({ closeIcon, onClose, ...props }) => {
+    const ClosableModal = React.memo(({ closeIcon = undefined, onClose = undefined, ...props }) => {
       const handleClose = useCallback(
         (event) => {
           if (isClosableActiveRef.current) {
@@ -49,14 +49,10 @@ export default (initialClosableValue) => {
       );
     });
 
+    /* Using parameter defaults instead of defaultProps */
     ClosableModal.propTypes = {
       closeIcon: PropTypes.bool,
       onClose: PropTypes.func,
-    };
-
-    ClosableModal.defaultProps = {
-      closeIcon: undefined,
-      onClose: undefined,
     };
 
     ClosableModal.Header = Modal.Header;

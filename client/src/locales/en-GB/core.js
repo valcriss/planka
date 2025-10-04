@@ -398,6 +398,7 @@ export default {
       addTask: 'Add task',
       addTaskList: 'Add task list',
       addLinkedCard: 'Add linked card',
+      addLinkedCardTitle: 'Add Linked Card',
       addToCard: 'Add to card',
       addUser: 'Add user',
       addWebhook: 'Add webhook',

@@ -27,213 +27,215 @@ const DEFAULT_DATA = {
   cardTypeId: null,
 };
 
-const AddCard = React.memo(({ isOpened, className, onCreate, onClose, listId }) => {
-  const {
-    defaultCardType: boardDefaultType,
-    defaultCardTypeId: boardDefaultTypeId,
-    limitCardTypesToDefaultOne: limitTypesToDefaultOne,
-    projectId,
-  } = useSelector(selectors.selectCurrentBoard);
+const AddCard = React.memo(
+  ({ isOpened = true, className = undefined, onCreate, onClose, listId = undefined }) => {
+    const {
+      defaultCardType: boardDefaultType,
+      defaultCardTypeId: boardDefaultTypeId,
+      limitCardTypesToDefaultOne: limitTypesToDefaultOne,
+      projectId,
+    } = useSelector(selectors.selectCurrentBoard);
 
-  const selectListById = useMemo(() => selectors.makeSelectListById(), []);
+    const selectListById = useMemo(() => selectors.makeSelectListById(), []);
 
-  const list = useSelector((state) => (listId ? selectListById(state, listId) : null));
+    const list = useSelector((state) => (listId ? selectListById(state, listId) : null));
 
-  const defaultType = list && list.defaultCardTypeId ? list.defaultCardType : boardDefaultType;
-  const defaultTypeId =
-    list && list.defaultCardTypeId ? list.defaultCardTypeId : boardDefaultTypeId;
+    const defaultType = list && list.defaultCardTypeId ? list.defaultCardType : boardDefaultType;
+    const defaultTypeId =
+      list && list.defaultCardTypeId ? list.defaultCardTypeId : boardDefaultTypeId;
 
-  const [t] = useTranslation();
-  const prevDefaultType = usePrevious(defaultType);
-  const prevDefaultTypeId = usePrevious(defaultTypeId);
+    const [t] = useTranslation();
+    const prevDefaultType = usePrevious(defaultType);
+    const prevDefaultTypeId = usePrevious(defaultTypeId);
 
-  const [data, handleFieldChange, setData] = useForm(() => ({
-    ...DEFAULT_DATA,
-    type: defaultType,
-    cardTypeId: defaultTypeId,
-  }));
+    const [data, handleFieldChange, setData] = useForm(() => ({
+      ...DEFAULT_DATA,
+      type: defaultType,
+      cardTypeId: defaultTypeId,
+    }));
 
-  const [focusNameFieldState, focusNameField] = useToggle();
-  const [isClosableActiveRef, activateClosable, deactivateClosable] = useClosable();
+    const [focusNameFieldState, focusNameField] = useToggle();
+    const [isClosableActiveRef, activateClosable, deactivateClosable] = useClosable();
 
-  const [nameFieldRef, handleNameFieldRef] = useNestedRef();
-  const [submitButtonRef, handleSubmitButtonRef] = useNestedRef();
-  const [selectTypeButtonRef, handleSelectTypeButtonRef] = useNestedRef();
+    const [nameFieldRef, handleNameFieldRef] = useNestedRef();
+    const [submitButtonRef, handleSubmitButtonRef] = useNestedRef();
+    const [selectTypeButtonRef, handleSelectTypeButtonRef] = useNestedRef();
 
-  const selectCardTypeById = useMemo(() => selectors.makeSelectCardTypeById(), []);
-  const selectBaseCardTypeById = useMemo(() => selectors.makeSelectBaseCardTypeById(), []);
+    const selectCardTypeById = useMemo(() => selectors.makeSelectCardTypeById(), []);
+    const selectBaseCardTypeById = useMemo(() => selectors.makeSelectBaseCardTypeById(), []);
 
-  const cardType = useSelector((state) => {
-    const ct = selectCardTypeById(state, data.cardTypeId);
-    return ct || selectBaseCardTypeById(state, data.cardTypeId);
-  });
+    const cardType = useSelector((state) => {
+      const ct = selectCardTypeById(state, data.cardTypeId);
+      return ct || selectBaseCardTypeById(state, data.cardTypeId);
+    });
 
-  const submit = useCallback(
-    (autoOpen) => {
-      const cleanData = {
-        ...data,
-        name: data.name.trim(),
-      };
+    const submit = useCallback(
+      (autoOpen) => {
+        const cleanData = {
+          ...data,
+          name: data.name.trim(),
+        };
 
-      if (!cleanData.name) {
-        nameFieldRef.current.select();
+        if (!cleanData.name) {
+          nameFieldRef.current.select();
+          return;
+        }
+
+        onCreate(cleanData, autoOpen);
+
+        setData({
+          ...DEFAULT_DATA,
+          type: defaultType,
+          cardTypeId: defaultTypeId,
+        });
+
+        if (autoOpen) {
+          onClose();
+        } else {
+          focusNameField();
+        }
+      },
+      [data, onCreate, setData, defaultType, defaultTypeId, nameFieldRef, onClose, focusNameField],
+    );
+
+    const handleSubmit = useCallback(() => {
+      submit();
+    }, [submit]);
+
+    const handleTypeSelect = useCallback(
+      (typeId) => {
+        setData((prevData) => ({
+          ...prevData,
+          cardTypeId: typeId,
+        }));
+      },
+      [setData],
+    );
+
+    const handleFieldKeyDown = useCallback(
+      (event) => {
+        switch (event.key) {
+          case 'Enter':
+            event.preventDefault();
+            submit(isModifierKeyPressed(event));
+
+            break;
+          case 'Escape':
+            onClose();
+
+            break;
+          default:
+        }
+      },
+      [onClose, submit],
+    );
+
+    const handleSelectTypeClose = useCallback(() => {
+      deactivateClosable();
+      nameFieldRef.current.focus();
+    }, [deactivateClosable, nameFieldRef]);
+
+    const handleAwayClick = useCallback(() => {
+      if (!isOpened || isClosableActiveRef.current) {
         return;
       }
 
-      onCreate(cleanData, autoOpen);
+      onClose();
+    }, [isOpened, onClose, isClosableActiveRef]);
 
-      setData({
-        ...DEFAULT_DATA,
-        type: defaultType,
-        cardTypeId: defaultTypeId,
-      });
-
-      if (autoOpen) {
-        onClose();
-      } else {
-        focusNameField();
-      }
-    },
-    [data, onCreate, setData, defaultType, defaultTypeId, nameFieldRef, onClose, focusNameField],
-  );
-
-  const handleSubmit = useCallback(() => {
-    submit();
-  }, [submit]);
-
-  const handleTypeSelect = useCallback(
-    (typeId) => {
-      setData((prevData) => ({
-        ...prevData,
-        cardTypeId: typeId,
-      }));
-    },
-    [setData],
-  );
-
-  const handleFieldKeyDown = useCallback(
-    (event) => {
-      switch (event.key) {
-        case 'Enter':
-          event.preventDefault();
-          submit(isModifierKeyPressed(event));
-
-          break;
-        case 'Escape':
-          onClose();
-
-          break;
-        default:
-      }
-    },
-    [onClose, submit],
-  );
-
-  const handleSelectTypeClose = useCallback(() => {
-    deactivateClosable();
-    nameFieldRef.current.focus();
-  }, [deactivateClosable, nameFieldRef]);
-
-  const handleAwayClick = useCallback(() => {
-    if (!isOpened || isClosableActiveRef.current) {
-      return;
-    }
-
-    onClose();
-  }, [isOpened, onClose, isClosableActiveRef]);
-
-  const handleClickAwayCancel = useCallback(() => {
-    nameFieldRef.current.focus();
-  }, [nameFieldRef]);
-
-  const clickAwayProps = useClickAwayListener(
-    [nameFieldRef, submitButtonRef, selectTypeButtonRef],
-    handleAwayClick,
-    handleClickAwayCancel,
-  );
-
-  useEffect(() => {
-    if (isOpened) {
+    const handleClickAwayCancel = useCallback(() => {
       nameFieldRef.current.focus();
-    }
-  }, [isOpened, nameFieldRef]);
+    }, [nameFieldRef]);
 
-  useEffect(() => {
-    if (!isOpened && (defaultType !== prevDefaultType || defaultTypeId !== prevDefaultTypeId)) {
-      setData((prevData) => ({
-        ...prevData,
-        type: defaultType,
-        cardTypeId: defaultTypeId,
-      }));
-    }
-  }, [isOpened, defaultType, defaultTypeId, prevDefaultType, prevDefaultTypeId, setData]);
+    const clickAwayProps = useClickAwayListener(
+      [nameFieldRef, submitButtonRef, selectTypeButtonRef],
+      handleAwayClick,
+      handleClickAwayCancel,
+    );
 
-  useDidUpdate(() => {
-    nameFieldRef.current.focus();
-  }, [focusNameFieldState]);
+    useEffect(() => {
+      if (isOpened) {
+        nameFieldRef.current.focus();
+      }
+    }, [isOpened, nameFieldRef]);
 
-  const SelectCardTypePopup = usePopup(SelectCardTypeStep, {
-    onOpen: activateClosable,
-    onClose: handleSelectTypeClose,
-  });
+    useEffect(() => {
+      if (!isOpened && (defaultType !== prevDefaultType || defaultTypeId !== prevDefaultTypeId)) {
+        setData((prevData) => ({
+          ...prevData,
+          type: defaultType,
+          cardTypeId: defaultTypeId,
+        }));
+      }
+    }, [isOpened, defaultType, defaultTypeId, prevDefaultType, prevDefaultTypeId, setData]);
 
-  return (
-    <Form
-      className={classNames(className, !isOpened && styles.wrapperClosed)}
-      onSubmit={handleSubmit}
-    >
-      <div className={styles.fieldWrapper}>
-        <TextArea
-          {...clickAwayProps} // eslint-disable-line react/jsx-props-no-spreading
-          ref={handleNameFieldRef}
-          as={TextareaAutosize}
-          name="name"
-          value={data.name}
-          placeholder={t('common.enterCardTitle')}
-          maxLength={1024}
-          minRows={3}
-          spellCheck={false}
-          className={styles.field}
-          onKeyDown={handleFieldKeyDown}
-          onChange={handleFieldChange}
-        />
-      </div>
-      <div className={styles.controls}>
-        <Button
-          {...clickAwayProps} // eslint-disable-line react/jsx-props-no-spreading
-          positive
-          ref={handleSubmitButtonRef}
-          content={t('action.addCard')}
-          className={styles.button}
-        />
-        <SelectCardTypePopup
-          projectId={projectId}
-          defaultValue={data.cardTypeId}
-          onSelect={handleTypeSelect}
-        >
+    useDidUpdate(() => {
+      nameFieldRef.current.focus();
+    }, [focusNameFieldState]);
+
+    const SelectCardTypePopup = usePopup(SelectCardTypeStep, {
+      onOpen: activateClosable,
+      onClose: handleSelectTypeClose,
+    });
+
+    return (
+      <Form
+        className={classNames(className, !isOpened && styles.wrapperClosed)}
+        onSubmit={handleSubmit}
+      >
+        <div className={styles.fieldWrapper}>
+          <TextArea
+            {...clickAwayProps} // eslint-disable-line react/jsx-props-no-spreading
+            ref={handleNameFieldRef}
+            as={TextareaAutosize}
+            name="name"
+            value={data.name}
+            placeholder={t('common.enterCardTitle')}
+            maxLength={1024}
+            minRows={3}
+            spellCheck={false}
+            className={styles.field}
+            onKeyDown={handleFieldKeyDown}
+            onChange={handleFieldChange}
+          />
+        </div>
+        <div className={styles.controls}>
           <Button
             {...clickAwayProps} // eslint-disable-line react/jsx-props-no-spreading
-            ref={handleSelectTypeButtonRef}
-            type="button"
-            disabled={limitTypesToDefaultOne}
-            className={classNames(styles.button, styles.selectTypeButton)}
+            positive
+            ref={handleSubmitButtonRef}
+            content={t('action.addCard')}
+            className={styles.button}
+          />
+          <SelectCardTypePopup
+            projectId={projectId}
+            defaultValue={data.cardTypeId}
+            onSelect={handleTypeSelect}
           >
-            <Icon
-              name={(cardType && cardType.icon) || CardTypeIcons[data.type]}
-              className={styles.selectTypeButtonIcon}
-            />
-            {(() => {
-              const typeName = (cardType && cardType.name) || data.type;
-              return typeName === CardTypes.PROJECT || typeName === CardTypes.STORY
-                ? t(`common.${typeName}`)
-                : typeName;
-            })()}
-          </Button>
-        </SelectCardTypePopup>
-      </div>
-    </Form>
-  );
-});
+            <Button
+              {...clickAwayProps} // eslint-disable-line react/jsx-props-no-spreading
+              ref={handleSelectTypeButtonRef}
+              type="button"
+              disabled={limitTypesToDefaultOne}
+              className={classNames(styles.button, styles.selectTypeButton)}
+            >
+              <Icon
+                name={(cardType && cardType.icon) || CardTypeIcons[data.type]}
+                className={styles.selectTypeButtonIcon}
+              />
+              {(() => {
+                const typeName = (cardType && cardType.name) || data.type;
+                return typeName === CardTypes.PROJECT || typeName === CardTypes.STORY
+                  ? t(`common.${typeName}`)
+                  : typeName;
+              })()}
+            </Button>
+          </SelectCardTypePopup>
+        </div>
+      </Form>
+    );
+  },
+);
 
 AddCard.propTypes = {
   isOpened: PropTypes.bool,
@@ -241,12 +243,6 @@ AddCard.propTypes = {
   listId: PropTypes.string,
   onCreate: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-};
-
-AddCard.defaultProps = {
-  isOpened: true,
-  className: undefined,
-  listId: undefined,
 };
 
 export default AddCard;

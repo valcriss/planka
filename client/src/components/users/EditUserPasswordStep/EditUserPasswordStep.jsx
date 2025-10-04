@@ -38,144 +38,141 @@ const createMessage = (error) => {
   }
 };
 
-const EditUserPasswordStep = React.memo(({ id, withPasswordConfirmation, onBack, onClose }) => {
-  const selectUserById = useMemo(() => selectors.makeSelectUserById(), []);
+const EditUserPasswordStep = React.memo(
+  ({ id, withPasswordConfirmation = false, onBack = undefined, onClose }) => {
+    const selectUserById = useMemo(() => selectors.makeSelectUserById(), []);
 
-  const {
-    data: defaultData,
-    isSubmitting,
-    error,
-  } = useSelector((state) => selectUserById(state, id).passwordUpdateForm);
+    const {
+      data: defaultData,
+      isSubmitting,
+      error,
+    } = useSelector((state) => selectUserById(state, id).passwordUpdateForm);
 
-  const dispatch = useDispatch();
-  const [t] = useTranslation();
-  const wasSubmitting = usePrevious(isSubmitting);
+    const dispatch = useDispatch();
+    const [t] = useTranslation();
+    const wasSubmitting = usePrevious(isSubmitting);
 
-  const [data, handleFieldChange, setData] = useForm({
-    password: '',
-    currentPassword: '',
-    ...defaultData,
-  });
-
-  const message = useMemo(() => createMessage(error), [error]);
-  const [focusCurrentPasswordFieldState, focusCurrentPasswordField] = useToggle();
-
-  const [passwordFieldRef, handlePasswordFieldRef] = useNestedRef('inputRef');
-  const [currentPasswordFieldRef, handleCurrentPasswordFieldRef] = useNestedRef('inputRef');
-
-  const handleSubmit = useCallback(() => {
-    if (!data.password || !isPassword(data.password)) {
-      passwordFieldRef.current.select();
-      return;
-    }
-
-    if (withPasswordConfirmation && !data.currentPassword) {
-      currentPasswordFieldRef.current.focus();
-      return;
-    }
-
-    dispatch(
-      entryActions.updateUserPassword(
-        id,
-        withPasswordConfirmation ? data : omit(data, 'currentPassword'),
-      ),
-    );
-  }, [id, withPasswordConfirmation, dispatch, data, passwordFieldRef, currentPasswordFieldRef]);
-
-  const handleMessageDismiss = useCallback(() => {
-    dispatch(entryActions.clearUserPasswordUpdateError(id));
-  }, [id, dispatch]);
-
-  useEffect(() => {
-    passwordFieldRef.current.focus({
-      preventScroll: true,
+    const [data, handleFieldChange, setData] = useForm({
+      password: '',
+      currentPassword: '',
+      ...defaultData,
     });
-  }, [passwordFieldRef]);
 
-  useDidUpdate(() => {
-    if (wasSubmitting && !isSubmitting) {
-      if (!error) {
-        onClose();
-      } else if (error.message === 'Invalid current password') {
-        setData((prevData) => ({
-          ...prevData,
-          currentPassword: '',
-        }));
-        focusCurrentPasswordField();
+    const message = useMemo(() => createMessage(error), [error]);
+    const [focusCurrentPasswordFieldState, focusCurrentPasswordField] = useToggle();
+
+    const [passwordFieldRef, handlePasswordFieldRef] = useNestedRef('inputRef');
+    const [currentPasswordFieldRef, handleCurrentPasswordFieldRef] = useNestedRef('inputRef');
+
+    const handleSubmit = useCallback(() => {
+      if (!data.password || !isPassword(data.password)) {
+        passwordFieldRef.current.select();
+        return;
       }
-    }
-  }, [isSubmitting, wasSubmitting, error, onClose]);
 
-  useDidUpdate(() => {
-    currentPasswordFieldRef.current.focus();
-  }, [focusCurrentPasswordFieldState]);
+      if (withPasswordConfirmation && !data.currentPassword) {
+        currentPasswordFieldRef.current.focus();
+        return;
+      }
 
-  return (
-    <>
-      <Popup.Header onBack={onBack}>
-        {t('common.editPassword', {
-          context: 'title',
-        })}
-      </Popup.Header>
-      <Popup.Content>
-        {message && (
-          <Message
-            {...{
-              [message.type]: true,
-            }}
-            visible
-            content={t(message.content)}
-            onDismiss={handleMessageDismiss}
-          />
-        )}
-        <Form onSubmit={handleSubmit}>
-          <div className={styles.text}>{t('common.newPassword')}</div>
-          <Input.Password
-            withStrengthBar
-            fluid
-            ref={handlePasswordFieldRef}
-            name="password"
-            value={data.password}
-            maxLength={256}
-            className={styles.field}
-            onChange={handleFieldChange}
-          />
-          {withPasswordConfirmation && (
-            <>
-              <div className={styles.text}>{t('common.currentPassword')}</div>
-              <Input.Password
-                fluid
-                ref={handleCurrentPasswordFieldRef}
-                name="currentPassword"
-                value={data.currentPassword}
-                maxLength={256}
-                className={styles.field}
-                onChange={handleFieldChange}
-              />
-            </>
+      dispatch(
+        entryActions.updateUserPassword(
+          id,
+          withPasswordConfirmation ? data : omit(data, 'currentPassword'),
+        ),
+      );
+    }, [id, withPasswordConfirmation, dispatch, data, passwordFieldRef, currentPasswordFieldRef]);
+
+    const handleMessageDismiss = useCallback(() => {
+      dispatch(entryActions.clearUserPasswordUpdateError(id));
+    }, [id, dispatch]);
+
+    useEffect(() => {
+      passwordFieldRef.current.focus({
+        preventScroll: true,
+      });
+    }, [passwordFieldRef]);
+
+    useDidUpdate(() => {
+      if (wasSubmitting && !isSubmitting) {
+        if (!error) {
+          onClose();
+        } else if (error.message === 'Invalid current password') {
+          setData((prevData) => ({
+            ...prevData,
+            currentPassword: '',
+          }));
+          focusCurrentPasswordField();
+        }
+      }
+    }, [isSubmitting, wasSubmitting, error, onClose]);
+
+    useDidUpdate(() => {
+      currentPasswordFieldRef.current.focus();
+    }, [focusCurrentPasswordFieldState]);
+
+    return (
+      <>
+        <Popup.Header onBack={onBack}>
+          {t('common.editPassword', {
+            context: 'title',
+          })}
+        </Popup.Header>
+        <Popup.Content>
+          {message && (
+            <Message
+              {...{
+                [message.type]: true,
+              }}
+              visible
+              content={t(message.content)}
+              onDismiss={handleMessageDismiss}
+            />
           )}
-          <Button
-            positive
-            content={t('action.save')}
-            loading={isSubmitting}
-            disabled={isSubmitting}
-          />
-        </Form>
-      </Popup.Content>
-    </>
-  );
-});
+          <Form onSubmit={handleSubmit}>
+            <div className={styles.text}>{t('common.newPassword')}</div>
+            <Input.Password
+              withStrengthBar
+              fluid
+              ref={handlePasswordFieldRef}
+              name="password"
+              value={data.password}
+              maxLength={256}
+              className={styles.field}
+              onChange={handleFieldChange}
+            />
+            {withPasswordConfirmation && (
+              <>
+                <div className={styles.text}>{t('common.currentPassword')}</div>
+                <Input.Password
+                  fluid
+                  ref={handleCurrentPasswordFieldRef}
+                  name="currentPassword"
+                  value={data.currentPassword}
+                  maxLength={256}
+                  className={styles.field}
+                  onChange={handleFieldChange}
+                />
+              </>
+            )}
+            <Button
+              positive
+              content={t('action.save')}
+              loading={isSubmitting}
+              disabled={isSubmitting}
+            />
+          </Form>
+        </Popup.Content>
+      </>
+    );
+  },
+);
 
 EditUserPasswordStep.propTypes = {
   id: PropTypes.string.isRequired,
   withPasswordConfirmation: PropTypes.bool,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-EditUserPasswordStep.defaultProps = {
-  withPasswordConfirmation: false,
-  onBack: undefined,
 };
 
 export default EditUserPasswordStep;

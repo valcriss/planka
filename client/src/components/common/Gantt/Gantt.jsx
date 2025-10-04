@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react'
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Icon } from 'semantic-ui-react';
 import {
   differenceInCalendarDays,
@@ -513,11 +513,8 @@ Gantt.propTypes = {
       isChild: PropTypes.bool,
     }),
   ).isRequired,
-  // eslint-disable-next-line react/require-default-props
   onChange: PropTypes.func,
-  // eslint-disable-next-line react/require-default-props
   onEpicClick: PropTypes.func,
-  // eslint-disable-next-line react/require-default-props
   onReorder: PropTypes.func,
 };
 

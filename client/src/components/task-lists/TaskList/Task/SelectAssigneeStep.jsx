@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import BoardMembershipsStep from '../../../board-memberships/BoardMembershipsStep';
 
 const SelectAssigneeStep = React.memo(
-  ({ currentUserId, onUserSelect, onUserDeselect, onBack, onClose }) => {
+  ({ currentUserId = undefined, onUserSelect, onUserDeselect, onBack = undefined, onClose }) => {
     const deselectUser = useCallback(() => {
       onUserDeselect();
       onClose();
@@ -51,11 +51,6 @@ SelectAssigneeStep.propTypes = {
   onUserDeselect: PropTypes.func.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
-};
-
-SelectAssigneeStep.defaultProps = {
-  currentUserId: undefined,
-  onBack: undefined,
 };
 
 export default SelectAssigneeStep;

@@ -13,12 +13,12 @@ import PureBoardMembershipsStep from './PureBoardMembershipsStep';
 const BoardMembershipsStep = React.memo(
   ({
     currentUserIds,
-    title,
-    clearButtonContent,
+    title = undefined,
+    clearButtonContent = undefined,
     onUserSelect,
     onUserDeselect,
-    onClear,
-    onBack,
+    onClear = undefined,
+    onBack = undefined,
   }) => {
     const boardMemberships = useSelector(selectors.selectMembershipsForCurrentBoard);
 
@@ -45,13 +45,6 @@ BoardMembershipsStep.propTypes = {
   onUserDeselect: PropTypes.func.isRequired,
   onClear: PropTypes.func,
   onBack: PropTypes.func,
-};
-
-BoardMembershipsStep.defaultProps = {
-  title: undefined,
-  clearButtonContent: undefined,
-  onClear: undefined,
-  onBack: undefined,
 };
 
 export default BoardMembershipsStep;
