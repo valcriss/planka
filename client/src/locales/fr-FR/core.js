@@ -123,6 +123,7 @@ export default {
       canOnlyViewBoard: 'Peut uniquement voir le tableau.',
       cardActions_title: 'Actions sur la carte',
       cardNotFound_title: 'Carte non trouvée',
+      unnamedCard: 'Carte sans nom',
       cardsOnThisListAreAvailableToAllBoardMembers:
         'Les cartes de cette liste sont disponibles pour tous les membres du tableau.',
       cardsOnThisListAreCompleteAndReadyToBeArchived:

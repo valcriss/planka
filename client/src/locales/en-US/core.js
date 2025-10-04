@@ -114,6 +114,7 @@ export default {
       canOnlyViewBoard: 'Can only view the board.',
       cardActions_title: 'Card Actions',
       cardNotFound_title: 'Card Not Found',
+      unnamedCard: 'Untitled card',
       cardsOnThisListAreAvailableToAllBoardMembers:
         'Cards on this list are available to all board members.',
       cardsOnThisListAreCompleteAndReadyToBeArchived:
