@@ -17,6 +17,7 @@ global._ = lodash;
 
 global.Board = global.Board || {
   Views: { KANBAN: 'kanban', GRID: 'grid', LIST: 'list' },
+  SwimlaneTypes: { NONE: 'none', MEMBERS: 'members', LABELS: 'labels', EPICS: 'epics' },
   qm: {},
 };
 
@@ -75,6 +76,7 @@ describe('showCardCount and cardLimit updates', () => {
 
     global.Board = {
       Views: { KANBAN: 'kanban', GRID: 'grid', LIST: 'list' },
+      SwimlaneTypes: { NONE: 'none', MEMBERS: 'members', LABELS: 'labels', EPICS: 'epics' },
       qm: {
         getByProjectId: jest.fn(),
       },

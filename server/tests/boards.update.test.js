@@ -50,7 +50,10 @@ describe('boards/update controller', () => {
       },
     };
 
-    global.Board = { Views: { kanban: 'kanban', table: 'table' } };
+    global.Board = {
+      Views: { kanban: 'kanban', table: 'table' },
+      SwimlaneTypes: { NONE: 'none', MEMBERS: 'members', LABELS: 'labels', EPICS: 'epics' },
+    };
 
     // Require controller after setting globals it depends on (Board, _,...)
     // to avoid ReferenceError at module evaluation time.
