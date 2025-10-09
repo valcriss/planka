@@ -263,6 +263,26 @@ describe('list selectors', () => {
     ]);
     expect(selectUniqueIds(state, LIST_ID)).toEqual(['card-1']);
   });
+
+  test('returns no swimlanes when the board is not grouped or no cards match', () => {
+    const selectSwimlanes = makeSelectSwimlaneLanesByListId();
+
+    const emptyState = createState();
+    expect(selectSwimlanes(emptyState, LIST_ID, BoardSwimlaneTypes.MEMBERS)).toEqual([]);
+
+    const populatedState = createState({
+      cards: [
+        {
+          id: 'card-1',
+          name: 'Card without grouping',
+          memberIds: ['user-1'],
+        },
+      ],
+    });
+
+    expect(selectSwimlanes(populatedState, LIST_ID, BoardSwimlaneTypes.NONE)).toEqual([]);
+    expect(selectSwimlanes(populatedState, LIST_ID, undefined)).toEqual([]);
+  });
 });
 
 describe('project selector', () => {
