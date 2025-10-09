@@ -18,14 +18,24 @@ const handleCardsUpdate = (cards, activities) => ({
   },
 });
 
-const createCard = (listId, data, autoOpen) => ({
-  type: EntryActionTypes.CARD_CREATE,
-  payload: {
+const createCard = (listId, data, autoOpen) => {
+  const { laneContext, ...cleanData } = data || {};
+
+  const payload = {
     listId,
-    data,
+    data: cleanData,
     autoOpen,
-  },
-});
+  };
+
+  if (laneContext !== undefined) {
+    payload.laneContext = laneContext;
+  }
+
+  return {
+    type: EntryActionTypes.CARD_CREATE,
+    payload,
+  };
+};
 
 const createCardInCurrentList = (data, autoOpen) => ({
   type: EntryActionTypes.CARD_IN_CURRENT_LIST_CREATE,

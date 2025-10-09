@@ -3,7 +3,7 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
-import { call, fork, join, put, race, select, take } from 'redux-saga/effects';
+import { all, call, fork, join, put, race, select, take } from 'redux-saga/effects';
 import { LOCATION_CHANGE_HANDLE } from '../../../lib/redux-router';
 
 import { goToBoard, goToCard } from './router';
@@ -17,7 +17,7 @@ import { createLocalId } from '../../../utils/local-id';
 import { isListArchiveOrTrash, isListFinite } from '../../../utils/record-helpers';
 import parseLaneKey from '../../../utils/parse-lane-key';
 import ActionTypes from '../../../constants/ActionTypes';
-import { BoardViews, ListTypes } from '../../../constants/Enums';
+import { BoardSwimlaneTypes, BoardViews, ListTypes } from '../../../constants/Enums';
 
 // eslint-disable-next-line no-underscore-dangle
 const _preloadImage = (url) =>
@@ -120,9 +120,102 @@ export function* handleCardsUpdate(cards, activities) {
   yield put(actions.handleCardsUpdate(cards, activities));
 }
 
-export function* createCard(listId, data, autoOpen) {
+function* applyLaneContextAfterCreate(card, laneContext, boardSwimlaneType) {
+  if (laneContext === undefined) {
+    return;
+  }
+
+  const normalizedLaneContext =
+    laneContext && typeof laneContext === 'object' && laneContext.type === 'unassigned'
+      ? null
+      : laneContext;
+
+  const cardId = card.id;
+
+  if (normalizedLaneContext === null) {
+    switch (boardSwimlaneType) {
+      case BoardSwimlaneTypes.MEMBERS: {
+        const userIds = (yield select(selectors.selectUserIdsByCardId, cardId)) || [];
+
+        if (userIds.length > 0) {
+          const removalEffects = userIds.map((userId) =>
+            put(entryActions.removeUserFromCard(userId, cardId)),
+          );
+
+          yield all(removalEffects);
+        }
+
+        break;
+      }
+      case BoardSwimlaneTypes.LABELS: {
+        const labelIds = (yield select(selectors.selectLabelIdsByCardId, cardId)) || [];
+
+        if (labelIds.length > 0) {
+          const removalEffects = labelIds.map((labelId) =>
+            put(entryActions.removeLabelFromCard(labelId, cardId)),
+          );
+
+          yield all(removalEffects);
+        }
+
+        break;
+      }
+      case BoardSwimlaneTypes.EPICS:
+        if (card.epicId !== null) {
+          yield put(entryActions.updateCard(cardId, { epicId: null }));
+        }
+
+        break;
+      default:
+    }
+
+    return;
+  }
+
+  if (!normalizedLaneContext || typeof normalizedLaneContext !== 'object') {
+    return;
+  }
+
+  const { type = null, value = null } = normalizedLaneContext;
+
+  switch (type) {
+    case 'member':
+      if (value) {
+        yield put(entryActions.addUserToCard(value, cardId));
+      }
+
+      break;
+    case 'label':
+      if (value) {
+        yield put(entryActions.addLabelToCard(value, cardId));
+      }
+
+      break;
+    case 'epic': {
+      const targetEpicId = value ?? null;
+
+      if (card.epicId !== targetEpicId) {
+        yield put(entryActions.updateCard(cardId, { epicId: targetEpicId }));
+      }
+
+      break;
+    }
+    default:
+  }
+}
+
+export function* createCard(listId, data, autoOpen, laneContextParam = undefined) {
+  const { laneContext: dataLaneContext, ...cardData } = data || {};
+  const laneContext = laneContextParam !== undefined ? laneContextParam : dataLaneContext;
+
   const localId = yield call(createLocalId);
   const list = yield select(selectors.selectListById, listId);
+
+  let boardSwimlaneType = BoardSwimlaneTypes.NONE;
+  if (laneContext !== undefined) {
+    const board = yield select(selectors.selectBoardById, list.boardId);
+    boardSwimlaneType = board?.swimlaneType ?? BoardSwimlaneTypes.NONE;
+  }
 
   const currentUserMembership = yield select(
     selectors.selectCurrentUserMembershipByBoardId,
@@ -130,7 +223,7 @@ export function* createCard(listId, data, autoOpen) {
   );
 
   const nextData = {
-    ...data,
+    ...cardData,
   };
 
   if (isListFinite(list)) {
@@ -167,6 +260,10 @@ export function* createCard(listId, data, autoOpen) {
   }
 
   yield put(actions.createCard.success(localId, card));
+
+  if (laneContext !== undefined) {
+    yield call(applyLaneContextAfterCreate, card, laneContext, boardSwimlaneType);
+  }
 
   if (watchForCreateCardActionTask && watchForCreateCardActionTask.isRunning()) {
     yield call(goToCard, card.id);

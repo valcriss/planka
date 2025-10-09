@@ -28,7 +28,14 @@ const DEFAULT_DATA = {
 };
 
 const AddCard = React.memo(
-  ({ isOpened = true, className = undefined, onCreate, onClose, listId = undefined }) => {
+  ({
+    isOpened = true,
+    className = undefined,
+    onCreate,
+    onClose,
+    listId = undefined,
+    laneContext = undefined,
+  }) => {
     const {
       defaultCardType: boardDefaultType,
       defaultCardTypeId: boardDefaultTypeId,
@@ -76,6 +83,10 @@ const AddCard = React.memo(
           name: data.name.trim(),
         };
 
+        if (laneContext !== undefined) {
+          cleanData.laneContext = laneContext;
+        }
+
         if (!cleanData.name) {
           nameFieldRef.current.select();
           return;
@@ -95,7 +106,17 @@ const AddCard = React.memo(
           focusNameField();
         }
       },
-      [data, onCreate, setData, defaultType, defaultTypeId, nameFieldRef, onClose, focusNameField],
+      [
+        data,
+        laneContext,
+        onCreate,
+        setData,
+        defaultType,
+        defaultTypeId,
+        nameFieldRef,
+        onClose,
+        focusNameField,
+      ],
     );
 
     const handleSubmit = useCallback(() => {
@@ -243,6 +264,13 @@ AddCard.propTypes = {
   listId: PropTypes.string,
   onCreate: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+  laneContext: PropTypes.oneOfType([
+    PropTypes.shape({
+      type: PropTypes.string.isRequired,
+      value: PropTypes.string,
+    }),
+    PropTypes.oneOf([null]),
+  ]),
 };
 
 export default AddCard;
