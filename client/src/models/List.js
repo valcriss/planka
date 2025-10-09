@@ -10,7 +10,7 @@ import buildSearchParts from '../utils/build-search-parts';
 import { isListFinite } from '../utils/record-helpers';
 import ActionTypes from '../constants/ActionTypes';
 import Config from '../constants/Config';
-import { ListSortFieldNames, ListTypes, SortOrders } from '../constants/Enums';
+import { BoardSwimlaneTypes, ListSortFieldNames, ListTypes, SortOrders } from '../constants/Enums';
 
 const POSITION_BY_LIST_TYPE = {
   [ListTypes.ARCHIVE]: Number.MAX_SAFE_INTEGER - 1,
@@ -319,6 +319,78 @@ export default class extends BaseModel {
     }
 
     return cardModels;
+  }
+
+  getUniqueFilteredCardIds() {
+    return Array.from(new Set(this.getFilteredCardsModelArray().map((cardModel) => cardModel.id)));
+  }
+
+  getSwimlaneDescriptors(swimlaneType) {
+    if (
+      !swimlaneType ||
+      swimlaneType === BoardSwimlaneTypes.NONE ||
+      !Object.values(BoardSwimlaneTypes).includes(swimlaneType)
+    ) {
+      return [];
+    }
+
+    const cardModels = this.getFilteredCardsModelArray();
+
+    if (cardModels.length === 0) {
+      return [];
+    }
+
+    const descriptorsMap = new Map();
+    const addCardToLane = (laneId, cardId) => {
+      if (!descriptorsMap.has(laneId)) {
+        descriptorsMap.set(laneId, { id: laneId, cardIds: [] });
+      }
+
+      descriptorsMap.get(laneId).cardIds.push(cardId);
+    };
+
+    cardModels.forEach((cardModel) => {
+      let isAssigned = false;
+
+      switch (swimlaneType) {
+        case BoardSwimlaneTypes.MEMBERS: {
+          const users = cardModel.users.toRefArray();
+
+          users.forEach((user) => {
+            addCardToLane(`member:${user.id}`, cardModel.id);
+            isAssigned = true;
+          });
+
+          break;
+        }
+        case BoardSwimlaneTypes.LABELS: {
+          const labels = cardModel.labels.toRefArray();
+
+          labels.forEach((label) => {
+            addCardToLane(`label:${label.id}`, cardModel.id);
+            isAssigned = true;
+          });
+
+          break;
+        }
+        case BoardSwimlaneTypes.EPICS: {
+          if (cardModel.epicId) {
+            addCardToLane(`epic:${cardModel.epicId}`, cardModel.id);
+            isAssigned = true;
+          }
+
+          break;
+        }
+        default:
+          break;
+      }
+
+      if (!isAssigned) {
+        addCardToLane('unassigned', cardModel.id);
+      }
+    });
+
+    return Array.from(descriptorsMap.values());
   }
 
   isAvailableForUser(userModel) {
