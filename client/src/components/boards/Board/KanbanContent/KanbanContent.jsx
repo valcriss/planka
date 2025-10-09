@@ -13,6 +13,7 @@ import { closePopup } from '../../../../lib/popup';
 import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
 import parseDndId from '../../../../utils/parse-dnd-id';
+import parseLaneKey from '../../../../utils/parse-lane-key';
 import DroppableTypes from '../../../../constants/DroppableTypes';
 import { BoardMembershipRoles } from '../../../../constants/Enums';
 import AddList from './AddList';
@@ -60,17 +61,40 @@ const KanbanContent = React.memo(() => {
         return;
       }
 
-      const id = parseDndId(draggableId);
+      const draggableDescriptor = parseDndId(draggableId);
 
       switch (type) {
         case DroppableTypes.LIST:
-          dispatch(entryActions.moveList(id, destination.index));
+          dispatch(entryActions.moveList(draggableDescriptor.id, destination.index));
 
           break;
         case DroppableTypes.CARD:
-          dispatch(
-            entryActions.moveCard(id, parseDndId(destination.droppableId), destination.index),
-          );
+          {
+            const sourceDescriptor = parseDndId(source.droppableId);
+            const destinationDescriptor = parseDndId(destination.droppableId);
+
+            const sourceLaneKey = sourceDescriptor.laneKey || draggableDescriptor.laneKey;
+            const sourceLane = parseLaneKey(sourceLaneKey);
+            const targetLane = parseLaneKey(destinationDescriptor.laneKey);
+
+            const hasLaneChanged = (sourceLane?.key || null) !== (targetLane?.key || null);
+
+            const metadata = hasLaneChanged
+              ? {
+                  sourceLane: sourceLane ?? null,
+                  targetLane: targetLane ?? null,
+                }
+              : undefined;
+
+            dispatch(
+              entryActions.moveCard(
+                draggableDescriptor.id,
+                destinationDescriptor.id,
+                destination.index,
+                metadata,
+              ),
+            );
+          }
 
           break;
         default:
