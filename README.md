@@ -1,68 +1,89 @@
-# PLANKA
+# Planka
 
-**Project mastering driven by fun**
+**Modern, self-hosted project boards for teams who need real-time collaboration.**
 
-![Version](https://img.shields.io/github/package-json/v/plankanban/planka?style=flat-square) [![Docker Pulls](https://img.shields.io/badge/docker_pulls-6M%2B-%23066da5?style=flat-square&color=red)](https://github.com/plankanban/planka/pkgs/container/planka) [![Contributors](https://img.shields.io/github/contributors/plankanban/planka?style=flat-square&color=blue)](https://github.com/plankanban/planka/graphs/contributors) [![Chat](https://img.shields.io/discord/1041440072953765979?style=flat-square&logo=discord&logoColor=white)](https://discord.gg/WqqYNd7Jvt)
+![Demo](assets/demo.gif)
 
-![Demo](https://raw.githubusercontent.com/plankanban/planka/master/assets/demo.gif)
-
-[**Client demo**](https://plankanban.github.io/planka) (without server features).
-
-> ⚠️ The demo GIF and client demo are based on **v1** and will be updated soon.
+Planka combines a collaborative Kanban interface with a Sails.js backend and a fast React client. It is designed to be easy to run on your own infrastructure while still offering the collaborative features expected from a hosted productivity platform.
 
 ## Key Features
 
-- **Collaborative Kanban Boards**: Create projects, boards, lists, cards, and manage tasks with an intuitive drag-and-drop interface
-- **Real-Time Updates**: Instant syncing across all users, no refresh needed
-- **Rich Markdown Support**: Write beautifully formatted card descriptions with a powerful markdown editor
-- **Flexible Notifications**: Get alerts through 100+ providers, fully customizable to your workflow
-- **Configurable List Counters**: Enable per-board list card counters to track filtered versus total cards at a glance; counters are automatically disabled when Scrum mode is active
-- **Board Swimlane Modes**: Group each board by members, labels, or epics and see cards duplicated across relevant swimlanes for complete visual coverage
-- **Seamless Authentication**: Single sign-on with OpenID Connect integration
-- **Multilingual & Easy to Translate**: Full internationalization support for a global audience
-- **Stable List Slugs**: Lists have optional `slug` identifiers for reliable API queries, unaffected by renaming
+- **Real-time collaboration** powered by websockets keeps every participant in sync without manual refreshes.
+- **Flexible project structure** with projects, boards, swimlanes, lists, cards, comments, checklists, and attachments.
+- **Rich editing tools** including markdown formatting, code highlighting, due dates, member assignments, and powerful filtering.
+- **Granular permissions** with roles for administrators, project owners, board users, and personal project owners.
+- **Extensive integrations** through OpenID Connect for authentication and SMTP for email notifications.
+- **Customizable storage** options for self-hosted or S3-compatible object storage providers.
 
-### Board swimlane preferences
+## Technology Stack
 
-Every board can switch between three grouping modes—**Members**, **Labels**, and **Epics**—from the board action menu or preferences pane. Cards automatically appear in each lane that matches their assignments, and an additional **Unassigned** lane keeps items without a matching member, label, or epic in sight so work never disappears when grouped visually.
+- **Frontend:** React 18, Vite, Redux, Semantic UI, and Gravity UI components.
+- **Backend:** Node.js with Sails.js, Knex-powered PostgreSQL persistence, and Socket.IO for live updates.
+- **Database:** PostgreSQL 16 (configurable).
+- **Build & Tooling:** ESLint, Jest, Playwright, and Docker for containerized deployments.
 
-## Personal Project Owners
+## Getting Started
 
-Planka now includes a dedicated **personal project owner** role that gives users the ability to create and manage their own private projects without granting them global administration rights. Personal project owners are limited to two personal projects each by default. You can customize this cap with the `PERSONNAL_PROJECT_OWNER_LIMIT` environment variable (set it to `0` to disallow new personal projects entirely). If you provision users through OpenID Connect, map identity-provider groups to the role with the comma-separated `OIDC_PERSONNAL_PROJECT_OWNER_ROLES` environment variable.
+### Development environment
 
-## How to Deploy
+1. Install Node.js 18 (or newer) and npm.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Copy the default server environment template and adjust it to your needs:
+   ```bash
+   cp server/.env.sample server/.env
+   ```
+   Update the values to point to your PostgreSQL instance. `DATABASE_URL` defaults to `postgresql://postgres@localhost/planka`.
+4. Start both the API and client in development mode:
+   ```bash
+   npm start
+   ```
+   The client is served by Vite and proxies API calls to the Sails.js server.
 
-PLANKA is easy to install using multiple methods - learn more in the [installation guide](https://docs.planka.cloud/docs/welcome/).
+Useful helper scripts are available in `package.json`, such as `npm run server:db:migrate` to apply database migrations and `npm run client:lint` to lint the frontend codebase.
 
-For configuration and environment settings, see the [configuration section](https://docs.planka.cloud/docs/category/configuration/).
+### Docker Compose
 
-## Contact
+For a self-contained deployment you can rely on the provided compose file:
 
-Interested in a hosted version of PLANKA? Email us at [github@planka.group](mailto:github@planka.group).
+```bash
+docker compose up -d
+```
 
-For any security issues, please do not create a public issue on GitHub - instead, report it privately by emailing [security@planka.group](mailto:security@planka.group).
+The compose stack starts two services:
 
-**Note:** We do NOT offer any public support via email, please use GitHub.
+- `planka`: the application, exposed on `http://localhost:3000`.
+- `postgres`: a PostgreSQL database with persistent volumes for data and uploaded assets.
 
-**Join our community:** Get help, share ideas, or contribute on our [Discord server](https://discord.gg/WqqYNd7Jvt).
+Environment variables can be overridden in the compose file or supplied via an `.env` file. Secrets such as the database password or SMTP credentials can be stored using Docker secrets (see commented examples inside `docker-compose.yml`).
 
-## License
+### Configuration
 
-PLANKA is [fair-code](https://faircode.io) distributed under the [Fair Use License](https://github.com/plankanban/planka/blob/master/LICENSES/PLANKA%20Community%20License%20EN.md) and [PLANKA Pro/Enterprise License](https://github.com/plankanban/planka/blob/master/LICENSES/PLANKA%20Commercial%20License%20EN.md).
+Environment variables control most behavior. The `server/.env.sample` file documents the available options, including:
 
-- **Source Available**: The source code is always visible
-- **Self-Hostable**: Deploy and host it anywhere
-- **Extensible**: Customize with your own functionality
-- **Enterprise Licenses**: Available for additional features and support
+- `BASE_URL`: public URL of the instance.
+- `DATABASE_URL`: PostgreSQL connection string.
+- `SECRET_KEY`: used for token signing.
+- `DEFAULT_*` values for provisioning the first administrator.
+- `S3_*` settings for external file storage.
+- `OIDC_*` values for OpenID Connect login.
+- `SMTP_*` options for email notifications.
 
-For more details, check the [License Guide](https://github.com/plankanban/planka/blob/master/LICENSES/PLANKA%20License%20Guide%20EN.md).
+Set the variables you need before starting the application.
 
 ## Contributing
 
-Found a bug or have a feature request? Check out our [Contributing Guide](https://github.com/plankanban/planka/blob/master/CONTRIBUTING.md) to get started.
+Contributions, bug reports, and feature proposals are welcome. Please open an issue or pull request with a clear description of your changes and, if possible, accompanying tests.
 
-For setting up the project locally, see the [development section](https://docs.planka.cloud/docs/category/development/).
+Before submitting changes, run the lint and test suites:
 
-**Thanks to all our contributors!**
+```bash
+npm run lint
+npm test
+```
 
-[![Contributors](https://contrib.rocks/image?repo=plankanban/planka)](https://github.com/plankanban/planka/graphs/contributors)
+## License
+
+This repository is distributed under the terms described in [`LICENSE.md`](LICENSE.md). Commercial licensing options are also described in the accompanying files inside the `LICENSES/` directory.
