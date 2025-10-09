@@ -6,10 +6,11 @@
 import React, { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Radio, Segment } from 'semantic-ui-react';
+import { Dropdown, Radio, Segment } from 'semantic-ui-react';
 
 import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
+import { BoardSwimlaneTypes } from '../../../../constants/Enums';
 
 import styles from './Others.module.scss';
 
@@ -22,6 +23,18 @@ const Others = React.memo(() => {
   const dispatch = useDispatch();
   const [t] = useTranslation();
 
+  const swimlaneType = board?.swimlaneType ?? BoardSwimlaneTypes.NONE;
+
+  const swimlaneOptions = useMemo(
+    () =>
+      Object.values(BoardSwimlaneTypes).map((value) => ({
+        key: value,
+        value,
+        text: t(`common.boardSwimlaneTypes.${value}`),
+      })),
+    [t],
+  );
+
   const handleChange = useCallback(
     (_, { name: fieldName, checked }) => {
       dispatch(
@@ -33,8 +46,30 @@ const Others = React.memo(() => {
     [boardId, dispatch],
   );
 
+  const handleSwimlaneTypeChange = useCallback(
+    (_, { value }) => {
+      dispatch(
+        entryActions.updateBoard(boardId, {
+          swimlaneType: value,
+        }),
+      );
+    },
+    [boardId, dispatch],
+  );
+
   return (
     <Segment basic>
+      <div className={styles.field}>
+        <div className={styles.text}>{t('common.swimlaneType')}</div>
+        <Dropdown
+          fluid
+          selection
+          options={swimlaneOptions}
+          value={swimlaneType}
+          className={styles.dropdown}
+          onChange={handleSwimlaneTypeChange}
+        />
+      </div>
       <Radio
         toggle
         name="alwaysDisplayCardCreator"
