@@ -9,22 +9,24 @@ import classNames from 'classnames';
 
 import styles from './ListMetricChip.module.scss';
 
-const ListMetricChip = React.memo(({ filteredCount = null, totalCount, className = undefined }) => {
-  const displayValue = useMemo(() => {
-    const total = Number.isFinite(totalCount) ? totalCount : 0;
+const ListMetricChip = React.memo(
+  ({ filteredUniqueCount = null, totalCount, className = undefined }) => {
+    const displayValue = useMemo(() => {
+      const total = Number.isFinite(totalCount) ? totalCount : 0;
 
-    if (Number.isFinite(filteredCount) && filteredCount !== total) {
-      return `${filteredCount}/${total}`;
-    }
+      if (Number.isFinite(filteredUniqueCount) && filteredUniqueCount !== total) {
+        return `${filteredUniqueCount}/${total}`;
+      }
 
-    return `${total}`;
-  }, [filteredCount, totalCount]);
+      return `${total}`;
+    }, [filteredUniqueCount, totalCount]);
 
-  return <span className={classNames(styles.wrapper, className)}>{displayValue}</span>;
-});
+    return <span className={classNames(styles.wrapper, className)}>{displayValue}</span>;
+  },
+);
 
 ListMetricChip.propTypes = {
-  filteredCount: PropTypes.number,
+  filteredUniqueCount: PropTypes.number,
   totalCount: PropTypes.number.isRequired,
   className: PropTypes.string,
 };
