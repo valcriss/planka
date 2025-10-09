@@ -17,9 +17,14 @@
 - **Rich Markdown Support**: Write beautifully formatted card descriptions with a powerful markdown editor
 - **Flexible Notifications**: Get alerts through 100+ providers, fully customizable to your workflow
 - **Configurable List Counters**: Enable per-board list card counters to track filtered versus total cards at a glance; counters are automatically disabled when Scrum mode is active
+- **Board Swimlane Modes**: Group each board by members, labels, or epics and see cards duplicated across relevant swimlanes for complete visual coverage
 - **Seamless Authentication**: Single sign-on with OpenID Connect integration
 - **Multilingual & Easy to Translate**: Full internationalization support for a global audience
 - **Stable List Slugs**: Lists have optional `slug` identifiers for reliable API queries, unaffected by renaming
+
+### Board swimlane preferences
+
+Every board can switch between three grouping modes—**Members**, **Labels**, and **Epics**—from the board action menu or preferences pane. Cards automatically appear in each lane that matches their assignments, and an additional **Unassigned** lane keeps items without a matching member, label, or epic in sight so work never disappears when grouped visually.
 
 ## Personal Project Owners
 

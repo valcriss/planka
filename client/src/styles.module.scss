@@ -359,6 +359,11 @@
 }
 
 :global(#app) {
+  &.dragging,
+  &.dragScrolling {
+    touch-action: none;
+  }
+
   &.dragging > * {
     pointer-events: none;
   }

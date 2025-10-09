@@ -120,7 +120,7 @@ export function* handleCardsUpdate(cards, activities) {
   yield put(actions.handleCardsUpdate(cards, activities));
 }
 
-function* applyLaneContextAfterCreate(card, laneContext, boardSwimlaneType) {
+export function* applyLaneContextAfterCreate(card, laneContext, boardSwimlaneType) {
   if (laneContext === undefined) {
     return;
   }
