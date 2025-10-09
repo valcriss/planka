@@ -3,16 +3,18 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Icon } from 'semantic-ui-react';
 import { usePopup } from '../../../../lib/popup';
 
 import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
-import { BoardContexts, BoardViews } from '../../../../constants/Enums';
+import { BoardContexts, BoardSwimlaneTypes, BoardViews } from '../../../../constants/Enums';
 import { BoardContextIcons, BoardViewIcons } from '../../../../constants/Icons';
 import ActionsStep from './ActionsStep';
+import SwimlaneTypeStep from './SwimlaneTypeStep';
 
 import styles from './RightSide.module.scss';
 
@@ -20,6 +22,7 @@ const RightSide = React.memo(() => {
   const board = useSelector(selectors.selectCurrentBoard);
 
   const dispatch = useDispatch();
+  const [t] = useTranslation();
 
   const handleSelectViewClick = useCallback(
     ({ currentTarget: { value: view } }) => {
@@ -29,12 +32,19 @@ const RightSide = React.memo(() => {
   );
 
   const ActionsPopup = usePopup(ActionsStep);
+  const SwimlaneTypePopup = usePopup(SwimlaneTypeStep);
 
   const views = [BoardViews.GRID, BoardViews.LIST];
   if (board.context === BoardContexts.BOARD) {
     views.unshift(BoardViews.KANBAN);
     views.push(BoardViews.CALENDAR);
   }
+
+  const swimlaneType = board?.swimlaneType ?? BoardSwimlaneTypes.NONE;
+  const swimlaneTypeLabel = useMemo(
+    () => t(`common.boardSwimlaneTypes.${swimlaneType}`),
+    [swimlaneType, t],
+  );
 
   return (
     <>
@@ -53,6 +63,13 @@ const RightSide = React.memo(() => {
             </button>
           ))}
         </div>
+      </div>
+      <div className={styles.action}>
+        <SwimlaneTypePopup>
+          <button type="button" className={styles.button}>
+            {t('common.swimlaneType')}: {swimlaneTypeLabel}
+          </button>
+        </SwimlaneTypePopup>
       </div>
       <div className={styles.action}>
         <ActionsPopup>

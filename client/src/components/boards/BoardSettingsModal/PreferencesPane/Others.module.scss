@@ -4,6 +4,21 @@
  */
 
 :global(#app) {
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .text {
+    color: #444444;
+    font-size: 12px;
+    font-weight: bold;
+    padding-bottom: 6px;
+  }
+
+  .dropdown {
+    margin-bottom: 8px;
+  }
+
   .radio {
     margin-bottom: 16px;
     width: 100%;
