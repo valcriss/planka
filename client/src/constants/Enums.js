@@ -67,6 +67,13 @@ export const BoardContexts = {
   TRASH: 'trash',
 };
 
+export const BoardSwimlaneTypes = {
+  NONE: 'none',
+  MEMBERS: 'members',
+  LABELS: 'labels',
+  EPICS: 'epics',
+};
+
 export const BoardMembershipRoles = {
   EDITOR: 'editor',
   VIEWER: 'viewer',
