@@ -16,8 +16,10 @@ export default function* cardsWatchers() {
     takeEvery(EntryActionTypes.CARDS_UPDATE_HANDLE, ({ payload: { cards, activities } }) =>
       services.handleCardsUpdate(cards, activities),
     ),
-    takeEvery(EntryActionTypes.CARD_CREATE, ({ payload: { listId, data, autoOpen } }) =>
-      services.createCard(listId, data, autoOpen),
+    takeEvery(
+      EntryActionTypes.CARD_CREATE,
+      ({ payload: { listId, data, autoOpen, laneContext } }) =>
+        services.createCard(listId, data, autoOpen, laneContext),
     ),
     takeEvery(EntryActionTypes.CARD_IN_CURRENT_LIST_CREATE, ({ payload: { data, autoOpen } }) =>
       services.createCardInCurrentList(data, autoOpen),

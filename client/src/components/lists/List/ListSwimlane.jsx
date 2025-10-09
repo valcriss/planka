@@ -51,6 +51,23 @@ const ListSwimlane = React.memo(
     const label = useSelector((state) => selectLabelById(state, laneEntityId));
     const epic = useSelector((state) => selectEpicById(state, laneEntityId));
 
+    const laneContext = useMemo(() => {
+      if (laneKey === 'unassigned') {
+        return null;
+      }
+
+      switch (swimlaneType) {
+        case BoardSwimlaneTypes.MEMBERS:
+          return laneEntityId && user ? { type: 'member', value: laneEntityId } : null;
+        case BoardSwimlaneTypes.LABELS:
+          return laneEntityId && label ? { type: 'label', value: laneEntityId } : null;
+        case BoardSwimlaneTypes.EPICS:
+          return laneEntityId && epic ? { type: 'epic', value: laneEntityId } : null;
+        default:
+          return null;
+      }
+    }, [laneKey, swimlaneType, laneEntityId, user, label, epic]);
+
     const laneCardIds = useMemo(() => lane.cardIds || [], [lane.cardIds]);
     const laneCardCount = useMemo(() => new Set(laneCardIds).size, [laneCardIds]);
 
@@ -164,6 +181,7 @@ const ListSwimlane = React.memo(
                   isOpened={isAddCardOpened}
                   className={styles.addCard}
                   listId={listId}
+                  laneContext={laneContext}
                   onCreate={handleCardCreate}
                   onClose={handleAddCardClose}
                 />
