@@ -40,6 +40,10 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
+    swimlaneType: {
+      type: 'string',
+      isIn: Object.values(Board.SwimlaneTypes),
+    },
     limitCardTypesToDefaultOne: {
       type: 'boolean',
       allowNull: true,
@@ -87,6 +91,7 @@ module.exports = {
         'defaultView',
         'defaultCardType',
         'defaultCardTypeId',
+        'swimlaneType',
         'limitCardTypesToDefaultOne',
         'alwaysDisplayCardCreator',
         'showCardCount',
@@ -106,6 +111,7 @@ module.exports = {
       'defaultView',
       'defaultCardType',
       'defaultCardTypeId',
+      'swimlaneType',
       'limitCardTypesToDefaultOne',
       'alwaysDisplayCardCreator',
       'isSubscribed',

@@ -24,9 +24,17 @@ const ImportTypes = {
   PLANNER: 'planner',
 };
 
+const SwimlaneTypes = {
+  NONE: 'none',
+  MEMBERS: 'members',
+  LABELS: 'labels',
+  EPICS: 'epics',
+};
+
 module.exports = {
   Views,
   ImportTypes,
+  SwimlaneTypes,
 
   attributes: {
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
@@ -59,6 +67,12 @@ module.exports = {
     defaultCardTypeId: {
       model: 'CardType',
       columnName: 'default_card_type_id',
+    },
+    swimlaneType: {
+      type: 'string',
+      isIn: Object.values(SwimlaneTypes),
+      defaultsTo: SwimlaneTypes.NONE,
+      columnName: 'swimlane_type',
     },
     limitCardTypesToDefaultOne: {
       type: 'boolean',
