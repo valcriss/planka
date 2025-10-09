@@ -10,7 +10,7 @@ import buildSearchParts from '../utils/build-search-parts';
 import { isListFinite } from '../utils/record-helpers';
 import ActionTypes from '../constants/ActionTypes';
 import Config from '../constants/Config';
-import { BoardContexts, BoardViews } from '../constants/Enums';
+import { BoardContexts, BoardSwimlaneTypes, BoardViews } from '../constants/Enums';
 
 const prepareFetchedBoard = (board) => ({
   ...board,
@@ -18,6 +18,7 @@ const prepareFetchedBoard = (board) => ({
   context: BoardContexts.BOARD,
   view: board.defaultView,
   search: '',
+  swimlaneType: board.swimlaneType ?? BoardSwimlaneTypes.NONE,
 });
 
 export default class extends BaseModel {
@@ -35,6 +36,9 @@ export default class extends BaseModel {
     alwaysDisplayCardCreator: attr(),
     showCardCount: attr({
       getDefault: () => false,
+    }),
+    swimlaneType: attr({
+      getDefault: () => BoardSwimlaneTypes.NONE,
     }),
     context: attr(),
     view: attr(),
