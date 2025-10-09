@@ -15,40 +15,45 @@ import Card from '../Card';
 
 import styles from './DraggableCard.module.scss';
 
-const DraggableCard = React.memo(({ id, index, className = undefined, ...props }) => {
-  const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
+const DraggableCard = React.memo(
+  ({ id, index, laneKey = null, className = undefined, ...props }) => {
+    const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
 
-  const card = useSelector((state) => selectCardById(state, id));
+    const card = useSelector((state) => selectCardById(state, id));
 
-  const canDrag = useSelector((state) => {
-    const boardMembership = selectors.selectCurrentUserMembershipForCurrentBoard(state);
-    return !!boardMembership && boardMembership.role === BoardMembershipRoles.EDITOR;
-  });
+    const canDrag = useSelector((state) => {
+      const boardMembership = selectors.selectCurrentUserMembershipForCurrentBoard(state);
+      return !!boardMembership && boardMembership.role === BoardMembershipRoles.EDITOR;
+    });
 
-  return (
-    <Draggable
-      draggableId={`card:${id}`}
-      index={index}
-      isDragDisabled={!card.isPersisted || !canDrag}
-    >
-      {({ innerRef, draggableProps, dragHandleProps }) => (
-        <div
-          {...draggableProps} // eslint-disable-line react/jsx-props-no-spreading
-          {...dragHandleProps} // eslint-disable-line react/jsx-props-no-spreading
-          ref={innerRef}
-          className={classNames(styles.wrapper, className)}
-        >
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          <Card {...props} id={id} />
-        </div>
-      )}
-    </Draggable>
-  );
-});
+    const draggableId = laneKey ? `card:${id}:lane:${laneKey}` : `card:${id}`;
+
+    return (
+      <Draggable
+        draggableId={draggableId}
+        index={index}
+        isDragDisabled={!card.isPersisted || !canDrag}
+      >
+        {({ innerRef, draggableProps, dragHandleProps }) => (
+          <div
+            {...draggableProps} // eslint-disable-line react/jsx-props-no-spreading
+            {...dragHandleProps} // eslint-disable-line react/jsx-props-no-spreading
+            ref={innerRef}
+            className={classNames(styles.wrapper, className)}
+          >
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <Card {...props} id={id} />
+          </div>
+        )}
+      </Draggable>
+    );
+  },
+);
 
 DraggableCard.propTypes = {
   id: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
+  laneKey: PropTypes.string,
   className: PropTypes.string,
 };
 

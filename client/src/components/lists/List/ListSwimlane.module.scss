@@ -1,0 +1,127 @@
+/*!
+ * Copyright (c) 2024 PLANKA Software GmbH
+ * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
+ */
+
+.wrapper {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.headerTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.headerCount {
+  background: rgba(23, 57, 77, 0.08);
+  border-radius: 12px;
+  color: #17394d;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 4px 8px;
+}
+
+.titleText {
+  color: #17394d;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.memberTitle {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.memberAvatar {
+  display: inline-flex;
+}
+
+.memberName {
+  color: #17394d;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.labelTitle,
+.epicTitle {
+  display: inline-flex;
+}
+
+.unassignedBadge {
+  background: rgba(9, 30, 66, 0.1);
+  border-radius: 999px;
+  color: #54606a;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  line-height: 1;
+  padding: 4px 10px;
+  text-transform: uppercase;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 1px;
+}
+
+.card {
+  margin: 0;
+}
+
+.placeholder {
+  margin-bottom: 8px;
+}
+
+.addCard {
+  margin-bottom: 8px;
+}
+
+.addCardButton {
+  background: #dfe3e6;
+  border: none;
+  color: #6b808c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-start;
+  padding: 8px;
+  text-align: left;
+  width: 100%;
+
+  &:hover:not(:disabled) {
+    background: #c3cbd0;
+    color: #17394d;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.addCardButtonIcon {
+  height: 18px;
+  width: 18px;
+}
+
+.addCardButtonText {
+  font-size: 14px;
+  line-height: 20px;
+}

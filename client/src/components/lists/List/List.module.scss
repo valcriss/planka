@@ -79,10 +79,35 @@
     }
   }
 
+  .cardsInnerWrapperWithSwimlanes {
+    width: 290px;
+
+    &:hover {
+      width: 290px;
+    }
+  }
+
   .cardsOuterWrapper {
     padding: 0 8px;
     white-space: normal;
     width: 272px;
+  }
+
+  .cardsOuterWrapperWithSwimlanes {
+    padding-bottom: 12px;
+  }
+
+  .swimlanes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 520px) {
+    .swimlanes {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
   }
 
   .header {

@@ -18,7 +18,7 @@ import { usePopup } from '../../../lib/popup';
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
 import DroppableTypes from '../../../constants/DroppableTypes';
-import { BoardMembershipRoles, ListTypes } from '../../../constants/Enums';
+import { BoardMembershipRoles, BoardSwimlaneTypes, ListTypes } from '../../../constants/Enums';
 import { ListTypeIcons } from '../../../constants/Icons';
 import EditName from './EditName';
 import ActionsStep from './ActionsStep';
@@ -29,6 +29,7 @@ import StartSprintStep from './StartSprintStep';
 import PlusMathIcon from '../../../assets/images/plus-math-icon.svg?react';
 import StoryPointsChip from '../../cards/StoryPointsChip';
 import ListMetricChip from './ListMetricChip';
+import ListSwimlane from './ListSwimlane';
 
 import styles from './List.module.scss';
 import globalStyles from '../../../styles.module.scss';
@@ -42,6 +43,11 @@ const List = React.memo(({ id, index }) => {
   );
 
   const selectCardCountByListId = useMemo(() => selectors.makeSelectCardCountByListId(), []);
+
+  const selectUniqueFilteredCardIdsByListId = useMemo(
+    () => selectors.makeSelectUniqueFilteredCardIdsByListId(),
+    [],
+  );
 
   const selectIsCardLimitReachedByListId = useMemo(
     () => selectors.makeSelectIsCardLimitReachedByListId(),
@@ -58,15 +64,25 @@ const List = React.memo(({ id, index }) => {
     [],
   );
 
+  const selectSwimlaneLanesByListId = useMemo(
+    () => selectors.makeSelectSwimlaneLanesByListId(),
+    [],
+  );
+
   const isFavoritesActive = useSelector(selectors.selectIsFavoritesActiveForCurrentUser);
   const list = useSelector((state) => selectListById(state, id));
-  const cardIds = useSelector((state) => selectFilteredCardIdsByListId(state, id));
+  const filteredCardIds = useSelector((state) => selectFilteredCardIdsByListId(state, id));
+  const uniqueFilteredCardIds =
+    useSelector((state) => selectUniqueFilteredCardIdsByListId(state, id)) || [];
   const totalCardCount = useSelector((state) => selectCardCountByListId(state, id));
   const isLimitWarning = useSelector((state) => selectIsCardLimitReachedByListId(state, id));
   const isLimitBlocking = useSelector((state) => selectIsCardLimitBlockingByListId(state, id));
   const storyPointsTotal = useSelector((state) => selectStoryPointsTotalByListId(state, id));
   const project = useSelector(selectors.selectCurrentProject);
   const board = useSelector(selectors.selectCurrentBoard);
+  const boardSwimlaneType = board?.swimlaneType ?? BoardSwimlaneTypes.NONE;
+  const swimlaneLanes =
+    useSelector((state) => selectSwimlaneLanesByListId(state, id, boardSwimlaneType)) || [];
   const isProjectManager = useSelector(selectors.selectIsCurrentUserManagerForCurrentProject);
 
   const { canEdit, canArchiveCards, canAddCard, canDropCard } = useSelector((state) => {
@@ -87,12 +103,15 @@ const List = React.memo(({ id, index }) => {
   const [t] = useTranslation();
   const [isEditNameOpened, setIsEditNameOpened] = useState(false);
   const [isAddCardOpened, setIsAddCardOpened] = useState(false);
+  const [openedLaneKey, setOpenedLaneKey] = useState(null);
 
   const wrapperRef = useRef(null);
   const cardsWrapperRef = useRef(null);
 
-  const filteredCardCount = cardIds.length;
+  const uniqueFilteredCardCount = uniqueFilteredCardIds.length;
   const showCardCount = board && board.showCardCount;
+  const hasSwimlanes =
+    boardSwimlaneType && boardSwimlaneType !== BoardSwimlaneTypes.NONE && swimlaneLanes.length > 0;
 
   const handleCardCreate = useCallback(
     (data, autoOpen) => {
@@ -119,6 +138,21 @@ const List = React.memo(({ id, index }) => {
     setIsAddCardOpened(false);
   }, []);
 
+  const handleLaneAddCardOpen = useCallback(
+    (laneKey) => {
+      if (isLimitBlocking) {
+        return;
+      }
+
+      setOpenedLaneKey(laneKey);
+    },
+    [isLimitBlocking],
+  );
+
+  const handleLaneAddCardClose = useCallback(() => {
+    setOpenedLaneKey(null);
+  }, []);
+
   const handleCardAdd = useCallback(() => {
     if (isLimitBlocking) {
       return;
@@ -142,16 +176,28 @@ const List = React.memo(({ id, index }) => {
   );
 
   useDidUpdate(() => {
-    if (isAddCardOpened) {
+    if (isAddCardOpened && cardsWrapperRef.current) {
       cardsWrapperRef.current.scrollTop = cardsWrapperRef.current.scrollHeight;
     }
-  }, [cardIds, isAddCardOpened]);
+  }, [filteredCardIds, isAddCardOpened]);
+
+  useDidUpdate(() => {
+    if (openedLaneKey && cardsWrapperRef.current) {
+      cardsWrapperRef.current.scrollTop = cardsWrapperRef.current.scrollHeight;
+    }
+  }, [swimlaneLanes, openedLaneKey]);
 
   useDidUpdate(() => {
     if (isLimitBlocking && isAddCardOpened) {
       setIsAddCardOpened(false);
     }
   }, [isLimitBlocking, isAddCardOpened]);
+
+  useDidUpdate(() => {
+    if (isLimitBlocking && openedLaneKey) {
+      setOpenedLaneKey(null);
+    }
+  }, [isLimitBlocking, openedLaneKey]);
 
   const ActionsPopup = usePopup(ActionsStep);
   const ArchiveCardsPopup = usePopup(ArchiveCardsStep);
@@ -167,7 +213,7 @@ const List = React.memo(({ id, index }) => {
         // eslint-disable-next-line react/jsx-props-no-spreading
         <div {...droppableProps} ref={innerRef}>
           <div className={styles.cards}>
-            {cardIds.map((cardId, cardIndex) => (
+            {filteredCardIds.map((cardId, cardIndex) => (
               <DraggableCard key={cardId} id={cardId} index={cardIndex} className={styles.card} />
             ))}
             {placeholder}
@@ -249,7 +295,7 @@ const List = React.memo(({ id, index }) => {
                     )}
                     {showCardCount && Number.isFinite(totalCardCount) && (
                       <ListMetricChip
-                        filteredCount={filteredCardCount}
+                        filteredUniqueCount={uniqueFilteredCardCount}
                         totalCount={totalCardCount}
                         className={styles.headerMetric}
                       />
@@ -290,10 +336,45 @@ const List = React.memo(({ id, index }) => {
                 )}
               </div>
             </div>
-            <div ref={cardsWrapperRef} className={styles.cardsInnerWrapper}>
-              <div className={styles.cardsOuterWrapper}>{cardsNode}</div>
+            <div
+              ref={cardsWrapperRef}
+              className={classNames(
+                styles.cardsInnerWrapper,
+                hasSwimlanes && styles.cardsInnerWrapperWithSwimlanes,
+              )}
+            >
+              <div
+                className={classNames(
+                  styles.cardsOuterWrapper,
+                  hasSwimlanes && styles.cardsOuterWrapperWithSwimlanes,
+                )}
+              >
+                {hasSwimlanes ? (
+                  <div className={styles.swimlanes}>
+                    {swimlaneLanes.map((lane) => (
+                      <ListSwimlane
+                        key={lane.id}
+                        lane={lane}
+                        laneKey={lane.id}
+                        listId={id}
+                        swimlaneType={boardSwimlaneType}
+                        canAddCard={canAddCard}
+                        canDropCard={canDropCard}
+                        isLimitBlocking={isLimitBlocking}
+                        isListPersisted={list.isPersisted}
+                        isAddCardOpened={openedLaneKey === lane.id}
+                        onCardCreate={handleCardCreate}
+                        onAddCardOpen={handleLaneAddCardOpen}
+                        onAddCardClose={handleLaneAddCardClose}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  cardsNode
+                )}
+              </div>
             </div>
-            {!isAddCardOpened && canAddCard && !isLimitBlocking && (
+            {!hasSwimlanes && !isAddCardOpened && canAddCard && !isLimitBlocking && (
               <button
                 type="button"
                 disabled={!list.isPersisted || isLimitBlocking}
@@ -302,7 +383,7 @@ const List = React.memo(({ id, index }) => {
               >
                 <PlusMathIcon className={styles.addCardButtonIcon} />
                 <span className={styles.addCardButtonText}>
-                  {filteredCardCount > 0 ? t('action.addAnotherCard') : t('action.addCard')}
+                  {uniqueFilteredCardCount > 0 ? t('action.addAnotherCard') : t('action.addCard')}
                 </span>
               </button>
             )}
