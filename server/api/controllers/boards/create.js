@@ -38,6 +38,10 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
+    swimlaneType: {
+      type: 'string',
+      isIn: Object.values(Board.SwimlaneTypes),
+    },
     importType: {
       type: 'string',
       isIn: Object.values(Board.ImportTypes),
@@ -116,7 +120,7 @@ module.exports = {
       }
     }
 
-    const values = _.pick(inputs, ['position', 'name', 'defaultCardTypeId']);
+    const values = _.pick(inputs, ['position', 'name', 'defaultCardTypeId', 'swimlaneType']);
 
     if (values.defaultCardTypeId) {
       const cardType = await sails.helpers.cardTypes.getOrCreateForProject
