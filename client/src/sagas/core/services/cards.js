@@ -9,11 +9,13 @@ import { LOCATION_CHANGE_HANDLE } from '../../../lib/redux-router';
 import { goToBoard, goToCard } from './router';
 import request from '../request';
 import selectors from '../../../selectors';
+import entryActions from '../../../entry-actions';
 import actions from '../../../actions';
 import api from '../../../api';
 import mergeRecords from '../../../utils/merge-records';
 import { createLocalId } from '../../../utils/local-id';
 import { isListArchiveOrTrash, isListFinite } from '../../../utils/record-helpers';
+import parseLaneKey from '../../../utils/parse-lane-key';
 import ActionTypes from '../../../constants/ActionTypes';
 import { BoardViews, ListTypes } from '../../../constants/Enums';
 
@@ -349,7 +351,107 @@ export function* handleCardUpdate(card) {
   }
 }
 
-export function* moveCard(id, listId, index) {
+const normalizeLaneDescriptor = (lane) => {
+  if (!lane) {
+    return null;
+  }
+
+  if (typeof lane === 'string') {
+    return parseLaneKey(lane);
+  }
+
+  if (typeof lane === 'object') {
+    const { key = null, type = null, id = null } = lane;
+
+    if (key) {
+      const parsed = parseLaneKey(key);
+
+      if (parsed) {
+        return {
+          key: parsed.key,
+          type: type ?? parsed.type,
+          id: id ?? parsed.id,
+        };
+      }
+    }
+
+    if (type || id) {
+      let derivedKey = null;
+
+      if (type === 'unassigned') {
+        derivedKey = 'unassigned';
+      } else if (type && id) {
+        derivedKey = `${type}:${id}`;
+      }
+
+      if (derivedKey || type || id) {
+        return {
+          key: derivedKey,
+          type,
+          id,
+        };
+      }
+    }
+  }
+
+  return null;
+};
+
+function* applyLaneChange(cardId, sourceLane, targetLane) {
+  if (!sourceLane && !targetLane) {
+    return;
+  }
+
+  const sourceKey = sourceLane?.key ?? null;
+  const targetKey = targetLane?.key ?? null;
+
+  if (sourceKey === targetKey) {
+    return;
+  }
+
+  let laneType = null;
+
+  if (targetLane?.type && targetLane.type !== 'unassigned') {
+    laneType = targetLane.type;
+  } else if (sourceLane?.type && sourceLane.type !== 'unassigned') {
+    laneType = sourceLane.type;
+  }
+
+  switch (laneType) {
+    case 'member':
+      if (sourceLane?.type === 'member' && sourceLane.id) {
+        yield put(entryActions.removeUserFromCard(sourceLane.id, cardId));
+      }
+
+      if (targetLane?.type === 'member' && targetLane.id) {
+        yield put(entryActions.addUserToCard(targetLane.id, cardId));
+      }
+
+      break;
+    case 'label':
+      if (sourceLane?.type === 'label' && sourceLane.id) {
+        yield put(entryActions.removeLabelFromCard(sourceLane.id, cardId));
+      }
+
+      if (targetLane?.type === 'label' && targetLane.id) {
+        yield put(entryActions.addLabelToCard(targetLane.id, cardId));
+      }
+
+      break;
+    case 'epic': {
+      const epicId = targetLane?.type === 'epic' && targetLane.id ? targetLane.id : null;
+
+      if (sourceLane?.type === 'epic' || targetLane?.type === 'epic') {
+        yield call(updateCard, cardId, { epicId });
+      }
+
+      break;
+    }
+    default:
+  }
+}
+
+export function* moveCard(id, listId, index, metadata = undefined) {
   const data = {};
   if (listId) {
     data.listId = listId;
@@ -365,6 +467,15 @@ export function* moveCard(id, listId, index) {
   }
 
   yield call(updateCard, id, data);
+
+  const isMetadataObject = metadata && typeof metadata === 'object';
+
+  const sourceLane = isMetadataObject ? normalizeLaneDescriptor(metadata.sourceLane) : null;
+  const targetLane = isMetadataObject ? normalizeLaneDescriptor(metadata.targetLane) : null;
+
+  if (sourceLane || targetLane) {
+    yield call(applyLaneChange, id, sourceLane, targetLane);
+  }
 }
 
 export function* moveCurrentCard(listId, index, autoClose) {

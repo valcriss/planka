@@ -72,14 +72,25 @@ const handleCardUpdate = (card) => ({
   },
 });
 
-const moveCard = (id, listId, index = 0) => ({
-  type: EntryActionTypes.CARD_MOVE,
-  payload: {
+const moveCard = (id, listId, index = 0, metadata = undefined) => {
+  const payload = {
     id,
     listId,
     index,
-  },
-});
+  };
+
+  if (metadata && typeof metadata === 'object') {
+    const { sourceLane = null, targetLane = null } = metadata;
+
+    payload.sourceLane = sourceLane;
+    payload.targetLane = targetLane;
+  }
+
+  return {
+    type: EntryActionTypes.CARD_MOVE,
+    payload,
+  };
+};
 
 const moveCurrentCard = (listId, index = 0, autoClose = false) => ({
   type: EntryActionTypes.CURRENT_CARD_MOVE,

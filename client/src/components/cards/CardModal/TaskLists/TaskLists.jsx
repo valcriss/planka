@@ -38,19 +38,20 @@ const TaskLists = React.memo(() => {
         return;
       }
 
-      const id = parseDndId(draggableId);
+      const { id } = parseDndId(draggableId);
 
       switch (type) {
         case DroppableTypes.TASK_LIST:
           dispatch(entryActions.moveTaskList(id, destination.index));
 
           break;
-        case DroppableTypes.TASK:
-          dispatch(
-            entryActions.moveTask(id, parseDndId(destination.droppableId), destination.index),
-          );
+        case DroppableTypes.TASK: {
+          const destinationDescriptor = parseDndId(destination.droppableId);
+
+          dispatch(entryActions.moveTask(id, destinationDescriptor.id, destination.index));
 
           break;
+        }
         default:
       }
     },
