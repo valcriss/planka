@@ -8,7 +8,7 @@ import { createSelector } from 'redux-orm';
 import orm from '../orm';
 import { selectPath } from './router';
 import { isLocalId } from '../utils/local-id';
-import { BoardContexts, ListTypes } from '../constants/Enums';
+import { BoardContexts, BoardSwimlaneTypes, ListTypes } from '../constants/Enums';
 
 export const makeSelectListById = () =>
   createSelector(
@@ -120,6 +120,41 @@ export const makeSelectFilteredCardIdsByListId = () =>
   );
 
 export const selectFilteredCardIdsByListId = makeSelectFilteredCardIdsByListId();
+
+export const makeSelectUniqueFilteredCardIdsByListId = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ List }, id) => {
+      const listModel = List.withId(id);
+
+      if (!listModel) {
+        return listModel;
+      }
+
+      return listModel.getUniqueFilteredCardIds();
+    },
+  );
+
+export const selectUniqueFilteredCardIdsByListId = makeSelectUniqueFilteredCardIdsByListId();
+
+export const makeSelectSwimlaneLanesByListId = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    (_, __, swimlaneType) => swimlaneType,
+    ({ List }, id, swimlaneType) => {
+      const listModel = List.withId(id);
+
+      if (!listModel) {
+        return listModel;
+      }
+
+      return listModel.getSwimlaneDescriptors(swimlaneType || BoardSwimlaneTypes.NONE);
+    },
+  );
+
+export const selectSwimlaneLanesByListId = makeSelectSwimlaneLanesByListId();
 
 export const makeSelectListIdBySlug = () =>
   createSelector(
