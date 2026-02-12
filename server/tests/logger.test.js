@@ -42,6 +42,14 @@ describe('logger utils', () => {
     expect(customLogger).toEqual({ id: 'logger' });
     expect(timestamp).toHaveBeenCalledWith({ format: 'YYYY-MM-DD HH:mm:ss' });
     expect(printf).toHaveBeenCalledWith(expect.any(Function));
+    const formatter = printf.mock.calls[0][0];
+    expect(
+      formatter({
+        timestamp: '2026-01-01 12:00:00',
+        level: 'info',
+        message: 'hello',
+      }),
+    ).toBe('2026-01-01 12:00:00 [I] hello');
     expect(combine).toHaveBeenCalled();
     expect(fileTransport).toHaveBeenCalledWith(
       expect.objectContaining({

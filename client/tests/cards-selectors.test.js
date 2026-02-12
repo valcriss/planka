@@ -263,6 +263,45 @@ describe('cards selectors', () => {
     ]);
   });
 
+  test('covers custom-field and incoming-link fallback branches', () => {
+    const selectShownCustomFieldValueIdsByCardId =
+      makeSelectShownOnFrontOfCardCustomFieldValueIdsByCardId();
+    const selectIncomingCardLinksByCardId = makeSelectIncomingCardLinksByCardId();
+
+    const state = createState({
+      models: {
+        ...models,
+        Card: {
+          ...models.Card,
+          withId: jest.fn((id) => {
+            if (id !== 'c1') {
+              return null;
+            }
+
+            return {
+              ...cardModel,
+              getIncomingCardLinksQuerySet: () => ({
+                toRefArray: () => [{ cardId: 'c9', linkedCardId: 'c1', type: 'unknown-type' }],
+              }),
+            };
+          }),
+        },
+        CustomFieldValue: {
+          withId: jest.fn(() => null),
+        },
+      },
+    });
+
+    expect(selectShownCustomFieldValueIdsByCardId(state, 'c1')).toEqual([]);
+    expect(selectIncomingCardLinksByCardId(state, 'c1')).toEqual([
+      {
+        cardId: 'c1',
+        linkedCardId: 'c9',
+        type: 'unknown-type',
+      },
+    ]);
+  });
+
   test('selects notifications and recency/blocking/availability flags', () => {
     const selectNotificationsByCardId = makeSelectNotificationsByCardId();
     const selectNotificationsTotalByCardId = makeSelectNotificationsTotalByCardId();
@@ -314,6 +353,64 @@ describe('cards selectors', () => {
         },
         List: {
           withId: jest.fn(() => ({ id: 'l-closed', type: ListTypes.CLOSED })),
+        },
+      },
+    });
+
+    expect(selectIsCardBlockedById(state, 'c1')).toBe(false);
+  });
+
+  test('returns false for blocking selector when blocking card cannot be loaded', () => {
+    const selectIsCardBlockedById = makeSelectIsCardBlockedById();
+    const state = createState({
+      models: {
+        ...models,
+        Card: {
+          ...models.Card,
+          withId: jest.fn((id) => {
+            if (id === 'c1') {
+              return {
+                ...cardModel,
+                getOutgoingCardLinksQuerySet: () => ({
+                  toRefArray: () => [{ cardId: 'c1', linkedCardId: 'missing', type: CardLinkTypes.BLOCKED_BY }],
+                }),
+                getIncomingCardLinksQuerySet: () => ({
+                  toRefArray: () => [],
+                }),
+              };
+            }
+
+            return null;
+          }),
+        },
+      },
+    });
+
+    expect(selectIsCardBlockedById(state, 'c1')).toBe(false);
+  });
+
+  test('covers incoming-link type fallback branch in blocking selector', () => {
+    const selectIsCardBlockedById = makeSelectIsCardBlockedById();
+    const state = createState({
+      models: {
+        ...models,
+        Card: {
+          ...models.Card,
+          withId: jest.fn((id) => {
+            if (id !== 'c1') {
+              return null;
+            }
+
+            return {
+              ...cardModel,
+              getOutgoingCardLinksQuerySet: () => ({
+                toRefArray: () => [],
+              }),
+              getIncomingCardLinksQuerySet: () => ({
+                toRefArray: () => [{ cardId: 'cX', linkedCardId: 'c1', type: 'unknown-type' }],
+              }),
+            };
+          }),
         },
       },
     });

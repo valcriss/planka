@@ -90,6 +90,7 @@
     },
     "collectCoverageFrom": [
       "<rootDir>/src/**/*.{js,jsx}",
+      "!<rootDir>/src/locales/**",
       "!<rootDir>/src/**/*.d.js"
     ],
     "testMatch": [

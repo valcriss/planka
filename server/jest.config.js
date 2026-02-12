@@ -1,12 +1,15 @@
 module.exports = {
   collectCoverageFrom: [
-    '<rootDir>/app.js',
     '<rootDir>/api/**/*.js',
-    '<rootDir>/config/**/*.js',
-    '<rootDir>/db/**/*.js',
-    '<rootDir>/scripts/**/*.js',
     '<rootDir>/utils/**/*.js',
     '!<rootDir>/tests/**',
+    '!<rootDir>/config/**',
+    '!<rootDir>/config/env/**',
+    '!<rootDir>/db/**',
+    '!<rootDir>/db/migrations/**',
+    '!<rootDir>/db/seeds/**',
+    '!<rootDir>/scripts/**',
+    '!<rootDir>/app.js',
   ],
   testMatch: ['<rootDir>/tests/**/*.test.js'],
 };
