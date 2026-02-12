@@ -19,7 +19,10 @@ const _ = require('lodash');
 global._ = _;
 
 const {
+  MAX_STRING_ID,
   isUrl,
+  isIdInRange,
+  isIdsWithCommaInRange,
   isId,
   isIds,
   isEmailOrUsername,
@@ -37,6 +40,11 @@ describe('other validator functions', () => {
   test('isId and isIds', () => {
     expect(isId('10')).toBe(true);
     expect(isId('0')).toBe(false);
+    expect(isIdInRange(MAX_STRING_ID)).toBe(true);
+    expect(isIdInRange('9223372036854775808')).toBe(false);
+    expect(isIdsWithCommaInRange('1,2,3')).toBe(true);
+    expect(isIdsWithCommaInRange(`1,${MAX_STRING_ID}`)).toBe(true);
+    expect(isIdsWithCommaInRange(`1,9223372036854775808`)).toBe(false);
     expect(isIds(['1', '2'])).toBe(true);
     expect(isIds(['1', 'x'])).toBe(false);
   });
@@ -57,7 +65,9 @@ describe('other validator functions', () => {
   test('isStopwatch', () => {
     const valid = { startedAt: null, total: 0 };
     expect(isStopwatch(valid)).toBe(true);
-    const invalid = { startedAt: 'not-date', total: -1 };
-    expect(isStopwatch(invalid)).toBe(false);
+    expect(isStopwatch(null)).toBe(false);
+    expect(isStopwatch({ startedAt: null })).toBe(false);
+    expect(isStopwatch({ startedAt: 'not-date', total: 1 })).toBe(false);
+    expect(isStopwatch({ startedAt: '2024-01-01T00:00:00Z', total: -1 })).toBe(false);
   });
 });
