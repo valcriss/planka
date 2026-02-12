@@ -361,6 +361,7 @@ export default {
         duplicatedBy: 'Duplicated by',
       },
       blockedTooltip: 'This card is blocked by another unfinished card',
+      blocksTooltip: 'This card blocks another card',
       type: 'Type',
       noResults: 'No results',
       subscribeToCardWhenCommenting: 'Subscribe to card when commenting',

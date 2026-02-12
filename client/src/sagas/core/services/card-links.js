@@ -54,9 +54,11 @@ export function* searchCardsForLink(boardId, cardId, search) {
 
   let cards;
   let lists;
+  let boards;
+  let projects;
 
   try {
-    ({ items: cards, included: { lists = [] } = {} } = yield call(
+    ({ items: cards, included: { lists = [], boards = [], projects = [] } = {} } = yield call(
       request,
       api.searchCardsForLink,
       boardId,
@@ -71,7 +73,15 @@ export function* searchCardsForLink(boardId, cardId, search) {
   }
 
   yield put(
-    actions.searchCardsForLink.success(boardId, cardId, search, cards.map(transformCard), lists),
+    actions.searchCardsForLink.success(
+      boardId,
+      cardId,
+      search,
+      cards.map(transformCard),
+      lists,
+      boards,
+      projects,
+    ),
   );
 }
 

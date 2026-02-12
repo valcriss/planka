@@ -24,6 +24,9 @@ const getBoard = (id, subscribe, headers) =>
       included: {
         ...body.included,
         cards: body.included.cards.map(transformCard),
+        ...(body.included.linkedCards && {
+          linkedCards: body.included.linkedCards.map(transformCard),
+        }),
         attachments: body.included.attachments.map(transformAttachment),
       },
     }));

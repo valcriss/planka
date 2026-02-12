@@ -12,6 +12,7 @@ import actions from '../../../actions';
 import api from '../../../api';
 import i18n from '../../../i18n';
 import { removeAccessToken } from '../../../utils/access-token-storage';
+import { handleLocationChange as handleRouterLocationChange } from '../../../lib/redux-router/actions';
 
 export function* initializeCore() {
   const { item: config } = yield call(request, api.getConfig); // TODO: handle error
@@ -77,6 +78,12 @@ export function* initializeCore() {
       notificationServices,
     ),
   );
+
+  const { location, action } = yield select((state) => state.router);
+  if (location) {
+    // Re-run route resolution after core bootstrap to reliably load deep links on hard refresh.
+    yield put(handleRouterLocationChange(location, action));
+  }
 
   if (epics && board && board.projectId) {
     yield put(actions.fetchEpics.success(board.projectId, epics));

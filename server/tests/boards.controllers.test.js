@@ -83,7 +83,7 @@ describe('boards controllers', () => {
 
     global.Label = { qm: { getByBoardId: jest.fn().mockResolvedValue([]) } };
     global.List = { qm: { getByBoardId: jest.fn().mockResolvedValue([]) } };
-    global.Card = { qm: { getByListIds: jest.fn().mockResolvedValue([]) } };
+    global.Card = { qm: { getByListIds: jest.fn().mockResolvedValue([]), getByIds: jest.fn() } };
     global.CardLink = { qm: { getForCardIds: jest.fn().mockResolvedValue([]) } };
     global.CardMembership = { qm: { getByCardIds: jest.fn().mockResolvedValue([]) } };
     global.CardLabel = { qm: { getByCardIds: jest.fn().mockResolvedValue([]) } };
@@ -430,6 +430,29 @@ describe('boards controllers', () => {
         attachments: [],
       },
     });
+  });
+
+  test('boards/show includes linked cards referenced by card links outside current board', async () => {
+    sails.helpers.boards.getPathToProjectById.mockReturnValue(
+      makeInterceptable(
+        Promise.resolve({
+          board: { id: 'b1' },
+          project: { id: 'p1', ownerProjectManagerId: null },
+        }),
+      ),
+    );
+    List.qm.getByBoardId.mockResolvedValue([{ id: 'l1', boardId: 'b1', type: 'active' }]);
+    Card.qm.getByListIds.mockResolvedValue([{ id: 'c1', listId: 'l1', boardId: 'b1' }]);
+    CardLink.qm.getForCardIds.mockResolvedValue([{ id: 'cl1', cardId: 'c1', linkedCardId: 'c2' }]);
+    Card.qm.getByIds.mockResolvedValue([{ id: 'c2', name: 'Linked card', boardId: 'b2' }]);
+
+    const result = await boardsShowController.fn.call(
+      { req: { currentUser: { id: 'u1', role: 'admin' } } },
+      { id: 'b1' },
+    );
+
+    expect(Card.qm.getByIds).toHaveBeenCalledWith(['c2']);
+    expect(result.included.linkedCards).toEqual([{ id: 'c2', name: 'Linked card', boardId: 'b2' }]);
   });
 
   test('boards/show-by-slug throws when project is missing', async () => {

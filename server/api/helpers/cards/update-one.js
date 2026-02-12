@@ -5,6 +5,48 @@
 
 const { POSITION_GAP } = require('../../../constants');
 
+const broadcastCardUpdateToLinkedBoards = async (card, request) => {
+  const cardLinks = await CardLink.qm.getForCardId(card.id);
+
+  if (cardLinks.length === 0) {
+    return;
+  }
+
+  const linkedCardIds = [];
+
+  cardLinks.forEach((cardLink) => {
+    if (cardLink.cardId !== card.id) {
+      linkedCardIds.push(cardLink.cardId);
+    }
+
+    if (cardLink.linkedCardId !== card.id) {
+      linkedCardIds.push(cardLink.linkedCardId);
+    }
+  });
+
+  if (linkedCardIds.length === 0) {
+    return;
+  }
+
+  const linkedCards = await Card.qm.getByIds(_.uniq(linkedCardIds));
+  const linkedBoardIds = _.uniq(
+    linkedCards
+      .map((linkedCard) => linkedCard.boardId)
+      .filter((boardId) => !_.isNil(boardId) && boardId !== card.boardId),
+  );
+
+  linkedBoardIds.forEach((boardId) => {
+    sails.sockets.broadcast(
+      `board:${boardId}`,
+      'cardUpdate',
+      {
+        item: card,
+      },
+      request,
+    );
+  });
+};
+
 module.exports = {
   inputs: {
     record: {
@@ -461,6 +503,8 @@ module.exports = {
           item: card,
         });
 
+        await broadcastCardUpdateToLinkedBoards(card, inputs.request);
+
         // TODO: add transfer action
       } else {
         sails.sockets.broadcast(
@@ -471,6 +515,8 @@ module.exports = {
           },
           inputs.request,
         );
+
+        await broadcastCardUpdateToLinkedBoards(card, inputs.request);
 
         if (values.list) {
           await sails.helpers.actions.createOne.with({

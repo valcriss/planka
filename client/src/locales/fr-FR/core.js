@@ -373,6 +373,7 @@ export default {
         duplicatedBy: 'Cette carte est dupliquée par la carte',
       },
       blockedTooltip: 'Cette carte est bloquée par une autre carte non terminée',
+      blocksTooltip: 'Cette carte bloque une autre carte',
       subscribeToCardWhenCommenting: 'S’abonner à la carte lors de la rédaction d’un commentaire',
       subscribeToMyOwnCardsByDefault: "M'abonner à mes propres cartes par défaut",
       taskActions_title: 'Actions de tâche',

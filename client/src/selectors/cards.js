@@ -13,6 +13,22 @@ import { buildCustomFieldValueId } from '../models/CustomFieldValue';
 import { isLocalId } from '../utils/local-id';
 import { CardLinkInverseTypeMap, ListTypes, CardLinkTypes } from '../constants/Enums';
 
+const isBlockingLinkActive = (Card, List, linkedCardId) => {
+  const linkedCard = Card.withId(linkedCardId);
+
+  if (!linkedCard) {
+    return false;
+  }
+
+  const linkedList = List.withId(linkedCard.listId);
+
+  if (linkedList) {
+    return linkedList.type !== ListTypes.CLOSED;
+  }
+
+  return !linkedCard.closedAt;
+};
+
 export const makeSelectCardById = () =>
   createSelector(
     orm,
@@ -344,11 +360,12 @@ export const makeSelectIsCardBlockedById = () =>
       const all = [...outgoing, ...incoming];
       for (let i = 0; i < all.length; i += 1) {
         const link = all[i];
-        if (link.type === CardLinkTypes.BLOCKED_BY) {
-          const blockingCard = Card.withId(link.linkedCardId);
-          if (!blockingCard) continue; // eslint-disable-line no-continue
-          const blockingList = List.withId(blockingCard.listId);
-          if (blockingList && blockingList.type !== ListTypes.CLOSED) {
+        if (
+          link.type === CardLinkTypes.BLOCKED_BY ||
+          link.type === CardLinkTypes.BLOCKS ||
+          link.type === CardLinkTypes.DEPENDS_ON
+        ) {
+          if (isBlockingLinkActive(Card, List, link.linkedCardId)) {
             return true;
           }
         }
@@ -358,6 +375,83 @@ export const makeSelectIsCardBlockedById = () =>
   );
 
 export const selectIsCardBlockedById = makeSelectIsCardBlockedById();
+
+export const makeSelectCardLinkIndicatorById = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ Card, List }, id) => {
+      const cardModel = Card.withId(id);
+
+      if (!cardModel) {
+        return null;
+      }
+
+      const outgoing = cardModel.getOutgoingCardLinksQuerySet().toRefArray();
+      const incoming = cardModel
+        .getIncomingCardLinksQuerySet()
+        .toRefArray()
+        .map((link) => ({
+          ...link,
+          linkedCardId: link.cardId,
+          type: CardLinkInverseTypeMap[link.type] || link.type,
+        }));
+
+      const all = [...outgoing, ...incoming];
+
+      let hasActiveBlockedBy = false;
+      let hasActiveBlocks = false;
+      let hasRelated = false;
+      let hasDuplicate = false;
+
+      for (let i = 0; i < all.length; i += 1) {
+        const link = all[i];
+
+        if (link.type === CardLinkTypes.BLOCKED_BY || link.type === CardLinkTypes.DEPENDS_ON) {
+          if (isBlockingLinkActive(Card, List, link.linkedCardId)) {
+            hasActiveBlockedBy = true;
+          }
+          continue; // eslint-disable-line no-continue
+        }
+
+        if (link.type === CardLinkTypes.BLOCKS) {
+          if (isBlockingLinkActive(Card, List, link.linkedCardId)) {
+            hasActiveBlocks = true;
+          }
+          continue; // eslint-disable-line no-continue
+        }
+
+        if (link.type === CardLinkTypes.RELATED) {
+          hasRelated = true;
+          continue; // eslint-disable-line no-continue
+        }
+
+        if (link.type === CardLinkTypes.DUPLICATES || link.type === CardLinkTypes.DUPLICATED_BY) {
+          hasDuplicate = true;
+        }
+      }
+
+      if (hasActiveBlockedBy) {
+        return 'blocked';
+      }
+
+      if (hasActiveBlocks) {
+        return 'blocks';
+      }
+
+      if (hasRelated) {
+        return 'related';
+      }
+
+      if (hasDuplicate) {
+        return 'duplicate';
+      }
+
+      return null;
+    },
+  );
+
+export const selectCardLinkIndicatorById = makeSelectCardLinkIndicatorById();
 
 export const selectIsCardWithIdAvailableForCurrentUser = createSelector(
   orm,
@@ -621,6 +715,8 @@ export default {
   selectIsCardWithIdAvailableForCurrentUser,
   makeSelectIsCardBlockedById,
   selectIsCardBlockedById,
+  makeSelectCardLinkIndicatorById,
+  selectCardLinkIndicatorById,
   selectCurrentCard,
   selectUserIdsForCurrentCard,
   selectLabelIdsForCurrentCard,

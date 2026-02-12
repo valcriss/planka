@@ -65,6 +65,22 @@ module.exports = {
       throw Errors.CARD_NOT_FOUND;
     }
 
+    const boardMemberships = await BoardMembership.qm.getByUserId(currentUser.id);
+    const availableBoardIds = _.uniq(
+      boardMemberships.map(({ boardId }) => boardId).filter((boardId) => !_.isNil(boardId)),
+    );
+
+    if (availableBoardIds.length === 0) {
+      return {
+        items: [],
+        included: {
+          lists: [],
+          boards: [],
+          projects: [],
+        },
+      };
+    }
+
     const existingCardLinks = await CardLink.qm.getForCardId(card.id);
 
     const excludedCardIds = new Set([card.id]);
@@ -79,10 +95,12 @@ module.exports = {
       }
     });
 
-    const values = [board.id];
+    const values = [availableBoardIds];
     let query = `
       SELECT card.* FROM card
-      WHERE card.board_id = $1
+      JOIN board ON board.id = card.board_id
+      JOIN project ON project.id = board.project_id
+      WHERE card.board_id = ANY($1)
     `;
 
     excludedCardIds.forEach((excludedCardId) => {
@@ -94,6 +112,16 @@ module.exports = {
 
     if (search.length > 0) {
       const conditions = [];
+
+      const projectCodeAndNumberMatch = search.match(/^([A-Za-z0-9_]+)-(\d+)$/);
+
+      if (projectCodeAndNumberMatch) {
+        values.push(projectCodeAndNumberMatch[1]);
+        values.push(Number.parseInt(projectCodeAndNumberMatch[2], 10));
+        conditions.push(
+          `(project.code ILIKE $${values.length - 1} AND card.number = $${values.length})`,
+        );
+      }
 
       if (search.startsWith('#')) {
         const number = Number.parseInt(search.slice(1), 10);
@@ -117,6 +145,9 @@ module.exports = {
           values.push(number);
           conditions.push(`card.number = $${values.length}`);
         }
+
+        values.push(`%${search}%`);
+        conditions.push(`(project.code || '-' || card.number::text) ILIKE $${values.length}`);
       }
 
       if (conditions.length > 0) {
@@ -130,12 +161,24 @@ module.exports = {
     const cards = rows.map((row) => _.mapKeys(row, (value, key) => _.camelCase(key)));
 
     const listIds = _.uniq(cards.map((item) => item.listId).filter((listId) => !_.isNil(listId)));
-    const lists = await List.qm.getByIds(listIds);
+    const lists = listIds.length > 0 ? await List.qm.getByIds(listIds) : [];
+
+    const boardIds = _.uniq(
+      cards.map((item) => item.boardId).filter((boardId) => !_.isNil(boardId)),
+    );
+    const boards = boardIds.length > 0 ? await Board.qm.getByIds(boardIds) : [];
+
+    const projectIds = _.uniq(
+      boards.map((item) => item.projectId).filter((projectId) => !_.isNil(projectId)),
+    );
+    const projects = projectIds.length > 0 ? await Project.qm.getByIds(projectIds) : [];
 
     return {
       items: cards,
       included: {
         lists,
+        boards,
+        projects,
       },
     };
   },

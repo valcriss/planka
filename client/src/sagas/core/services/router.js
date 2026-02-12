@@ -57,7 +57,22 @@ export function* goToCard(cardId) {
       Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number),
     );
   } else {
-    yield call(goTo, `/cards/${cardId}`);
+    try {
+      const {
+        item: { boardId, number },
+      } = yield call(request, api.getCard, cardId);
+      const { item: boardItem, included } = yield call(request, api.getBoard, boardId, false);
+      const projectItem = included.projects.find((item) => item.id === boardItem.projectId);
+
+      if (projectItem) {
+        yield call(
+          goTo,
+          Paths.CARDS.replace(':projectCode', projectItem.code).replace(':number', number),
+        );
+      }
+    } catch (error) {
+      /* empty */
+    }
   }
 }
 
@@ -85,6 +100,7 @@ export function* handleLocationChange() {
   }
 
   const isInitializing = yield select(selectors.selectIsInitializing);
+  const routeLocation = yield select((state) => state.router.location);
 
   if (isInitializing) {
     yield take(ActionTypes.CORE_INITIALIZE);
@@ -94,6 +110,7 @@ export function* handleLocationChange() {
 
   let currentBoardId = null;
   let currentCardId = null;
+  let shouldAbortAfterRedirect = false;
   let isEditModeEnabled;
   let board;
   let card;
@@ -159,6 +176,7 @@ export function* handleLocationChange() {
                 labels,
                 lists,
                 cards,
+                linkedCards: linkedCards2,
                 cardLinks: cardLinks1,
                 users: users1,
                 cardMemberships: cardMemberships1,
@@ -189,6 +207,13 @@ export function* handleLocationChange() {
       break;
     case Paths.CARDS: {
       ({ cardId: currentCardId, boardId: currentBoardId } = yield select(selectors.selectPath));
+      const fallbackCardId =
+        routeLocation &&
+        routeLocation.state &&
+        typeof routeLocation.state === 'object' &&
+        routeLocation.state.fallbackCardId
+          ? routeLocation.state.fallbackCardId
+          : null;
 
       if (currentCardId) {
         card = yield select(selectors.selectCardById, currentCardId);
@@ -221,7 +246,54 @@ export function* handleLocationChange() {
           ));
           currentCardId = card.id;
         } catch {
-          /* empty */
+          if (fallbackCardId) {
+            try {
+              ({
+                item: card,
+                included: {
+                  users: users1,
+                  cardMemberships: cardMemberships1,
+                  cardLabels: cardLabels1,
+                  taskLists: taskLists1,
+                  tasks: tasks1,
+                  attachments: attachments1,
+                  customFieldGroups: customFieldGroups1,
+                  customFields: customFields1,
+                  customFieldValues: customFieldValues1,
+                  cardLinks: cardLinks1,
+                  linkedCards: linkedCards1,
+                },
+              } = yield call(request, api.getCard, fallbackCardId));
+              currentCardId = card.id;
+              currentBoardId = card.boardId;
+
+              if (card.boardId) {
+                const { item: boardItem, included } = yield call(
+                  request,
+                  api.getBoard,
+                  card.boardId,
+                  false,
+                );
+                const projectItem = included.projects.find(
+                  (item) => item.id === boardItem.projectId,
+                );
+
+                if (projectItem) {
+                  const canonicalPath = Paths.CARDS.replace(
+                    ':projectCode',
+                    projectItem.code,
+                  ).replace(':number', card.number);
+
+                  if (pathsMatch.pathname !== canonicalPath) {
+                    shouldAbortAfterRedirect = true;
+                    yield call(goTo, canonicalPath);
+                  }
+                }
+              }
+            } catch {
+              /* empty */
+            }
+          }
         }
       }
 
@@ -233,7 +305,15 @@ export function* handleLocationChange() {
           currentBoardId = card.boardId;
         }
 
-        if (!currentBoard && card.boardId) {
+        const currentProject =
+          currentBoard && currentBoard.projectId
+            ? yield select(selectors.selectProjectById, currentBoard.projectId)
+            : null;
+        const currentList = card.listId
+          ? yield select(selectors.selectListById, card.listId)
+          : null;
+
+        if ((!currentBoard || !currentProject || !currentList) && card.boardId) {
           try {
             ({
               item: board,
@@ -243,6 +323,7 @@ export function* handleLocationChange() {
                 labels,
                 lists,
                 cards,
+                linkedCards: linkedCards2,
                 cardLinks: cardLinks2,
                 users: users2,
                 cardMemberships: cardMemberships2,
@@ -291,6 +372,10 @@ export function* handleLocationChange() {
     }
 
     default:
+  }
+
+  if (shouldAbortAfterRedirect) {
+    return;
   }
 
   const boardForTypes = board || currentBoard;

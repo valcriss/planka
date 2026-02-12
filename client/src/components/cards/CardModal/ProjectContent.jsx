@@ -16,7 +16,7 @@ import entryActions from '../../../entry-actions';
 import { usePopupInClosableContext } from '../../../hooks';
 import { startStopwatch, stopStopwatch } from '../../../utils/stopwatch';
 import { isUsableMarkdownElement } from '../../../utils/element-helpers';
-import { BoardMembershipRoles, ListTypes, CardLinkTypes } from '../../../constants/Enums';
+import { BoardMembershipRoles, ListTypes } from '../../../constants/Enums';
 import { CardTypeIcons } from '../../../constants/Icons';
 import { ClosableContext } from '../../../contexts';
 import NameField from './NameField';
@@ -78,23 +78,9 @@ const ProjectContent = React.memo(({ onClose }) => {
     return selectors.selectIncomingCardLinksByCardId(state, card.id).length > 0;
   });
 
-  const isBlocked = useSelector((state) => {
-    const outgoing = selectors.selectOutgoingCardLinksByCardId(state, card.id);
-    const incoming = selectors.selectIncomingCardLinksByCardId(state, card.id);
-    const links = [...outgoing, ...incoming];
-    for (let i = 0; i < links.length; i += 1) {
-      const link = links[i];
-      if (link.type === CardLinkTypes.BLOCKED_BY) {
-        const blockingCard = selectors.selectCardById(state, link.linkedCardId);
-        if (!blockingCard) continue; // eslint-disable-line no-continue
-        const blockingList = selectors.selectListById(state, blockingCard.listId);
-        if (blockingList && blockingList.type !== ListTypes.CLOSED) {
-          return true;
-        }
-      }
-    }
-    return false;
-  });
+  const cardLinkIndicator = useSelector((state) =>
+    selectors.selectCardLinkIndicatorById(state, card.id),
+  );
 
   const isJoined = useSelector(selectors.selectIsCurrentUserInCurrentCard);
 
@@ -379,6 +365,34 @@ const ProjectContent = React.memo(({ onClose }) => {
   const MoveCardPopup = usePopupInClosableContext(MoveCardStep);
   const ConfirmationPopup = usePopupInClosableContext(ConfirmationStep);
 
+  let indicator = null;
+
+  if (cardLinkIndicator === 'blocked') {
+    indicator = {
+      iconName: 'stop circle',
+      color: '#db2828',
+      tooltip: t('common.blockedTooltip'),
+    };
+  } else if (cardLinkIndicator === 'blocks') {
+    indicator = {
+      iconName: 'stop circle',
+      color: '#f2711c',
+      tooltip: t('common.blocksTooltip'),
+    };
+  } else if (cardLinkIndicator === 'related') {
+    indicator = {
+      iconName: 'linkify',
+      color: '#2185d0',
+      tooltip: t('common.cardLinkTypes.related'),
+    };
+  } else if (cardLinkIndicator === 'duplicate') {
+    indicator = {
+      iconName: 'linkify',
+      color: '#2185d0',
+      tooltip: t('common.cardLinkTypes.duplicates'),
+    };
+  }
+
   return (
     <Grid className={styles.wrapper}>
       <Grid.Row className={styles.headerPadding}>
@@ -391,14 +405,14 @@ const ProjectContent = React.memo(({ onClose }) => {
             />
             <div className={styles.headerTitleWrapper}>
               <div className={styles.titleRow}>
-                {isBlocked && (
+                {indicator && (
                   <Popup
-                    content={t('common.blockedTooltip')}
+                    content={indicator.tooltip}
                     trigger={
                       <Icon
-                        name="stop circle"
+                        name={indicator.iconName}
                         className={styles.blockedIcon}
-                        style={{ color: '#db2828' }}
+                        style={{ color: indicator.color }}
                       />
                     }
                   />

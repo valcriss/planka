@@ -14,6 +14,7 @@ import entryActions from '../../../entry-actions';
 import { fetchBaseCardTypes } from './base-card-types';
 import { fetchCardTypes } from './card-types';
 import api from '../../../api';
+import mergeRecords from '../../../utils/merge-records';
 import { createLocalId } from '../../../utils/local-id';
 import ActionTypes from '../../../constants/ActionTypes';
 import ModalTypes from '../../../constants/ModalTypes';
@@ -99,6 +100,7 @@ export function* fetchBoard(id) {
   let labels;
   let lists;
   let cards;
+  let linkedCards;
   let cardLinks;
   let cardMemberships;
   let cardLabels;
@@ -119,6 +121,7 @@ export function* fetchBoard(id) {
         labels,
         lists,
         cards,
+        linkedCards,
         cardLinks,
         cardMemberships,
         cardLabels,
@@ -143,7 +146,7 @@ export function* fetchBoard(id) {
       boardMemberships,
       labels,
       lists,
-      cards,
+      mergeRecords(cards, linkedCards),
       cardLinks,
       cardMemberships,
       cardLabels,

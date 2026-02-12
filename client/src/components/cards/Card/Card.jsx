@@ -16,6 +16,7 @@ import { usePopup } from '../../../lib/popup';
 import selectors from '../../../selectors';
 import Paths from '../../../constants/Paths';
 import { BoardMembershipRoles, CardTypes, ListTypes } from '../../../constants/Enums';
+import api from '../../../api';
 import ProjectContent from './ProjectContent';
 import StoryContent from './StoryContent';
 import InlineContent from './InlineContent';
@@ -44,7 +45,9 @@ const Card = React.memo(({ id, isInline = false }) => {
   const project = useSelector((state) => selectProjectById(state, board.projectId));
 
   // Use non-factory selector (memoized internally by orm) to avoid missing factory export errors
-  const isBlocked = useSelector((state) => selectors.selectIsCardBlockedById(state, id));
+  const cardLinkIndicator = useSelector((state) =>
+    selectors.selectCardLinkIndicatorById(state, id),
+  );
 
   const isHighlightedAsRecent = useSelector((state) => {
     const { turnOffRecentCardHighlighting } = selectors.selectCurrentUser(state);
@@ -82,16 +85,37 @@ const Card = React.memo(({ id, isInline = false }) => {
   const initialPointerPosRef = useRef(null);
   const hasTriggeredRef = useRef(false);
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback(async () => {
     if (document.activeElement) {
       document.activeElement.blur();
     }
 
-    const path =
-      card && project
-        ? Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number)
-        : `/cards/${id}`;
-    dispatch(push(path));
+    if (card && project) {
+      dispatch(
+        push(Paths.CARDS.replace(':projectCode', project.code).replace(':number', card.number)),
+      );
+      return;
+    }
+
+    try {
+      const { item: cardItem } = card ? { item: card } : await api.getCard(id);
+      const cardNumber = Number(cardItem?.number);
+      if (!cardItem?.boardId || Number.isNaN(cardNumber)) {
+        return;
+      }
+
+      const { item: boardItem, included } = await api.getBoard(cardItem.boardId, false);
+      const projectItem = included.projects.find((item) => item.id === boardItem.projectId);
+      if (!projectItem) {
+        return;
+      }
+
+      dispatch(
+        push(Paths.CARDS.replace(':projectCode', projectItem.code).replace(':number', cardNumber)),
+      );
+    } catch {
+      // Keep silent to avoid noisy UI when linked card is not accessible anymore.
+    }
   }, [id, dispatch, card, project]);
 
   const handleNameEdit = useCallback(() => {
@@ -221,7 +245,7 @@ const Card = React.memo(({ id, isInline = false }) => {
             )}
             onClick={handleClick}
           >
-            <Content cardId={id} isBlocked={isBlocked} />
+            <Content cardId={id} cardLinkIndicator={cardLinkIndicator} />
             {colorLineNode}
           </div>
           {canUseActions && (
@@ -239,7 +263,7 @@ const Card = React.memo(({ id, isInline = false }) => {
             list.type === ListTypes.CLOSED && styles.contentDisabled,
           )}
         >
-          <Content cardId={id} isBlocked={isBlocked} />
+          <Content cardId={id} cardLinkIndicator={cardLinkIndicator} />
           {colorLineNode}
         </span>
       )}

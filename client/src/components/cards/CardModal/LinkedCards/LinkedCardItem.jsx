@@ -14,6 +14,8 @@ import history from '../../../../history';
 import { getCardLinkTypeIcon, getCardLinkTypeIconColor } from '../../../../constants/CardLinkIcons';
 import selectors from '../../../../selectors';
 import Paths from '../../../../constants/Paths';
+import { ListTypes } from '../../../../constants/Enums';
+import api from '../../../../api';
 
 import styles from './LinkedCards.module.scss';
 
@@ -31,6 +33,7 @@ const LinkedCardItem = React.memo(
   }) => {
     const [t] = useTranslation();
     const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
+    const selectListById = useMemo(() => selectors.makeSelectListById(), []);
     const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
     const selectProjectById = useMemo(() => selectors.makeSelectProjectById(), []);
 
@@ -41,6 +44,9 @@ const LinkedCardItem = React.memo(
     const linkedProject = useSelector((state) =>
       linkedBoard ? selectProjectById(state, linkedBoard.projectId) : null,
     );
+    const linkedList = useSelector((state) =>
+      linkedCard && linkedCard.listId ? selectListById(state, linkedCard.listId) : null,
+    );
 
     const linkedCardPath = useMemo(() => {
       if (linkedCard && linkedProject) {
@@ -50,17 +56,59 @@ const LinkedCardItem = React.memo(
         );
       }
 
-      return `/cards/${linkedCardId}`;
-    }, [linkedCard, linkedProject, linkedCardId]);
+      return null;
+    }, [linkedCard, linkedProject]);
 
     const displayName = name || t('common.unnamedCard');
+    const isCompleted = Boolean(linkedCard?.closedAt) || linkedList?.type === ListTypes.CLOSED;
 
     const handleOpen = useCallback(
-      (event) => {
+      async (event) => {
         event.preventDefault();
-        history.push(linkedCardPath);
+
+        if (linkedCardPath) {
+          history.push({
+            pathname: linkedCardPath,
+            state: {
+              fallbackCardId: linkedCardId,
+            },
+          });
+          return;
+        }
+
+        try {
+          const { item: cardItem } = linkedCard
+            ? { item: linkedCard }
+            : await api.getCard(linkedCardId);
+          const cardNumber = Number(cardItem?.number);
+
+          if (!cardItem || !cardItem.boardId || Number.isNaN(cardNumber)) {
+            return;
+          }
+
+          const { item: boardItem, included } = await api.getBoard(cardItem.boardId, false);
+          const projectItem = included.projects.find(
+            (project) => project.id === boardItem.projectId,
+          );
+
+          if (!projectItem) {
+            return;
+          }
+
+          history.push({
+            pathname: Paths.CARDS.replace(':projectCode', projectItem.code).replace(
+              ':number',
+              cardNumber,
+            ),
+            state: {
+              fallbackCardId: linkedCardId,
+            },
+          });
+        } catch {
+          // Keep silent to avoid noisy UI when linked card is not accessible anymore.
+        }
       },
-      [linkedCardPath],
+      [linkedCardPath, linkedCard, linkedCardId],
     );
 
     const handleRemove = useCallback(() => {
@@ -92,7 +140,7 @@ const LinkedCardItem = React.memo(
       <button
         type="button"
         ref={nameRef}
-        className={styles.cardButton}
+        className={classNames(styles.cardButton, isCompleted && styles.cardButtonCompleted)}
         onClick={handleOpen}
         onMouseEnter={checkTruncation}
       >

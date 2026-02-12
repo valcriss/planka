@@ -75,7 +75,7 @@ const searchCardsForLink = (boardId, cardId, search) => ({
   },
 });
 
-searchCardsForLink.success = (boardId, cardId, search, cards, lists) => ({
+searchCardsForLink.success = (boardId, cardId, search, cards, lists, boards, projects) => ({
   type: ActionTypes.CARD_LINKS_SEARCH__SUCCESS,
   payload: {
     boardId,
@@ -83,6 +83,8 @@ searchCardsForLink.success = (boardId, cardId, search, cards, lists) => ({
     search,
     cards,
     lists,
+    boards,
+    projects,
   },
 });
 
