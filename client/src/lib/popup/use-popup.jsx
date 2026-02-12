@@ -10,6 +10,28 @@ import { Button, Popup as SemanticUIPopup } from 'semantic-ui-react';
 
 import styles from './Popup.module.css';
 
+const isElement = (value) => typeof Element !== 'undefined' && value instanceof Element;
+
+const getElementFromRef = (value) => {
+  if (isElement(value)) {
+    return value;
+  }
+
+  if (isElement(value?.current)) {
+    return value.current;
+  }
+
+  if (isElement(value?.ref)) {
+    return value.ref;
+  }
+
+  if (isElement(value?.ref?.current)) {
+    return value.ref.current;
+  }
+
+  return null;
+};
+
 export default (Step, { position, onOpen, onClose } = {}) => {
   return useMemo(() => {
     const Popup = React.memo(({ children, ...stepProps }) => {
@@ -42,6 +64,7 @@ export default (Step, { position, onOpen, onClose } = {}) => {
       const handleTriggerClick = useCallback(
         (event) => {
           event.stopPropagation();
+          setTriggerNode(getElementFromRef(event.currentTarget));
 
           const { onClick } = children.props || {};
 
@@ -70,7 +93,7 @@ export default (Step, { position, onOpen, onClose } = {}) => {
 
       const handleTriggerRef = useCallback(
         (node) => {
-          setTriggerNode(node);
+          setTriggerNode(getElementFromRef(node));
 
           const { ref } = children;
 
