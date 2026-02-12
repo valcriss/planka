@@ -8,6 +8,7 @@ RUN apt-get update \
 WORKDIR /app
 
 COPY server/package.json server/package-lock.json server/requirements.txt ./
+COPY server/scripts ./scripts
 
 RUN npm install npm --global \
   && npm install --omit=dev
