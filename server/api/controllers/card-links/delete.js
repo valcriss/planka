@@ -57,27 +57,37 @@ module.exports = {
       throw Errors.NOT_ENOUGH_RIGHTS;
     }
 
-    const linkedCard = await Card.qm.getOneById(cardLink.linkedCardId);
+    const {
+      card: linkedCard,
+      list: linkedList,
+      board: linkedBoard,
+      project: linkedProject,
+    } = await sails.helpers.cards
+      .getPathToProjectById(cardLink.linkedCardId)
+      .intercept('pathNotFound', () => Errors.CARD_LINK_NOT_FOUND);
 
-    if (!linkedCard || linkedCard.boardId !== board.id) {
+    const linkedBoardMembership = await BoardMembership.qm.getOneByBoardIdAndUserId(
+      linkedBoard.id,
+      currentUser.id,
+    );
+
+    if (!linkedBoardMembership) {
       throw Errors.CARD_LINK_NOT_FOUND;
     }
 
-    const linkedList = await List.qm.getOneById(linkedCard.listId, {
-      boardId: board.id,
-    });
-
-    if (!linkedList) {
-      throw Errors.CARD_LINK_NOT_FOUND;
+    if (linkedBoardMembership.role !== BoardMembership.Roles.EDITOR) {
+      throw Errors.NOT_ENOUGH_RIGHTS;
     }
 
     await sails.helpers.cardLinks.deleteOne.with({
       record: cardLink,
       card,
       linkedCard,
-      project,
-      board,
-      list,
+      sourceProject: project,
+      sourceBoard: board,
+      sourceList: list,
+      linkedProject,
+      linkedBoard,
       linkedList,
       actorUser: currentUser,
       request: this.req,

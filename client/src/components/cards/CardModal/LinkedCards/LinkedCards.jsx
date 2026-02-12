@@ -52,6 +52,8 @@ const LinkedCards = React.memo(({ canEdit = false, className = null, headerClass
 
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
+  const selectBoardById = useMemo(() => selectors.makeSelectBoardById(), []);
+  const selectProjectById = useMemo(() => selectors.makeSelectProjectById(), []);
 
   const outgoingCardLinks = useSelector(
     (state) => selectors.selectOutgoingCardLinksByCardId(state, card.id),
@@ -77,17 +79,23 @@ const LinkedCards = React.memo(({ canEdit = false, className = null, headerClass
       const cards = (nextSearchState.cardIds || [])
         .map((id) => selectCardById(state, id))
         .filter(Boolean)
-        .map((cardItem) => ({
-          ...cardItem,
-          list: cardItem.listId ? selectListById(state, cardItem.listId) : null,
-        }));
+        .map((cardItem) => {
+          const boardItem = cardItem.boardId ? selectBoardById(state, cardItem.boardId) : null;
+
+          return {
+            ...cardItem,
+            list: cardItem.listId ? selectListById(state, cardItem.listId) : null,
+            board: boardItem,
+            project: boardItem ? selectProjectById(state, boardItem.projectId) : null,
+          };
+        });
 
       return {
         searchState: nextSearchState,
         searchResults: cards,
       };
     },
-    [card.id, selectCardById, selectListById],
+    [card.id, selectBoardById, selectCardById, selectListById, selectProjectById],
   );
 
   const { searchState, searchResults } = useSelector(selectSearchData, dequal);
@@ -257,6 +265,7 @@ const LinkedCards = React.memo(({ canEdit = false, className = null, headerClass
   const searchPlaceholder = t('common.searchCards');
   const noResultsLabel = t('common.noResults');
   const noLinkedCardsLabel = t('common.noLinkedCards');
+  const unnamedCardLabel = t('common.unnamedCard');
   const addLinkedCardLabel = t('action.addLinkedCard');
   const addLinkedCardTitle = t('action.addLinkedCardTitle');
   const linkedCardsTitle = t('common.linkedCards');
@@ -448,11 +457,11 @@ const LinkedCards = React.memo(({ canEdit = false, className = null, headerClass
                     })}
                     onMouseDown={(event) => {
                       event.preventDefault();
-                      handleResultSelect(cardItem.id, cardItem.name);
+                      handleResultSelect(cardItem.id, cardItem.name || unnamedCardLabel);
                     }}
                     onClick={() => {
                       if (!suppressNextSearchRef.current) {
-                        handleResultSelect(cardItem.id, cardItem.name);
+                        handleResultSelect(cardItem.id, cardItem.name || unnamedCardLabel);
                       }
                     }}
                     onMouseEnter={() => setHoveredResultId(cardItem.id)}
@@ -464,9 +473,20 @@ const LinkedCards = React.memo(({ canEdit = false, className = null, headerClass
                       setHoveredResultId((prev) => (prev === cardItem.id ? null : prev))
                     }
                   >
-                    <div className={styles.menuItemPrimary}>{cardItem.name}</div>
-                    {cardItem.list && (
-                      <div className={styles.menuItemSecondary}>{cardItem.list.name}</div>
+                    <div className={styles.menuItemPrimary}>
+                      {cardItem.name || unnamedCardLabel}
+                      {cardItem.project && (
+                        <span className={styles.menuItemCode}>
+                          {` ${cardItem.project.code}-${cardItem.number}`}
+                        </span>
+                      )}
+                    </div>
+                    {(cardItem.project || cardItem.board || cardItem.list) && (
+                      <div className={styles.menuItemSecondary}>
+                        {cardItem.project?.name || ''}
+                        {cardItem.board?.name ? ` \u2022 ${cardItem.board.name}` : ''}
+                        {cardItem.list?.name ? ` \u2022 ${cardItem.list.name}` : ''}
+                      </div>
                     )}
                   </Menu.Item>
                 ))}

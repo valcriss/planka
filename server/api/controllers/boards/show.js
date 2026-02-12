@@ -64,7 +64,21 @@ module.exports = {
 
     const cards = await Card.qm.getByListIds(finiteListIds);
     const cardIds = sails.helpers.utils.mapRecords(cards);
+    const cardIdsSet = new Set(cardIds);
     const cardLinks = cardIds.length > 0 ? await CardLink.qm.getForCardIds(cardIds) : [];
+    const extraCardIds = [];
+
+    cardLinks.forEach((cardLink) => {
+      if (!cardIdsSet.has(cardLink.cardId)) {
+        extraCardIds.push(cardLink.cardId);
+      }
+
+      if (!cardIdsSet.has(cardLink.linkedCardId)) {
+        extraCardIds.push(cardLink.linkedCardId);
+      }
+    });
+
+    const linkedCards = extraCardIds.length > 0 ? await Card.qm.getByIds(_.uniq(extraCardIds)) : [];
 
     const userIds = _.union(
       sails.helpers.utils.mapRecords(boardMemberships, 'userId'),
@@ -119,6 +133,7 @@ module.exports = {
         labels,
         lists,
         cards,
+        linkedCards,
         cardLinks,
         cardMemberships,
         cardLabels,

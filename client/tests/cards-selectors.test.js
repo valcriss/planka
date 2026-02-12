@@ -46,6 +46,7 @@ import {
   makeSelectNotificationsTotalByCardId,
   makeSelectIsCardWithIdRecent,
   makeSelectIsCardBlockedById,
+  makeSelectCardLinkIndicatorById,
   selectIsCardWithIdAvailableForCurrentUser,
   selectCurrentCard,
   selectUserIdsForCurrentCard,
@@ -387,6 +388,119 @@ describe('cards selectors', () => {
     });
 
     expect(selectIsCardBlockedById(state, 'c1')).toBe(false);
+  });
+
+  test('selects card-link indicator with priority blocked/blocks > related > duplicate', () => {
+    const selectCardLinkIndicatorById = makeSelectCardLinkIndicatorById();
+    const state = createState({ models });
+
+    expect(selectCardLinkIndicatorById(state, 'c1')).toBe('blocked');
+    expect(selectCardLinkIndicatorById(state, 'missing')).toBeNull();
+  });
+
+  test('selects blocks indicator when card blocks another active card', () => {
+    const selectCardLinkIndicatorById = makeSelectCardLinkIndicatorById();
+    const state = createState({
+      models: {
+        ...models,
+        Card: {
+          ...models.Card,
+          withId: jest.fn((id) => {
+            if (id === 'c1') {
+              return {
+                ...cardModel,
+                getOutgoingCardLinksQuerySet: () => ({
+                  toRefArray: () => [{ cardId: 'c1', linkedCardId: 'c9', type: CardLinkTypes.BLOCKS }],
+                }),
+                getIncomingCardLinksQuerySet: () => ({
+                  toRefArray: () => [],
+                }),
+              };
+            }
+
+            if (id === 'c9') {
+              return { id: 'c9', listId: 'l-open' };
+            }
+
+            return null;
+          }),
+        },
+      },
+    });
+
+    expect(selectCardLinkIndicatorById(state, 'c1')).toBe('blocks');
+  });
+
+  test('falls back to related indicator when blocking links are inactive', () => {
+    const selectCardLinkIndicatorById = makeSelectCardLinkIndicatorById();
+    const state = createState({
+      models: {
+        ...models,
+        Card: {
+          ...models.Card,
+          withId: jest.fn((id) => {
+            if (id === 'c1') {
+              return {
+                ...cardModel,
+                getOutgoingCardLinksQuerySet: () => ({
+                  toRefArray: () => [
+                    { cardId: 'c1', linkedCardId: 'c3', type: CardLinkTypes.BLOCKED_BY },
+                    { cardId: 'c1', linkedCardId: 'c2', type: CardLinkTypes.RELATED },
+                  ],
+                }),
+                getIncomingCardLinksQuerySet: () => ({
+                  toRefArray: () => [],
+                }),
+              };
+            }
+
+            if (id === 'c3') {
+              return { id: 'c3', listId: 'l-closed' };
+            }
+
+            return null;
+          }),
+        },
+        List: {
+          withId: jest.fn((id) => ({ id, type: ListTypes.CLOSED })),
+        },
+      },
+    });
+
+    expect(selectCardLinkIndicatorById(state, 'c1')).toBe('related');
+  });
+
+  test('selects duplicate indicator when no blocking/related link exists', () => {
+    const selectCardLinkIndicatorById = makeSelectCardLinkIndicatorById();
+    const state = createState({
+      models: {
+        ...models,
+        Card: {
+          ...models.Card,
+          withId: jest.fn((id) => {
+            if (id === 'c1') {
+              return {
+                ...cardModel,
+                getOutgoingCardLinksQuerySet: () => ({
+                  toRefArray: () => [{ cardId: 'c1', linkedCardId: 'c9', type: CardLinkTypes.DUPLICATES }],
+                }),
+                getIncomingCardLinksQuerySet: () => ({
+                  toRefArray: () => [],
+                }),
+              };
+            }
+
+            if (id === 'c9') {
+              return { id: 'c9', listId: 'l-open' };
+            }
+
+            return null;
+          }),
+        },
+      },
+    });
+
+    expect(selectCardLinkIndicatorById(state, 'c1')).toBe('duplicate');
   });
 
   test('covers incoming-link type fallback branch in blocking selector', () => {

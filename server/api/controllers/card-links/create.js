@@ -82,25 +82,35 @@ module.exports = {
       throw Errors.NOT_ENOUGH_RIGHTS;
     }
 
-    const linkedCard = await Card.qm.getOneById(inputs.linkedCardId);
+    const {
+      card: linkedCard,
+      list: linkedList,
+      board: linkedBoard,
+      project: linkedProject,
+    } = await sails.helpers.cards
+      .getPathToProjectById(inputs.linkedCardId)
+      .intercept('pathNotFound', () => Errors.LINKED_CARD_NOT_FOUND);
 
-    if (!linkedCard || linkedCard.boardId !== board.id) {
+    const linkedBoardMembership = await BoardMembership.qm.getOneByBoardIdAndUserId(
+      linkedBoard.id,
+      currentUser.id,
+    );
+
+    if (!linkedBoardMembership) {
       throw Errors.LINKED_CARD_NOT_FOUND;
     }
 
-    const linkedList = await List.qm.getOneById(linkedCard.listId, {
-      boardId: board.id,
-    });
-
-    if (!linkedList) {
-      throw Errors.LINKED_CARD_NOT_FOUND;
+    if (linkedBoardMembership.role !== BoardMembership.Roles.EDITOR) {
+      throw Errors.NOT_ENOUGH_RIGHTS;
     }
 
     const cardLink = await sails.helpers.cardLinks.createOne
       .with({
-        project,
-        board,
-        list,
+        sourceProject: project,
+        sourceBoard: board,
+        sourceList: list,
+        linkedProject,
+        linkedBoard,
         linkedList,
         values: {
           card,

@@ -17,15 +17,23 @@ module.exports = {
       type: 'ref',
       required: true,
     },
-    project: {
+    sourceProject: {
       type: 'ref',
       required: true,
     },
-    board: {
+    sourceBoard: {
       type: 'ref',
       required: true,
     },
-    list: {
+    sourceList: {
+      type: 'ref',
+      required: true,
+    },
+    linkedProject: {
+      type: 'ref',
+      required: true,
+    },
+    linkedBoard: {
       type: 'ref',
       required: true,
     },
@@ -49,18 +57,22 @@ module.exports = {
       return cardLink;
     }
 
-    sails.sockets.broadcast(
-      `board:${inputs.board.id}`,
-      'cardLinkDelete',
-      {
-        item: cardLink,
-      },
-      inputs.request,
-    );
+    _.uniq([inputs.sourceBoard.id, inputs.linkedBoard.id]).forEach((boardId) => {
+      sails.sockets.broadcast(
+        `board:${boardId}`,
+        'cardLinkDelete',
+        {
+          item: cardLink,
+        },
+        inputs.request,
+      );
+    });
 
     const webhooks = await Webhook.qm.getAll();
 
-    const lists = _.uniqBy([inputs.list, inputs.linkedList], 'id');
+    const projects = _.uniqBy([inputs.sourceProject, inputs.linkedProject], 'id');
+    const boards = _.uniqBy([inputs.sourceBoard, inputs.linkedBoard], 'id');
+    const lists = _.uniqBy([inputs.sourceList, inputs.linkedList], 'id');
     const cards = _.uniqBy([inputs.card, inputs.linkedCard], 'id');
 
     sails.helpers.utils.sendWebhooks.with({
@@ -69,8 +81,8 @@ module.exports = {
       buildData: () => ({
         item: cardLink,
         included: {
-          projects: [inputs.project],
-          boards: [inputs.board],
+          projects,
+          boards,
           lists,
           cards,
         },
@@ -90,9 +102,9 @@ module.exports = {
         user: inputs.actorUser,
         card: inputs.card,
       },
-      project: inputs.project,
-      board: inputs.board,
-      list: inputs.list,
+      project: inputs.sourceProject,
+      board: inputs.sourceBoard,
+      list: inputs.sourceList,
     });
 
     return cardLink;

@@ -235,6 +235,14 @@ export default class extends BaseModel {
         });
 
         break;
+      case ActionTypes.CARD_LINKS_SEARCH__SUCCESS:
+        if (payload.boards) {
+          payload.boards.forEach((board) => {
+            Board.upsert(board);
+          });
+        }
+
+        break;
       case ActionTypes.BOARD_DELETE:
         Board.withId(payload.id).deleteWithRelated();
 

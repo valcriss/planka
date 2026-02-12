@@ -87,6 +87,11 @@
   }
 }
 
+.cardButtonCompleted {
+  color: #6b808c;
+  text-decoration: line-through;
+}
+
 .typeCell {
   color: #6b808c;
   font-size: 13px;
@@ -183,6 +188,11 @@
   color: #17394d;
   font-size: 14px;
   line-height: 18px;
+}
+
+.menuItemCode {
+  color: #6b808c;
+  font-size: 12px;
 }
 
 .menuItemSecondary {

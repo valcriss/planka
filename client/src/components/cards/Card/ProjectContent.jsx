@@ -27,7 +27,7 @@ import EpicChip from '../../epics/EpicChip';
 
 import styles from './ProjectContent.module.scss';
 
-const ProjectContent = React.memo(({ cardId, isBlocked = false }) => {
+const ProjectContent = React.memo(({ cardId, cardLinkIndicator = null }) => {
   const [t] = useTranslation();
   // Selector factories (memoized once per component instance)
   const selectCardById = useMemo(() => selectors.makeSelectCardById(), []);
@@ -158,19 +158,47 @@ const ProjectContent = React.memo(({ cardId, isBlocked = false }) => {
       </span>
     ) : null;
 
+  let indicator = null;
+
+  if (cardLinkIndicator === 'blocked') {
+    indicator = {
+      iconName: 'stop circle',
+      color: '#db2828',
+      tooltip: t('common.blockedTooltip'),
+    };
+  } else if (cardLinkIndicator === 'blocks') {
+    indicator = {
+      iconName: 'stop circle',
+      color: '#f2711c',
+      tooltip: t('common.blocksTooltip'),
+    };
+  } else if (cardLinkIndicator === 'related') {
+    indicator = {
+      iconName: 'linkify',
+      color: '#2185d0',
+      tooltip: t('common.cardLinkTypes.related'),
+    };
+  } else if (cardLinkIndicator === 'duplicate') {
+    indicator = {
+      iconName: 'linkify',
+      color: '#2185d0',
+      tooltip: t('common.cardLinkTypes.duplicates'),
+    };
+  }
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.nameRow}>
         <div className={classNames(styles.name, isInClosedList && styles.nameClosed)}>
           {/* Blocked icon inline before title */}
-          {isBlocked && (
+          {indicator && (
             <Popup
-              content={t('common.blockedTooltip')}
+              content={indicator.tooltip}
               trigger={
                 <Icon
-                  name="stop circle"
+                  name={indicator.iconName}
                   className={styles.blockedIcon}
-                  style={{ color: '#db2828' }}
+                  style={{ color: indicator.color }}
                 />
               }
             />
@@ -299,6 +327,6 @@ const ProjectContent = React.memo(({ cardId, isBlocked = false }) => {
 
 ProjectContent.propTypes = {
   cardId: PropTypes.string.isRequired,
-  isBlocked: PropTypes.bool,
+  cardLinkIndicator: PropTypes.oneOf(['blocked', 'blocks', 'related', 'duplicate']),
 };
 export default ProjectContent;
