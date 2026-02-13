@@ -77,8 +77,7 @@ export default {
         'Êtes-vous sûr de vouloir supprimer ce champ personnalisé ?',
       areYouSureYouWantToDeleteThisCustomFieldGroup:
         'Êtes-vous sûr de vouloir supprimer ce groupe de champs personnalisés ?',
-      areYouSureYouWantToDeleteThisLabel:
-        'Êtes-vous sûr de vouloir supprimer cette étiquette ?',
+      areYouSureYouWantToDeleteThisLabel: 'Êtes-vous sûr de vouloir supprimer cette étiquette ?',
       areYouSureYouWantToDeleteThisCardType:
         'Êtes-vous sûr de vouloir supprimer ce type de carte ?',
       areYouSureYouWantToDeleteThisList: 'Êtes-vous sûr de vouloir supprimer cette liste ?',
@@ -138,8 +137,7 @@ export default {
         'Les cartes de cette liste sont disponibles pour tous les membres du tableau.',
       cardsOnThisListAreCompleteAndReadyToBeArchived:
         'Les cartes de cette liste sont terminées et prêtes à être archivées.',
-      cardsOnThisListAreReadyToBeWorkedOn:
-        'Les cartes de cette liste sont prêtes à être traitées.',
+      cardsOnThisListAreReadyToBeWorkedOn: 'Les cartes de cette liste sont prêtes à être traitées.',
       clickHereOrRefreshPageToUpdate:
         '<0>Cliquez ici</0> ou rafraîchissez la page pour mettre à jour.',
       closed: 'Fermé',
@@ -324,8 +322,7 @@ export default {
       noTemplate: 'Aucun modèle',
       kabanProject: 'Projet Kaban',
       scrumProject: 'Projet Scrum',
-      referenceDataAndKnowledgeStorage:
-        'Stockage de données de référence et de connaissances.',
+      referenceDataAndKnowledgeStorage: 'Stockage de données de référence et de connaissances.',
       removeManager_title: 'Supprimer le responsable',
       removeMember_title: 'Supprimer le membre',
       role: 'Rôle',
@@ -398,8 +395,7 @@ export default {
       },
       blockedTooltip: 'Cette carte est bloquée par une autre carte non terminée',
       blocksTooltip: 'Cette carte bloque une autre carte',
-      subscribeToCardWhenCommenting:
-        'S’abonner à la carte lors de la rédaction d’un commentaire',
+      subscribeToCardWhenCommenting: 'S’abonner à la carte lors de la rédaction d’un commentaire',
       subscribeToMyOwnCardsByDefault: "M'abonner à mes propres cartes par défaut",
       taskActions_title: 'Actions de tâche',
       taskAssignmentAndProjectCompletion: 'Completion de tâches et d’un projet.',
