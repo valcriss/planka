@@ -15,6 +15,7 @@ import { BoardViews } from '../../../constants/Enums';
 import Home from '../Home';
 import Board from '../../boards/Board';
 import ProjectEpics from '../../projects/ProjectEpics';
+import PlanningPoker from '../../planning-poker/PlanningPoker';
 import Paths from '../../../constants/Paths';
 
 import styles from './Static.module.scss';
@@ -86,6 +87,13 @@ const Static = React.memo(() => {
     ];
 
     contentNode = <ProjectEpics />;
+  } else if (pathsMatch && pathsMatch.pattern.path === Paths.PLANNING_POKER) {
+    wrapperClassNames = [
+      isFavoritesActive ? styles.wrapperBoardWithFavorites : styles.wrapperBoard,
+      styles.wrapperFlex,
+    ];
+
+    contentNode = <PlanningPoker />;
   } else if (board === undefined) {
     wrapperClassNames = [
       isFavoritesActive ? styles.wrapperProjectWithFavorites : styles.wrapperProject,

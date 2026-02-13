@@ -2,6 +2,8 @@ const repositoriesCreateController = require('../api/controllers/repositories/cr
 const repositoriesDeleteController = require('../api/controllers/repositories/delete');
 const repositoriesUpdateController = require('../api/controllers/repositories/update');
 const epicsCreateController = require('../api/controllers/epics/create');
+const epicsDeleteController = require('../api/controllers/epics/delete');
+const epicsIndexController = require('../api/controllers/epics/index');
 const epicsUpdateController = require('../api/controllers/epics/update');
 
 const originalSails = global.sails;
@@ -47,7 +49,9 @@ describe('repositories and epics controllers', () => {
 
     global.Epic = {
       qm: {
+        getByProjectId: jest.fn(),
         getOneById: jest.fn(),
+        deleteOne: jest.fn(),
         updateOne: jest.fn(),
       },
     };
@@ -241,6 +245,36 @@ describe('repositories and epics controllers', () => {
     expect(result).toEqual({ item: created });
   });
 
+  test('epics/index enforces project existence and manager rights', async () => {
+    const req = { currentUser: { id: 'u1' } };
+
+    Project.qm.getOneById.mockResolvedValueOnce(null);
+    await expect(epicsIndexController.fn.call({ req }, { projectId: 'p1' })).rejects.toEqual({
+      projectNotFound: 'Project not found',
+    });
+
+    Project.qm.getOneById.mockResolvedValueOnce({ id: 'p1' });
+    sails.helpers.users.isProjectManager.mockResolvedValueOnce(false);
+    await expect(epicsIndexController.fn.call({ req }, { projectId: 'p1' })).rejects.toEqual({
+      projectNotFound: 'Project not found',
+    });
+  });
+
+  test('epics/index returns project epics for manager', async () => {
+    const req = { currentUser: { id: 'u1' } };
+    const project = { id: 'p1' };
+    const epics = [{ id: 'e1' }, { id: 'e2' }];
+
+    Project.qm.getOneById.mockResolvedValue(project);
+    sails.helpers.users.isProjectManager.mockResolvedValue(true);
+    Epic.qm.getByProjectId.mockResolvedValue(epics);
+
+    const result = await epicsIndexController.fn.call({ req }, { projectId: 'p1' });
+
+    expect(Epic.qm.getByProjectId).toHaveBeenCalledWith('p1');
+    expect(result).toEqual({ items: epics });
+  });
+
   test('epics/update enforces existence and manager rights', async () => {
     const req = { currentUser: { id: 'u1' } };
 
@@ -284,5 +318,40 @@ describe('repositories and epics controllers', () => {
       req,
     );
     expect(result).toEqual({ item: updated });
+  });
+
+  test('epics/delete enforces existence and manager rights', async () => {
+    const req = { currentUser: { id: 'u1' } };
+
+    Epic.qm.getOneById.mockResolvedValueOnce(null);
+    await expect(epicsDeleteController.fn.call({ req }, { id: 'e1' })).rejects.toEqual({
+      epicNotFound: 'Epic not found',
+    });
+
+    Epic.qm.getOneById.mockResolvedValueOnce({ id: 'e1', projectId: 'p1' });
+    sails.helpers.users.isProjectManager.mockResolvedValueOnce(false);
+    await expect(epicsDeleteController.fn.call({ req }, { id: 'e1' })).rejects.toEqual({
+      epicNotFound: 'Epic not found',
+    });
+  });
+
+  test('epics/delete removes epic and broadcasts', async () => {
+    const req = { currentUser: { id: 'u1' } };
+    const epic = { id: 'e1', projectId: 'p1' };
+
+    Epic.qm.getOneById.mockResolvedValue(epic);
+    sails.helpers.users.isProjectManager.mockResolvedValue(true);
+    Epic.qm.deleteOne.mockResolvedValue(epic);
+
+    const result = await epicsDeleteController.fn.call({ req }, { id: 'e1' });
+
+    expect(Epic.qm.deleteOne).toHaveBeenCalledWith({ id: 'e1' });
+    expect(sails.sockets.broadcast).toHaveBeenCalledWith(
+      'project:p1',
+      'epicDelete',
+      { item: epic },
+      req,
+    );
+    expect(result).toEqual({ item: epic });
   });
 });

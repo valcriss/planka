@@ -37,6 +37,7 @@ function Root({ store, history }) {
               <Route path={Paths.PROJECTS} element={<Core />} />
               <Route path={Paths.PROJECT_EPICS} element={<Core />} />
               <Route path={Paths.BOARDS} element={<Core />} />
+              <Route path={Paths.PLANNING_POKER} element={<Core />} />
               <Route path={Paths.CARDS} element={<Core />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

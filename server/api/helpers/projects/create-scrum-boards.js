@@ -48,6 +48,7 @@ module.exports = {
         type: List.Types.ACTIVE,
         position: POSITION_GAP * 3,
         name: t('To Estimate'),
+        slug: 'to-estimate',
       },
       project,
       actorUser,

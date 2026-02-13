@@ -228,6 +228,17 @@ describe('notification-services controllers', () => {
 
     sails.helpers.notificationServices.getPathToUserById.mockReturnValueOnce(
       makeInterceptable({
+        notificationService: { id: 'ns1', userId: 'u1' },
+        user: { id: 'u1' },
+      }),
+    );
+    sails.helpers.notificationServices.deleteOneInUser.with.mockResolvedValueOnce({ id: 'ns1' });
+
+    const userResult = await deleteController.fn.call({ req }, { id: 'ns1' });
+    expect(userResult).toEqual({ item: { id: 'ns1' } });
+
+    sails.helpers.notificationServices.getPathToUserById.mockReturnValueOnce(
+      makeInterceptable({
         notificationService: { id: 'ns2', boardId: 'b1' },
         board: { id: 'b1' },
         project: { id: 'p1' },
@@ -238,6 +249,24 @@ describe('notification-services controllers', () => {
 
     const result = await deleteController.fn.call({ req }, { id: 'ns2' });
     expect(result).toEqual({ item: { id: 'ns2' } });
+  });
+
+  test('delete returns not found when board removal yields null', async () => {
+    const req = { currentUser: { id: 'u1' } };
+
+    sails.helpers.notificationServices.getPathToUserById.mockReturnValueOnce(
+      makeInterceptable({
+        notificationService: { id: 'ns3', boardId: 'b1' },
+        board: { id: 'b1' },
+        project: { id: 'p1' },
+      }),
+    );
+    sails.helpers.users.isProjectManager.mockResolvedValueOnce(true);
+    sails.helpers.notificationServices.deleteOneInBoard.with.mockResolvedValueOnce(null);
+
+    await expect(deleteController.fn.call({ req }, { id: 'ns3' })).rejects.toEqual({
+      notificationServiceNotFound: 'Notification service not found',
+    });
   });
 
   test('update handles missing path and access checks', async () => {
@@ -312,6 +341,26 @@ describe('notification-services controllers', () => {
     expect(result).toEqual({ item: { id: 'ns2' } });
   });
 
+  test('update returns not found when board update yields null', async () => {
+    const req = { currentUser: { id: 'u1' } };
+
+    sails.helpers.notificationServices.getPathToUserById.mockReturnValueOnce(
+      makeInterceptable({
+        notificationService: { id: 'ns4', boardId: 'b1' },
+        board: { id: 'b1' },
+        project: { id: 'p1' },
+      }),
+    );
+    sails.helpers.users.isProjectManager.mockResolvedValueOnce(true);
+    sails.helpers.notificationServices.updateOneInBoard.with.mockResolvedValueOnce(null);
+
+    await expect(
+      updateController.fn.call({ req }, { id: 'ns4', url: 'https://new' }),
+    ).rejects.toEqual({
+      notificationServiceNotFound: 'Notification service not found',
+    });
+  });
+
   test('test controller enforces access and runs helper', async () => {
     const req = { currentUser: { id: 'u1' }, i18n: { __: jest.fn() } };
 
@@ -353,6 +402,23 @@ describe('notification-services controllers', () => {
     sails.helpers.notificationServices.testOne.with.mockResolvedValueOnce(undefined);
 
     const result = await testController.fn.call({ req }, { id: 'ns2' });
+    expect(result).toEqual({ item: notificationService });
+  });
+
+  test('test controller allows project manager for board service', async () => {
+    const req = { currentUser: { id: 'u1' }, i18n: { __: jest.fn() } };
+    const notificationService = { id: 'ns5', boardId: 'b1' };
+
+    sails.helpers.notificationServices.getPathToUserById.mockReturnValueOnce(
+      makeInterceptable({
+        notificationService,
+        project: { id: 'p1' },
+      }),
+    );
+    sails.helpers.users.isProjectManager.mockResolvedValueOnce(true);
+    sails.helpers.notificationServices.testOne.with.mockResolvedValueOnce(undefined);
+
+    const result = await testController.fn.call({ req }, { id: 'ns5' });
     expect(result).toEqual({ item: notificationService });
   });
 });

@@ -91,6 +91,22 @@ module.exports.routes = {
   'PATCH /api/projects/:id': 'projects/update',
   'DELETE /api/projects/:id': 'projects/delete',
   'POST /api/projects/:projectId/start-sprint': 'projects/start-sprint',
+  'GET /api/projects/:projectId/planning-poker/session': 'planning-poker/show',
+  'POST /api/projects/:projectId/planning-poker/session': 'planning-poker/join',
+  'POST /api/projects/:projectId/planning-poker/session/leave': 'planning-poker/leave',
+  'POST /api/projects/:projectId/planning-poker/session/observer': 'planning-poker/set-observer',
+  'POST /api/projects/:projectId/planning-poker/session/activate-story':
+    'planning-poker/activate-story',
+  'POST /api/projects/:projectId/planning-poker/session/vote': 'planning-poker/vote',
+  'POST /api/projects/:projectId/planning-poker/session/finish-vote': 'planning-poker/finish-vote',
+  'POST /api/projects/:projectId/planning-poker/session/assign-story-points':
+    'planning-poker/assign-story-points',
+  'POST /api/projects/:projectId/planning-poker/session/restart-vote':
+    'planning-poker/restart-vote',
+  'POST /api/projects/:projectId/planning-poker/session/skip-story': 'planning-poker/skip-story',
+  'POST /api/projects/:projectId/planning-poker/session/close': 'planning-poker/close-session',
+  'POST /api/projects/:projectId/planning-poker/session/transfer-host':
+    'planning-poker/transfer-host',
   'GET /api/projects/:projectId/current-sprint': 'sprints/current',
   'GET /api/projects/:projectId/sprints': 'sprints/index',
   'GET /api/sprints/:id': 'sprints/show',

@@ -36,6 +36,7 @@ import notifications from './notifications';
 import notificationServices from './notification-services';
 import repositories from './repositories';
 import sprints from './sprints';
+import planningPoker from './planning-poker';
 import system from './system';
 
 export { http, socket };
@@ -67,6 +68,7 @@ export default {
   ...customFields,
   ...customFieldValues,
   ...sprints,
+  ...planningPoker,
   ...comments,
   ...activities,
   ...notifications,

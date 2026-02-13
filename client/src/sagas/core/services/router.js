@@ -161,6 +161,7 @@ export function* handleLocationChange() {
     case Paths.PROJECT_EPICS:
       break;
     case Paths.BOARDS:
+    case Paths.PLANNING_POKER:
       if (currentBoard) {
         ({ id: currentBoardId } = currentBoard);
 
