@@ -135,6 +135,18 @@ describe('labels controllers extra branches', () => {
         project: { id: 'p1' },
       }),
     );
+    BoardMembership.qm.getOneByBoardIdAndUserId.mockResolvedValueOnce(null);
+    await expect(deleteController.fn.call({ req }, { id: 'lb1' })).rejects.toEqual({
+      labelNotFound: 'Label not found',
+    });
+
+    sails.helpers.labels.getPathToProjectById.mockReturnValueOnce(
+      makeInterceptable({
+        label: { id: 'lb1' },
+        board: { id: 'b1' },
+        project: { id: 'p1' },
+      }),
+    );
     BoardMembership.qm.getOneByBoardIdAndUserId.mockResolvedValueOnce({ role: 'viewer' });
     await expect(deleteController.fn.call({ req }, { id: 'lb1' })).rejects.toEqual({
       notEnoughRights: 'Not enough rights',

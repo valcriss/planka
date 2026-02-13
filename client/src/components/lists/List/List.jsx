@@ -12,11 +12,13 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Draggable, Droppable } from '@hello-pangea/dnd';
 import { Button, Icon } from 'semantic-ui-react';
+import { push } from '../../../lib/redux-router';
 import { useDidUpdate, useTransitioning } from '../../../lib/hooks';
 import { usePopup } from '../../../lib/popup';
 
 import selectors from '../../../selectors';
 import entryActions from '../../../entry-actions';
+import Paths from '../../../constants/Paths';
 import DroppableTypes from '../../../constants/DroppableTypes';
 import { BoardMembershipRoles, ListTypes } from '../../../constants/Enums';
 import { ListTypeIcons } from '../../../constants/Icons';
@@ -127,6 +129,18 @@ const List = React.memo(({ id, index }) => {
     setIsAddCardOpened(true);
   }, [isLimitBlocking]);
 
+  const handleOpenPlanningPokerClick = useCallback(() => {
+    if (!project || !board) {
+      return;
+    }
+
+    dispatch(
+      push(
+        `${Paths.PLANNING_POKER.replace(':code', project.code).replace(':slug', board.slug)}?listId=${id}`,
+      ),
+    );
+  }, [board, dispatch, id, project]);
+
   const handleNameEdit = useCallback(() => {
     setIsEditNameOpened(true);
   }, []);
@@ -156,6 +170,8 @@ const List = React.memo(({ id, index }) => {
   const ActionsPopup = usePopup(ActionsStep);
   const ArchiveCardsPopup = usePopup(ArchiveCardsStep);
   const StartSprintPopup = usePopup(StartSprintStep);
+  const isToEstimateList =
+    list.slug === 'to-estimate' || list.name === 'To Estimate' || list.name === 'À estimer';
 
   const cardsNode = (
     <Droppable
@@ -288,6 +304,19 @@ const List = React.memo(({ id, index }) => {
                     </Button>
                   </StartSprintPopup>
                 )}
+                {list.isPersisted &&
+                  project &&
+                  project.useScrum &&
+                  isProjectManager &&
+                  isToEstimateList && (
+                    <Button
+                      className={styles.headerButton}
+                      title={t('action.openPlanningPoker_title')}
+                      onClick={handleOpenPlanningPokerClick}
+                    >
+                      <Icon fitted name="chess king" size="small" />
+                    </Button>
+                  )}
               </div>
             </div>
             <div ref={cardsWrapperRef} className={styles.cardsInnerWrapper}>

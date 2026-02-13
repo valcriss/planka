@@ -60,7 +60,8 @@ export const selectPath = createReduxOrmSelector(
             projectId: projectModel.id,
           };
         }
-        case Paths.BOARDS: {
+        case Paths.BOARDS:
+        case Paths.PLANNING_POKER: {
           const projectModel = Project.all()
             .toModelArray()
             .find((p) => p.code === pathsMatch.params.code);

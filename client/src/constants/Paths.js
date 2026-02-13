@@ -9,6 +9,7 @@ const OIDC_CALLBACK = '/oidc-callback';
 const PROJECTS = '/projects/:code';
 const PROJECT_EPICS = '/boards/:code/project-epics';
 const BOARDS = '/boards/:code/:slug';
+const PLANNING_POKER = '/boards/:code/:slug/planning-poker';
 const CARDS = '/cards/:projectCode/:number';
 
 export default {
@@ -18,5 +19,6 @@ export default {
   PROJECTS,
   PROJECT_EPICS,
   BOARDS,
+  PLANNING_POKER,
   CARDS,
 };
