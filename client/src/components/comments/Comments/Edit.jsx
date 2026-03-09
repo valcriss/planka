@@ -145,7 +145,7 @@ const Edit = React.memo(({ commentId, onClose }) => {
             appendSpaceOnAdd
             data={boardMemberships.map(({ user }) => ({
               id: user.id,
-              display: user.username || user.name,
+              display: user.name || user.username,
             }))}
             displayTransform={(_, display) => `@${display}`}
             renderSuggestion={suggestionRenderer}
