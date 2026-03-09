@@ -13,7 +13,12 @@ import { Popup } from '../../../../lib/custom-ui';
 import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
 import { useSteps } from '../../../../hooks';
-import { BoardContexts, BoardMembershipRoles } from '../../../../constants/Enums';
+import {
+  BoardContexts,
+  BoardMembershipRoles,
+  BoardViews,
+  ListSortFieldNames,
+} from '../../../../constants/Enums';
 import { BoardContextIcons } from '../../../../constants/Icons';
 import ConfirmationStep from '../../../common/ConfirmationStep';
 import CustomFieldGroupsStep from '../../../custom-field-groups/CustomFieldGroupsStep';
@@ -25,27 +30,37 @@ const StepTypes = {
   EMPTY_TRASH: 'EMPTY_TRASH',
 };
 
+const SORT_CARDS_BY_DUE_DATE_DATA = {
+  fieldName: ListSortFieldNames.DUE_DATE,
+};
+
 const ActionsStep = React.memo(({ onClose }) => {
   const board = useSelector(selectors.selectCurrentBoard);
+  const listIds = useSelector(selectors.selectFiniteListIdsForCurrentBoard);
 
-  const { withSubscribe, withCustomFieldGroups, withTrashEmptier } = useSelector((state) => {
-    const isManager = selectors.selectIsCurrentUserManagerForCurrentProject(state);
-    const boardMembership = selectors.selectCurrentUserMembershipForCurrentBoard(state);
+  const { withSubscribe, withCustomFieldGroups, withCardSorter, withTrashEmptier } = useSelector(
+    (state) => {
+      const isManager = selectors.selectIsCurrentUserManagerForCurrentProject(state);
+      const boardMembership = selectors.selectCurrentUserMembershipForCurrentBoard(state);
 
-    let isMember = false;
-    let isEditor = false;
+      let isMember = false;
+      let isEditor = false;
 
-    if (boardMembership) {
-      isMember = true;
-      isEditor = boardMembership.role === BoardMembershipRoles.EDITOR;
-    }
+      if (boardMembership) {
+        isMember = true;
+        isEditor = boardMembership.role === BoardMembershipRoles.EDITOR;
+      }
 
-    return {
-      withSubscribe: isMember, // TODO: rename?
-      withCustomFieldGroups: isEditor,
-      withTrashEmptier: board.context === BoardContexts.TRASH && (isManager || isEditor),
-    };
-  }, shallowEqual);
+      return {
+        withSubscribe: isMember,
+        withCustomFieldGroups: isEditor,
+        withCardSorter:
+          board.context === BoardContexts.BOARD && board.view === BoardViews.KANBAN && isEditor,
+        withTrashEmptier: board.context === BoardContexts.TRASH && (isManager || isEditor),
+      };
+    },
+    shallowEqual,
+  );
 
   const dispatch = useDispatch();
   const [t] = useTranslation();
@@ -73,6 +88,14 @@ const ActionsStep = React.memo(({ onClose }) => {
     dispatch(entryActions.openBoardActivitiesModal());
     onClose();
   }, [onClose, dispatch]);
+
+  const handleSortCardsByDueDateClick = useCallback(() => {
+    (listIds || []).forEach((listId) => {
+      dispatch(entryActions.sortList(listId, SORT_CARDS_BY_DUE_DATE_DATA));
+    });
+
+    onClose();
+  }, [listIds, onClose, dispatch]);
 
   const handleEmptyTrashConfirm = useCallback(() => {
     dispatch(entryActions.clearTrashListInCurrentBoard());
@@ -139,6 +162,15 @@ const ActionsStep = React.memo(({ onClose }) => {
               context: 'title',
             })}
           </Menu.Item>
+          {withCardSorter && (
+            <>
+              <hr className={styles.divider} />
+              <Menu.Item className={styles.menuItem} onClick={handleSortCardsByDueDateClick}>
+                <Icon name="sort amount down" className={styles.menuItemIcon} />
+                {t('action.sortCardsByDueDate')}
+              </Menu.Item>
+            </>
+          )}
           {withTrashEmptier && (
             <>
               <hr className={styles.divider} />

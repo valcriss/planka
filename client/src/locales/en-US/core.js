@@ -594,6 +594,7 @@ export default {
       showFewerAttachments: 'Show fewer attachments',
       showLess: 'Show less',
       showMore: 'Show more',
+      sortCardsByDueDate: 'Sort cards by due date',
       sortList_title: 'Sort List',
       start: 'Start',
       startSprint: 'Start sprint',

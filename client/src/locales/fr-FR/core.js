@@ -598,6 +598,7 @@ export default {
       showFewerAttachments: 'Afficher moins de pièces jointes',
       showLess: 'Voir moins',
       showMore: 'Voir plus',
+      sortCardsByDueDate: 'Trier les cartes par date d’échéance',
       sortList_title: 'Trier la liste',
       start: 'Commencer',
       startSprint: 'D\u00e9marrer le sprint',
