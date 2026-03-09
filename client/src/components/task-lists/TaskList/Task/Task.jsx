@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Draggable } from '@hello-pangea/dnd';
 import { Button, Checkbox, Icon } from 'semantic-ui-react';
+import { useTranslation } from 'react-i18next';
 import { useDidUpdate } from '../../../../lib/hooks';
 
 import selectors from '../../../../selectors';
@@ -21,8 +22,10 @@ import { ClosableContext } from '../../../../contexts';
 import EditName from './EditName';
 import SelectAssigneeStep from './SelectAssigneeStep';
 import ActionsStep from './ActionsStep';
+import ConvertToCardModal from './ConvertToCardModal';
 import Linkify from '../../../common/Linkify';
 import UserAvatar from '../../../users/UserAvatar';
+import { getTaskCardLinks } from '../../../../utils/task-card-links';
 
 import styles from './Task.module.scss';
 
@@ -36,22 +39,22 @@ const Task = React.memo(({ id, index }) => {
   );
 
   const task = useSelector((state) => selectTaskById(state, id));
+  const linkedCardReferences = useMemo(() => getTaskCardLinks(task.name), [task.name]);
+  const [t] = useTranslation();
 
   const isLinkedCardCompleted = useSelector((state) => {
-    const regex = /\/cards\/([^/]+)(?:\/([^/]+))?/g;
-    const matches = task.name.matchAll(regex);
     // eslint-disable-next-line no-restricted-syntax
-    for (const match of matches) {
+    for (const link of linkedCardReferences) {
       let card;
-      if (match[2]) {
-        card = selectCardByProjectCodeAndNumber(state, match[1], Number(match[2]));
+      if (link.projectCode) {
+        card = selectCardByProjectCodeAndNumber(state, link.projectCode, link.number);
       } else {
-        card = selectCardById(state, match[1]);
+        card = selectCardById(state, link.id);
       }
 
       if (card) {
         const list = selectListById(state, card.listId);
-        if (list && list.type === ListTypes.CLOSED) {
+        if (list?.type === ListTypes.CLOSED) {
           return true;
         }
       }
@@ -81,11 +84,13 @@ const Task = React.memo(({ id, index }) => {
 
   const dispatch = useDispatch();
   const [isEditNameOpened, setIsEditNameOpened] = useState(false);
+  const [isConvertToCardModalOpened, setIsConvertToCardModalOpened] = useState(false);
   const [, , setIsClosableActive] = useContext(ClosableContext);
 
   const isEditable = task.isPersisted && canEdit;
   const isCompleted = task.isCompleted || isLinkedCardCompleted;
   const isToggleDisabled = !task.isPersisted || !canToggle || isLinkedCardCompleted;
+  const isConvertibleToCard = isEditable && linkedCardReferences.length === 0;
 
   const handleToggleChange = useCallback(() => {
     if (isToggleDisabled) {
@@ -132,93 +137,128 @@ const Task = React.memo(({ id, index }) => {
     setIsEditNameOpened(false);
   }, []);
 
+  const handleConvertToCardOpen = useCallback(() => {
+    setIsConvertToCardModalOpened(true);
+  }, []);
+
+  const handleConvertToCardClose = useCallback(() => {
+    setIsConvertToCardModalOpened(false);
+  }, []);
+
   useDidUpdate(() => {
-    setIsClosableActive(isEditNameOpened);
-  }, [isEditNameOpened]);
+    setIsClosableActive(isEditNameOpened || isConvertToCardModalOpened);
+  }, [isConvertToCardModalOpened, isEditNameOpened]);
 
   const SelectAssigneePopup = usePopupInClosableContext(SelectAssigneeStep);
   const ActionsPopup = usePopupInClosableContext(ActionsStep);
 
   return (
-    <Draggable
-      draggableId={`task:${id}`}
-      index={index}
-      isDragDisabled={isEditNameOpened || !isEditable}
-    >
-      {({ innerRef, draggableProps, dragHandleProps }, { isDragging }) => {
-        const contentNode = (
-          <div
-            {...draggableProps} // eslint-disable-line react/jsx-props-no-spreading
-            {...dragHandleProps} // eslint-disable-line react/jsx-props-no-spreading
-            ref={innerRef}
-            className={classNames(styles.wrapper, isDragging && styles.wrapperDragging)}
-          >
-            <span className={styles.checkboxWrapper}>
-              <Checkbox
-                checked={isCompleted}
-                disabled={isToggleDisabled}
-                className={styles.checkbox}
-                onChange={handleToggleChange}
-              />
-            </span>
-            {isEditNameOpened ? (
-              <EditName taskId={id} onClose={handleEditNameClose} />
-            ) : (
-              <div className={classNames(canEdit && styles.contentHoverable)}>
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,
-                                             jsx-a11y/no-static-element-interactions */}
-                <span
-                  className={classNames(styles.text, canEdit && styles.textEditable)}
-                  onClick={handleClick}
-                >
-                  <span className={classNames(styles.task, isCompleted && styles.taskCompleted)}>
-                    <Linkify linkStopPropagation>{task.name}</Linkify>
+    <>
+      <Draggable
+        draggableId={`task:${id}`}
+        index={index}
+        isDragDisabled={isEditNameOpened || isConvertToCardModalOpened || !isEditable}
+      >
+        {({ innerRef, draggableProps, dragHandleProps }, { isDragging }) => {
+          const contentNode = (
+            <div
+              {...draggableProps} // eslint-disable-line react/jsx-props-no-spreading
+              {...dragHandleProps} // eslint-disable-line react/jsx-props-no-spreading
+              ref={innerRef}
+              className={classNames(styles.wrapper, isDragging && styles.wrapperDragging)}
+            >
+              <span className={styles.checkboxWrapper}>
+                <Checkbox
+                  checked={isCompleted}
+                  disabled={isToggleDisabled}
+                  className={styles.checkbox}
+                  onChange={handleToggleChange}
+                />
+              </span>
+              {isEditNameOpened ? (
+                <EditName taskId={id} onClose={handleEditNameClose} />
+              ) : (
+                <div className={classNames(canEdit && styles.contentHoverable)}>
+                  {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,
+                                               jsx-a11y/no-static-element-interactions */}
+                  <span
+                    className={classNames(styles.text, canEdit && styles.textEditable)}
+                    onClick={handleClick}
+                  >
+                    <span className={classNames(styles.task, isCompleted && styles.taskCompleted)}>
+                      <Linkify linkStopPropagation>{task.name}</Linkify>
+                    </span>
                   </span>
-                </span>
-                {(task.assigneeUserId || isEditable) && (
-                  <div className={classNames(styles.actions, isEditable && styles.actionsEditable)}>
-                    {isEditable ? (
-                      <>
-                        <SelectAssigneePopup
-                          currentUserId={task.assigneeUserId}
-                          onUserSelect={handleUserSelect}
-                          onUserDeselect={handleUserDeselect}
-                        >
-                          {task.assigneeUserId ? (
-                            <UserAvatar
-                              id={task.assigneeUserId}
-                              size="tiny"
-                              className={styles.assigneeUserAvatar}
-                            />
-                          ) : (
-                            <Button className={styles.button}>
-                              <Icon fitted name="add user" size="small" />
+                  {(task.assigneeUserId || isEditable) && (
+                    <div
+                      className={classNames(styles.actions, isEditable && styles.actionsEditable)}
+                    >
+                      {isEditable ? (
+                        <>
+                          <SelectAssigneePopup
+                            currentUserId={task.assigneeUserId}
+                            onUserSelect={handleUserSelect}
+                            onUserDeselect={handleUserDeselect}
+                          >
+                            {task.assigneeUserId ? (
+                              <UserAvatar
+                                id={task.assigneeUserId}
+                                size="tiny"
+                                title={t('common.selectAssignee', { context: 'title' })}
+                                className={styles.assigneeUserAvatar}
+                              />
+                            ) : (
+                              <Button
+                                className={styles.button}
+                                title={t('common.selectAssignee', { context: 'title' })}
+                              >
+                                <Icon fitted name="add user" size="small" />
+                              </Button>
+                            )}
+                          </SelectAssigneePopup>
+                          {isConvertibleToCard && (
+                            <Button
+                              className={styles.button}
+                              title={t('action.convertTaskToCard')}
+                              onClick={handleConvertToCardOpen}
+                            >
+                              <Icon fitted name="clone" size="small" />
                             </Button>
                           )}
-                        </SelectAssigneePopup>
-                        <ActionsPopup taskId={id} onNameEdit={handleNameEdit}>
-                          <Button className={styles.button}>
-                            <Icon fitted name="pencil" size="small" />
-                          </Button>
-                        </ActionsPopup>
-                      </>
-                    ) : (
-                      <UserAvatar
-                        id={task.assigneeUserId}
-                        size="tiny"
-                        className={styles.assigneeUserAvatar}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        );
+                          <ActionsPopup taskId={id} onNameEdit={handleNameEdit}>
+                            <Button
+                              className={styles.button}
+                              title={t('action.editDescription', { context: 'title' })}
+                            >
+                              <Icon fitted name="pencil" size="small" />
+                            </Button>
+                          </ActionsPopup>
+                        </>
+                      ) : (
+                        <UserAvatar
+                          id={task.assigneeUserId}
+                          size="tiny"
+                          className={styles.assigneeUserAvatar}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
 
-        return isDragging ? ReactDOM.createPortal(contentNode, document.body) : contentNode;
-      }}
-    </Draggable>
+          return isDragging ? ReactDOM.createPortal(contentNode, document.body) : contentNode;
+        }}
+      </Draggable>
+      {isConvertToCardModalOpened && (
+        <ConvertToCardModal
+          taskId={id}
+          defaultTitle={task.name}
+          onClose={handleConvertToCardClose}
+        />
+      )}
+    </>
   );
 });
 

@@ -10,6 +10,9 @@ import selectors from '../../../selectors';
 import actions from '../../../actions';
 import api from '../../../api';
 import { createLocalId } from '../../../utils/local-id';
+import { goToCard } from './router';
+import { buildTaskCardLink } from '../../../utils/task-card-links';
+import { isListFinite } from '../../../utils/record-helpers';
 
 export function* createTask(taskListId, data) {
   const localId = yield call(createLocalId);
@@ -56,6 +59,70 @@ export function* updateTask(id, data) {
   yield put(actions.updateTask.success(task));
 }
 
+export function* convertTaskToCard(id, listId, data) {
+  const cleanData = {
+    ...data,
+    name: data.name.trim(),
+  };
+
+  if (!cleanData.name) {
+    return;
+  }
+
+  const localId = yield call(createLocalId);
+  const list = yield select(selectors.selectListById, listId);
+  const currentUserMembership = yield select(
+    selectors.selectCurrentUserMembershipByBoardId,
+    list.boardId,
+  );
+
+  const nextData = {
+    ...cleanData,
+  };
+
+  if (isListFinite(list)) {
+    nextData.position = yield select(selectors.selectNextCardPosition, listId);
+  }
+
+  yield put(
+    actions.createCard(
+      {
+        ...nextData,
+        listId,
+        id: localId,
+        boardId: list.boardId,
+        creatorUserId: currentUserMembership.userId,
+      },
+      false,
+    ),
+  );
+
+  let card;
+  try {
+    ({ item: card } = yield call(request, api.createCard, listId, nextData));
+  } catch (error) {
+    yield put(actions.createCard.failure(localId, error));
+    return;
+  }
+
+  yield put(actions.createCard.success(localId, card));
+
+  if (!card) {
+    return;
+  }
+
+  const board = yield select(selectors.selectBoardById, card.boardId);
+  const project = board ? yield select(selectors.selectProjectById, board.projectId) : null;
+
+  if (project) {
+    yield call(updateTask, id, {
+      name: buildTaskCardLink(project.code, card.number),
+    });
+  }
+
+  yield call(goToCard, card.id);
+}
+
 export function* handleTaskUpdate(task) {
   yield put(actions.handleTaskUpdate(task));
 }
@@ -91,6 +158,7 @@ export default {
   createTask,
   handleTaskCreate,
   updateTask,
+  convertTaskToCard,
   handleTaskUpdate,
   moveTask,
   deleteTask,

@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import selectors from '../../../../selectors';
 import { ListTypes } from '../../../../constants/Enums';
 import Linkify from '../../../common/Linkify';
+import { getTaskCardLinks } from '../../../../utils/task-card-links';
 
 import styles from './Task.module.scss';
 
@@ -24,24 +25,22 @@ const Task = React.memo(({ id }) => {
   const selectListById = useMemo(() => selectors.makeSelectListById(), []);
 
   const task = useSelector((state) => selectTaskById(state, id));
+  const linkedCardReferences = useMemo(() => getTaskCardLinks(task.name), [task.name]);
 
   const isLinkedCardCompleted = useSelector((state) => {
-    const regex = /\/cards\/([^/]+)(?:\/([^/]+))?/g;
-    const matches = task.name.matchAll(regex);
-
     // eslint-disable-next-line no-restricted-syntax
-    for (const match of matches) {
+    for (const link of linkedCardReferences) {
       let card;
-      if (match[2]) {
-        card = selectCardByProjectCodeAndNumber(state, match[1], Number(match[2]));
+      if (link.projectCode) {
+        card = selectCardByProjectCodeAndNumber(state, link.projectCode, link.number);
       } else {
-        card = selectCardById(state, match[1]);
+        card = selectCardById(state, link.id);
       }
 
       if (card) {
         const list = selectListById(state, card.listId);
 
-        if (list && list.type === ListTypes.CLOSED) {
+        if (list?.type === ListTypes.CLOSED) {
           return true;
         }
       }

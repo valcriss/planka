@@ -28,6 +28,15 @@ const updateTask = (id, data) => ({
   },
 });
 
+const convertTaskToCard = (id, listId, data) => ({
+  type: EntryActionTypes.TASK_CONVERT_TO_CARD,
+  payload: {
+    id,
+    listId,
+    data,
+  },
+});
+
 const handleTaskUpdate = (task) => ({
   type: EntryActionTypes.TASK_UPDATE_HANDLE,
   payload: {
@@ -62,6 +71,7 @@ export default {
   createTask,
   handleTaskCreate,
   updateTask,
+  convertTaskToCard,
   handleTaskUpdate,
   moveTask,
   deleteTask,

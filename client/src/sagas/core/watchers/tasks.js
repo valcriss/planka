@@ -19,6 +19,9 @@ export default function* tasksWatchers() {
     takeEvery(EntryActionTypes.TASK_UPDATE, ({ payload: { id, data } }) =>
       services.updateTask(id, data),
     ),
+    takeEvery(EntryActionTypes.TASK_CONVERT_TO_CARD, ({ payload: { id, listId, data } }) =>
+      services.convertTaskToCard(id, listId, data),
+    ),
     takeEvery(EntryActionTypes.TASK_UPDATE_HANDLE, ({ payload: { task } }) =>
       services.handleTaskUpdate(task),
     ),

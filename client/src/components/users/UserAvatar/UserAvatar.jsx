@@ -50,6 +50,7 @@ const UserAvatar = React.memo(
     size = Sizes.MEDIUM,
     isDisabled = false,
     withCreatorIndicator = false,
+    title = undefined,
     className = undefined,
     onClick = undefined,
   }) => {
@@ -62,11 +63,12 @@ const UserAvatar = React.memo(
     const contentNode = (
       <span
         title={
-          user.id === StaticUserIds.DELETED
+          title ||
+          (user.id === StaticUserIds.DELETED
             ? t(`common.${user.name}`, {
                 context: 'title',
               })
-            : user.name
+            : user.name)
         }
         className={classNames(
           styles.wrapper,
@@ -104,6 +106,7 @@ UserAvatar.propTypes = {
   size: PropTypes.oneOf(Object.values(Sizes)),
   isDisabled: PropTypes.bool,
   withCreatorIndicator: PropTypes.bool,
+  title: PropTypes.string,
   className: PropTypes.string,
   onClick: PropTypes.func,
 };
