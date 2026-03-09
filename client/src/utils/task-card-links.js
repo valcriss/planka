@@ -3,6 +3,8 @@
  * Licensed under the Fair Use License: https://github.com/plankanban/planka/blob/master/LICENSE.md
  */
 
+/* global globalThis */
+
 import Paths from '../constants/Paths';
 
 export const TASK_CARD_LINK_REGEX = /\/cards\/([^/\s]+)(?:\/([^/\s]+))?/g;
@@ -27,8 +29,16 @@ export const getTaskCardLinks = (text) =>
 
 export const hasTaskCardLinks = (text) => getTaskCardLinks(text).length > 0;
 
-export const buildTaskCardLink = (projectCode, number) =>
-  Paths.CARDS.replace(':projectCode', projectCode).replace(':number', number);
+export const buildTaskCardLink = (projectCode, number) => {
+  const pathname = Paths.CARDS.replace(':projectCode', projectCode).replace(':number', number);
+  const origin = globalThis.window?.location?.origin;
+
+  if (!origin) {
+    return pathname;
+  }
+
+  return new URL(pathname, origin).toString();
+};
 
 export default {
   TASK_CARD_LINK_REGEX,

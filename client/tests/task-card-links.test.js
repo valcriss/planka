@@ -5,6 +5,12 @@ import {
 } from '../src/utils/task-card-links';
 
 describe('taskCardLinks', () => {
+  const originalWindow = globalThis.window;
+
+  afterEach(() => {
+    globalThis.window = originalWindow;
+  });
+
   test('extracts canonical card links', () => {
     expect(getTaskCardLinks('/cards/PRJ/42')).toEqual([
       {
@@ -28,6 +34,18 @@ describe('taskCardLinks', () => {
   });
 
   test('builds canonical task card links', () => {
+    globalThis.window = {
+      location: {
+        origin: 'https://projects.incub.cnavts.fr',
+      },
+    };
+
+    expect(buildTaskCardLink('OPS', 13)).toBe('https://projects.incub.cnavts.fr/cards/OPS/13');
+  });
+
+  test('falls back to a relative path outside the browser', () => {
+    globalThis.window = undefined;
+
     expect(buildTaskCardLink('OPS', 13)).toBe('/cards/OPS/13');
   });
 });
