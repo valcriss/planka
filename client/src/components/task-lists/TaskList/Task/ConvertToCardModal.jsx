@@ -12,6 +12,7 @@ import { Button, Dropdown, Form, Modal } from 'semantic-ui-react';
 import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
 import { useForm } from '../../../../hooks';
+import { CardTypes } from '../../../../constants/Enums';
 
 import styles from './ConvertToCardModal.module.scss';
 
@@ -47,6 +48,14 @@ const ConvertToCardModal = React.memo(({ taskId, defaultTitle, onClose }) => {
   const selectedList = useMemo(
     () => selectedBoard?.lists.find((list) => list.id === data.listId) || null,
     [selectedBoard, data.listId],
+  );
+
+  const selectedDefaultCardType = useMemo(
+    () => ({
+      type: selectedList?.defaultCardType || selectedBoard?.defaultCardType || CardTypes.PROJECT,
+      cardTypeId: selectedList?.defaultCardTypeId || selectedBoard?.defaultCardTypeId || null,
+    }),
+    [selectedBoard, selectedList],
   );
 
   useEffect(() => {
@@ -110,11 +119,13 @@ const ConvertToCardModal = React.memo(({ taskId, defaultTitle, onClose }) => {
     dispatch(
       entryActions.convertTaskToCard(taskId, selectedList.id, {
         name: cleanName,
+        type: selectedDefaultCardType.type,
+        cardTypeId: selectedDefaultCardType.cardTypeId,
       }),
     );
 
     onClose();
-  }, [data.name, dispatch, onClose, selectedList, taskId]);
+  }, [data.name, dispatch, onClose, selectedDefaultCardType, selectedList, taskId]);
 
   return (
     <Modal open closeIcon size="tiny" onClose={onClose}>
