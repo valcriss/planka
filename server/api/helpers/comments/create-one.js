@@ -8,9 +8,12 @@ const escapeHtml = require('escape-html');
 
 const { extractMentionIds, formatTextWithMentions } = require('../../../utils/mentions');
 
-const buildAndSendNotifications = async (services, board, card, comment, actorUser, t) => {
-  const markdownCardLink = `[${escapeMarkdown(card.name)}](${sails.config.custom.baseUrl}/cards/${card.id})`;
-  const htmlCardLink = `<a href="${sails.config.custom.baseUrl}/cards/${card.id}}">${escapeHtml(card.name)}</a>`;
+const buildCardUrl = (project, card) =>
+  `${sails.config.custom.baseUrl}/cards/${project.code}/${card.number}`;
+
+const buildAndSendNotifications = async (services, project, board, card, comment, actorUser, t) => {
+  const markdownCardLink = `[${escapeMarkdown(card.name)}](${buildCardUrl(project, card)})`;
+  const htmlCardLink = `<a href="${buildCardUrl(project, card)}">${escapeHtml(card.name)}</a>`;
   const commentText = _.truncate(formatTextWithMentions(comment.text));
 
   await sails.helpers.utils.sendNotifications(services, t('New Comment'), {
@@ -183,6 +186,7 @@ module.exports = {
 
       buildAndSendNotifications(
         services,
+        inputs.project,
         inputs.board,
         values.card,
         comment,

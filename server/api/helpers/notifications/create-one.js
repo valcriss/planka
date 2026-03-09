@@ -23,9 +23,15 @@ const buildTitle = (notification, t) => {
   }
 };
 
-const buildBodyByFormat = (board, card, notification, actorUser, t) => {
-  const markdownCardLink = `[${escapeMarkdown(card.name)}](${sails.config.custom.baseUrl}/cards/${card.id})`;
-  const htmlCardLink = `<a href="${sails.config.custom.baseUrl}/cards/${card.id}">${escapeHtml(card.name)}</a>`;
+const buildCardUrl = (project, card) =>
+  `${sails.config.custom.baseUrl}/cards/${project.code}/${card.number}`;
+
+const buildBoardUrl = (project, board) =>
+  `${sails.config.custom.baseUrl}/boards/${project.code}/${board.slug}`;
+
+const buildBodyByFormat = (project, board, card, notification, actorUser, t) => {
+  const markdownCardLink = `[${escapeMarkdown(card.name)}](${buildCardUrl(project, card)})`;
+  const htmlCardLink = `<a href="${buildCardUrl(project, card)}">${escapeHtml(card.name)}</a>`;
 
   switch (notification.type) {
     case Notification.Types.MOVE_CARD: {
@@ -128,18 +134,34 @@ const buildBodyByFormat = (board, card, notification, actorUser, t) => {
   }
 };
 
-const buildAndSendNotifications = async (services, board, card, notification, actorUser, t) => {
+const buildAndSendNotifications = async (
+  services,
+  project,
+  board,
+  card,
+  notification,
+  actorUser,
+  t,
+) => {
   await sails.helpers.utils.sendNotifications(
     services,
     buildTitle(notification, t),
-    buildBodyByFormat(board, card, notification, actorUser, t),
+    buildBodyByFormat(project, board, card, notification, actorUser, t),
   );
 };
 
 // TODO: use templates (views) to build html
-const buildAndSendEmail = async (board, card, notification, actorUser, notifiableUser, t) => {
-  const cardLink = `<a href="${sails.config.custom.baseUrl}/cards/${card.id}">${escapeHtml(card.name)}</a>`;
-  const boardLink = `<a href="${sails.config.custom.baseUrl}/boards/${board.id}">${escapeHtml(board.name)}</a>`;
+const buildAndSendEmail = async (
+  project,
+  board,
+  card,
+  notification,
+  actorUser,
+  notifiableUser,
+  t,
+) => {
+  const cardLink = `<a href="${buildCardUrl(project, card)}">${escapeHtml(card.name)}</a>`;
+  const boardLink = `<a href="${buildBoardUrl(project, board)}">${escapeHtml(board.name)}</a>`;
 
   let html;
   switch (notification.type) {
@@ -286,6 +308,7 @@ module.exports = {
 
         buildAndSendNotifications(
           services,
+          inputs.project,
           inputs.board,
           values.card,
           notification,
@@ -296,6 +319,7 @@ module.exports = {
 
       if (sails.hooks.smtp.isEnabled()) {
         buildAndSendEmail(
+          inputs.project,
           inputs.board,
           values.card,
           notification,

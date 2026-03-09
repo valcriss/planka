@@ -17,9 +17,12 @@ const buildTitle = (action, t) => {
   }
 };
 
-const buildBodyByFormat = (board, card, action, actorUser, t) => {
-  const markdownCardLink = `[${escapeMarkdown(card.name)}](${sails.config.custom.baseUrl}/cards/${card.id})`;
-  const htmlCardLink = `<a href="${sails.config.custom.baseUrl}/cards/${card.id}">${escapeHtml(card.name)}</a>`;
+const buildCardUrl = (project, card) =>
+  `${sails.config.custom.baseUrl}/cards/${project.code}/${card.number}`;
+
+const buildBodyByFormat = (project, board, card, action, actorUser, t) => {
+  const markdownCardLink = `[${escapeMarkdown(card.name)}](${buildCardUrl(project, card)})`;
+  const htmlCardLink = `<a href="${buildCardUrl(project, card)}">${escapeHtml(card.name)}</a>`;
 
   switch (action.type) {
     case Action.Types.CREATE_CARD: {
@@ -79,11 +82,11 @@ const buildBodyByFormat = (board, card, action, actorUser, t) => {
   }
 };
 
-const buildAndSendNotifications = async (services, board, card, action, actorUser, t) => {
+const buildAndSendNotifications = async (services, project, board, card, action, actorUser, t) => {
   await sails.helpers.utils.sendNotifications(
     services,
     buildTitle(action, t),
-    buildBodyByFormat(board, card, action, actorUser, t),
+    buildBodyByFormat(project, board, card, action, actorUser, t),
   );
 };
 
@@ -210,6 +213,7 @@ module.exports = {
 
         buildAndSendNotifications(
           services,
+          inputs.project,
           inputs.board,
           values.card,
           action,
