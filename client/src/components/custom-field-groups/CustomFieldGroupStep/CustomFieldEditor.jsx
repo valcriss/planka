@@ -7,12 +7,19 @@ import React, { useCallback, useEffect, useImperativeHandle } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { Radio } from 'semantic-ui-react';
+import { Dropdown, Radio } from 'semantic-ui-react';
 import { Input } from '../../../lib/custom-ui';
 
 import { useNestedRef } from '../../../hooks';
+import { CustomFieldFrontOfCardDisplayTypes } from '../../../constants/Enums';
 
 import styles from './CustomFieldEditor.module.scss';
+
+const DISPLAY_TYPE_OPTIONS = Object.values(CustomFieldFrontOfCardDisplayTypes).map((value) => ({
+  key: value,
+  value,
+  text: value,
+}));
 
 const CustomFieldEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
   const [t] = useTranslation();
@@ -55,6 +62,25 @@ const CustomFieldEditor = React.forwardRef(({ data, onFieldChange }, ref) => {
         className={classNames(styles.field, styles.fieldRadio)}
         onChange={onFieldChange}
       />
+      {data.showOnFrontOfCard && (
+        <>
+          <div className={styles.text}>{t('common.frontOfCardDisplayType')}</div>
+          <Dropdown
+            fluid
+            selection
+            name="frontOfCardDisplayType"
+            value={data.frontOfCardDisplayType}
+            options={DISPLAY_TYPE_OPTIONS.map((option) => ({
+              ...option,
+              text: t(`common.customFieldFrontOfCardDisplayTypes.${option.value}`, {
+                defaultValue: option.text,
+              }),
+            }))}
+            className={styles.field}
+            onChange={(_, { name, value }) => onFieldChange(null, { name, value })}
+          />
+        </>
+      )}
     </>
   );
 });

@@ -35,13 +35,15 @@ const CustomFieldEditStep = React.memo(({ id, onBack }) => {
     () => ({
       name: customField.name,
       showOnFrontOfCard: customField.showOnFrontOfCard,
+      frontOfCardDisplayType: customField.frontOfCardDisplayType || 'normal',
     }),
-    [customField.name, customField.showOnFrontOfCard],
+    [customField.name, customField.showOnFrontOfCard, customField.frontOfCardDisplayType],
   );
 
   const [data, handleFieldChange] = useForm(() => ({
     name: '',
     showOnFrontOfCard: false,
+    frontOfCardDisplayType: 'normal',
     ...defaultData,
   }));
 

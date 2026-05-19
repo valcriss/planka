@@ -90,6 +90,13 @@ export const CardTypes = {
   STORY: 'story',
 };
 
+export const CustomFieldFrontOfCardDisplayTypes = {
+  NORMAL: 'normal',
+  WARNING: 'warning',
+  ERROR: 'error',
+  SUCCESS: 'success',
+};
+
 export const AttachmentTypes = {
   FILE: 'file',
   LINK: 'link',

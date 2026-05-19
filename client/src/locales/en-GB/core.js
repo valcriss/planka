@@ -277,6 +277,13 @@ export default {
       settings: 'Settings',
       shared: 'Shared',
       sharedWithMe_title: 'Shared With Me',
+      frontOfCardDisplayType: 'Front of card display type',
+      customFieldFrontOfCardDisplayTypes: {
+        normal: 'Normal',
+        warning: 'Warning',
+        error: 'Error',
+        success: 'Success',
+      },
       showOnFrontOfCard: 'Show on front of card',
       sortList_title: 'Sort List',
       stopwatch: 'Stopwatch',

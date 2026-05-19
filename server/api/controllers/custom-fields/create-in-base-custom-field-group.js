@@ -4,6 +4,7 @@
  */
 
 const { idInput } = require('../../../utils/inputs');
+const CustomFieldModel = require('../../models/CustomField');
 
 const Errors = {
   BASE_CUSTOM_FIELD_GROUP_NOT_FOUND: {
@@ -30,6 +31,10 @@ module.exports = {
     showOnFrontOfCard: {
       type: 'boolean',
     },
+    frontOfCardDisplayType: {
+      type: 'string',
+      isIn: Object.values(CustomFieldModel.FrontOfCardDisplayTypes),
+    },
   },
 
   exits: {
@@ -51,7 +56,12 @@ module.exports = {
       throw Errors.BASE_CUSTOM_FIELD_GROUP_NOT_FOUND; // Forbidden
     }
 
-    const values = _.pick(inputs, ['position', 'name', 'showOnFrontOfCard']);
+    const values = _.pick(inputs, [
+      'position',
+      'name',
+      'showOnFrontOfCard',
+      'frontOfCardDisplayType',
+    ]);
 
     const customField = await sails.helpers.customFields.createOneInBaseCustomFieldGroup.with({
       project,

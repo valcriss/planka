@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
 import selectors from '../../../selectors';
+import { CustomFieldFrontOfCardDisplayTypes } from '../../../constants/Enums';
 
 import styles from './CustomFieldValueChip.module.scss';
 
@@ -29,12 +30,17 @@ const CustomFieldValueChip = React.memo(({ id, size = Sizes.MEDIUM, onClick = un
     selectCustomFieldById(state, customFieldValue.customFieldId),
   );
 
+  const displayType =
+    customField.frontOfCardDisplayType || CustomFieldFrontOfCardDisplayTypes.NORMAL;
+
   const contentNode = (
     <span
       title={`${customField.name}: ${customFieldValue.content}`}
       className={classNames(
         styles.wrapper,
         styles[`wrapper${upperFirst(size)}`],
+        displayType !== CustomFieldFrontOfCardDisplayTypes.NORMAL &&
+          styles[`wrapper${upperFirst(displayType)}`],
         onClick && styles.wrapperHoverable,
       )}
     >

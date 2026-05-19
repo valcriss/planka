@@ -10,7 +10,16 @@
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
+const FrontOfCardDisplayTypes = {
+  NORMAL: 'normal',
+  WARNING: 'warning',
+  ERROR: 'error',
+  SUCCESS: 'success',
+};
+
 module.exports = {
+  FrontOfCardDisplayTypes,
+
   attributes: {
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
@@ -28,6 +37,12 @@ module.exports = {
       type: 'boolean',
       required: true,
       columnName: 'show_on_front_of_card',
+    },
+    frontOfCardDisplayType: {
+      type: 'string',
+      isIn: Object.values(FrontOfCardDisplayTypes),
+      defaultsTo: FrontOfCardDisplayTypes.NORMAL,
+      columnName: 'front_of_card_display_type',
     },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗

@@ -349,6 +349,13 @@ export default {
       settings: 'Réglages',
       shared: 'Partagé',
       sharedWithMe_title: 'Partagé avec moi',
+      frontOfCardDisplayType: 'Type d’affichage sur la carte',
+      customFieldFrontOfCardDisplayTypes: {
+        normal: 'Normal',
+        warning: 'Warning',
+        error: 'Error',
+        success: 'Success',
+      },
       showOnFrontOfCard: 'Afficher sur le devant de la carte',
       sortList_title: 'Trier la liste',
       stopwatch: 'Minuteur',

@@ -4,6 +4,7 @@
  */
 
 const { idInput } = require('../../../utils/inputs');
+const CustomFieldModel = require('../../models/CustomField');
 
 const Errors = {
   NOT_ENOUGH_RIGHTS: {
@@ -32,6 +33,10 @@ module.exports = {
     },
     showOnFrontOfCard: {
       type: 'boolean',
+    },
+    frontOfCardDisplayType: {
+      type: 'string',
+      isIn: Object.values(CustomFieldModel.FrontOfCardDisplayTypes),
     },
   },
 
@@ -64,7 +69,12 @@ module.exports = {
       throw Errors.NOT_ENOUGH_RIGHTS;
     }
 
-    const values = _.pick(inputs, ['position', 'name', 'showOnFrontOfCard']);
+    const values = _.pick(inputs, [
+      'position',
+      'name',
+      'showOnFrontOfCard',
+      'frontOfCardDisplayType',
+    ]);
 
     const customField = await sails.helpers.customFields.createOneInCustomFieldGroup.with({
       project,

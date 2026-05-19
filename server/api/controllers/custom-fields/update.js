@@ -4,6 +4,7 @@
  */
 
 const { idInput } = require('../../../utils/inputs');
+const CustomFieldModel = require('../../models/CustomField');
 
 const Errors = {
   NOT_ENOUGH_RIGHTS: {
@@ -32,6 +33,10 @@ module.exports = {
     showOnFrontOfCard: {
       type: 'boolean',
     },
+    frontOfCardDisplayType: {
+      type: 'string',
+      isIn: Object.values(CustomFieldModel.FrontOfCardDisplayTypes),
+    },
   },
 
   exits: {
@@ -53,7 +58,12 @@ module.exports = {
     let { customField } = pathToProject;
     const { customFieldGroup, card, list, board, baseCustomFieldGroup, project } = pathToProject;
 
-    const values = _.pick(inputs, ['position', 'name', 'showOnFrontOfCard']);
+    const values = _.pick(inputs, [
+      'position',
+      'name',
+      'showOnFrontOfCard',
+      'frontOfCardDisplayType',
+    ]);
 
     if (customField.baseCustomFieldGroupId) {
       const isProjectManager = await sails.helpers.users.isProjectManager(

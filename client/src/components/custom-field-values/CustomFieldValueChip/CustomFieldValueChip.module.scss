@@ -52,4 +52,28 @@
     max-width: 230px;
     padding: 6px 12px;
   }
+
+  .wrapperWarning {
+    background: #fff2b8;
+    border: 1px solid #f59f00;
+    color: #111111;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .wrapperError {
+    background: #ffe3e3;
+    border: 1px solid #d32f2f;
+    color: #111111;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .wrapperSuccess {
+    background: #d8f5d0;
+    border: 1px solid #2f7d32;
+    color: #111111;
+    font-size: 13px;
+    font-weight: 600;
+  }
 }
